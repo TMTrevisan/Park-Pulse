@@ -239,7 +239,27 @@ export function Dashboard({ initialData, error }: DashboardProps) {
             );
         }
         if (colId === 'land') {
-            return <span className="text-gray-500 text-xs">{getLand(ride.name)}</span>;
+            const land = getLand(ride.name);
+            let colorClass = "bg-gray-100 text-gray-600 dark:bg-zinc-800 dark:text-gray-400";
+
+            if (land.includes("Tomorrowland")) colorClass = "bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800";
+            if (land.includes("Adventureland")) colorClass = "bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800";
+            if (land.includes("New Orleans")) colorClass = "bg-purple-100 text-purple-700 border-purple-200 dark:bg-purple-900/30 dark:text-purple-300 dark:border-purple-800";
+            if (land.includes("Galaxy's Edge")) colorClass = "bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700";
+            if (land.includes("Fantasyland")) colorClass = "bg-pink-100 text-pink-700 border-pink-200 dark:bg-pink-900/30 dark:text-pink-300 dark:border-pink-800";
+            if (land.includes("Frontierland")) colorClass = "bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800";
+            if (land.includes("Cars Land")) colorClass = "bg-orange-100 text-orange-700 border-orange-200 dark:bg-orange-900/30 dark:text-orange-300 dark:border-orange-800";
+            if (land.includes("Pixar Pier")) colorClass = "bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-800";
+            if (land.includes("Avengers")) colorClass = "bg-red-100 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800";
+            if (land.includes("Toontown")) colorClass = "bg-rose-100 text-rose-700 border-rose-200 dark:bg-rose-900/30 dark:text-rose-300 dark:border-rose-800";
+            if (land.includes("Grizzly Peak")) colorClass = "bg-green-100 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800";
+            if (land.includes("Hollywood Land")) colorClass = "bg-fuchsia-100 text-fuchsia-700 border-fuchsia-200 dark:bg-fuchsia-900/30 dark:text-fuchsia-300 dark:border-fuchsia-800";
+
+            return (
+                <span className={cn("text-xs font-medium px-2 py-1 rounded border whitespace-nowrap", colorClass)}>
+                    {land}
+                </span>
+            );
         }
         if (colId === 'ticket') {
             const ticket = getTicketClass(ride.name);
