@@ -4,17 +4,22 @@ Park Pulse is a modern, real-time dashboard for tracking wait times at **Disneyl
 
 ## 🚀 Key Features
 
+### ⭐️ Favorites System (**New**)
+*   **Personalized List**: Star your favorite rides to keep them at the top of your view.
+*   **Persistent**: Your favorites are saved automatically to your device, so they're there when you come back.
+
 ### 📊 Real-Time Dashboard
 *   **Live Data**: Connects to the [ThemeParks.wiki API](https://themeparks.wiki) for up-to-the-minute wait times.
 *   **Park Status**: Instant "Busyness" indicator (Quiet, Moderate, Busy, Very Busy) based on park-wide averages.
 *   **Search**: Instantly filter rides by name.
+*   **Skeleton Loading**: Polished shimmer effects while data fetch is in progress.
 
 ### 📱 Advanced List View
 The table view is optimized for power users and mobile devices:
 *   **Drag-and-Drop Columns**: Customize your view by dragging column headers. Reorder them however you like (e.g., move "Wait Time" next to "Ride Name").
     *   *Mobile Friendly*: Touch-optimized drag handles are always visible.
 *   **Sticky Columns**: The first column in your custom order stays frozen while you scroll horizontally to view hourly forecasts.
-*   **Smart Sorting**: Sort by Ride Name, Wait Time, Status, Land, or **Ticket Tier**.
+*   **Smart Sorting**: Sort by **Favorites**, Ride Name, Wait Time, Status, Land, or **Ticket Tier**.
 *   **Ticket Value**: Rides are categorized by tier for easy filtering:
     *   **E-Ticket**: Headliners (e.g., *Rise of the Resistance*, *Space Mountain*).
     *   **D-Ticket**: Major attractions.
@@ -26,13 +31,27 @@ The table view is optimized for power users and mobile devices:
 *   **Visual Cards**: Browse rides with a clean, card-based layout.
 *   **History Charts**: Click any ride card to expand a detailed interactive chart of wait time history.
 
+## 🏗️ Architecture & Refactoring
+The application has been refactored for modularity and maintainability:
+*   **Modular Components**: Broken down into `RideGrid`, `RideTable`, `HeaderToolbar`, and `StatsHeader` for better separation of concerns.
+*   **Strict Typing**: Comprehensive TypeScript interfaces for all data structures (`Ride`, `WaitTimeSnapshot`, etc.).
+*   **Server Actions**: Secure server-side data fetching and file usage.
+
 ## 🛠️ Tech Stack
-*   **Framework**: Next.js 14 (App Router)
-*   **Styling**: Tailwind CSS & Shadcn UI
+*   **Framework**: Next.js 16 (App Router)
+*   **Library**: React 19
+*   **Styling**: Tailwind CSS
+*   **Testing**: Vitest & React Testing Library
 *   **Charts**: Recharts
 *   **Icons**: Lucide React
 *   **Interactions**: @dnd-kit (Drag & Drop)
 *   **Language**: TypeScript
+
+## RUNNING TESTS
+To run the automated test suite:
+```bash
+npm test
+```
 
 ## 🏃‍♂️ Getting Started
 
