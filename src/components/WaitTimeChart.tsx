@@ -10,12 +10,12 @@ import {
     ResponsiveContainer,
     Legend
 } from "recharts";
-import { WaitTimeSnapshot, ParkLiveData } from "@/lib/types";
+import { WaitTimeSnapshot, Ride, Forecast } from "@/lib/types";
 import { format, parseISO, isSameDay } from "date-fns";
 
 interface WaitTimeChartProps {
-    rideId: string; // Kept for prop compatibility check, though we use ride object now
-    ride?: any; // Ideally this should be the specific Ride type from schemas
+    rideId: string;
+    ride?: Ride;
     history: WaitTimeSnapshot[];
 }
 
@@ -37,21 +37,16 @@ export function WaitTimeChart({ rideId, ride, history }: WaitTimeChartProps) {
     }).filter(d => d.historyWait !== null);
 
     // 2. Process Forecast Data
-    // Forecast is typically "Today", so we filter for today's points
     const now = new Date();
-    const forecastData = (ride?.forecast || []).map((f: any) => ({
+    const forecastData = (ride?.forecast || []).map((f: Forecast) => ({
         time: new Date(f.time),
         forecastWait: f.waitTime
-    })).filter((d: any) => isSameDay(d.time, now));
+    })).filter((d: { time: Date; forecastWait: number }) => isSameDay(d.time, now));
 
-    // 3. Merge Data (Approximate by hourly bins or just raw sort?)
-    // Using raw sort for precise plotting. Recharts handles non-aligned timestamps if we ignore "category" scale?
-    // Actually, 'time' scale is best.
-
-    // Combine arrays
+    // 3. Merge Data
     const combinedData = [
-        ...historyData.map(d => ({ ...d, type: 'history' })),
-        ...forecastData.map(d => ({ ...d, type: 'forecast' }))
+        ...historyData.map((d) => ({ ...d, type: 'history' })),
+        ...forecastData.map((d) => ({ ...d, type: 'forecast' }))
     ].sort((a, b) => a.time.getTime() - b.time.getTime());
 
     if (combinedData.length === 0) return <div className="text-center text-gray-400 py-8">No historic or forecast data available</div>;
