@@ -4,16 +4,18 @@ import fs from "fs/promises";
 import path from "path";
 import { PARKS } from "@/lib/parks";
 import { WaitTimeSnapshot, ParkLiveData } from "@/lib/types";
+import { kv } from "@vercel/kv";
 
 const DATA_FILE_PATH = path.join(process.env.NODE_ENV === 'production' ? '/tmp' : process.cwd(), "wait_times.json");
+const HISTORY_KEY = 'wait_times_history';
+const MAX_HISTORY_ITEMS = 2000;
 
-/* Helper to ensure directory exists */
+/* Helper to ensure directory exists (Local Only) */
 async function ensureDirectoryExistence(filePath: string) {
     const dirname = path.dirname(filePath);
     try {
         await fs.access(dirname);
     } catch (e) {
-        // In /tmp we might not need to mkdir, but good practice
         await fs.mkdir(dirname, { recursive: true }).catch(() => { });
     }
 }
@@ -34,6 +36,65 @@ async function fetchParkData(parkId: string): Promise<ParkLiveData> {
     return response.json();
 }
 
+/**
+ * Determine if we should use Vercel KV or File System
+ */
+const useKV = !!process.env.KV_REST_API_URL && !!process.env.KV_REST_API_TOKEN;
+
+async function getHistory(): Promise<WaitTimeSnapshot[]> {
+    if (useKV) {
+        try {
+            // KV returns typed objects automatically if parsing valid JSON
+            const result = await kv.lrange(HISTORY_KEY, 0, -1);
+            return (result as unknown as WaitTimeSnapshot[]) || [];
+        } catch (error) {
+            console.error("KV Read Error:", error);
+            return [];
+        }
+    } else {
+        try {
+            await ensureDirectoryExistence(DATA_FILE_PATH);
+            const fileContent = await fs.readFile(DATA_FILE_PATH, "utf-8");
+            return JSON.parse(fileContent);
+        } catch (error) {
+            return [];
+        }
+    }
+}
+
+async function saveSnapshot(snapshot: WaitTimeSnapshot, currentHistory: WaitTimeSnapshot[]) {
+    // Only save if 60 seconds passed since last entry
+    const lastSnapshot = currentHistory[currentHistory.length - 1];
+    const lastTime = lastSnapshot ? new Date(lastSnapshot.timestamp).getTime() : 0;
+    const currentTime = new Date(snapshot.timestamp).getTime();
+
+    if (currentTime - lastTime < 60 * 1000) {
+        return; // Too soon to save
+    }
+
+    if (useKV) {
+        try {
+            // Push to right (end)
+            await kv.rpush(HISTORY_KEY, snapshot);
+            // Trim from left (start) to keep only last N items
+            // ltrim indices are inclusive. -2000 to -1 keeps last 2000
+            await kv.ltrim(HISTORY_KEY, -MAX_HISTORY_ITEMS, -1);
+        } catch (error) {
+            console.error("KV Write Error:", error);
+        }
+    } else {
+        try {
+            const newHistory = [...currentHistory, snapshot];
+            if (newHistory.length > MAX_HISTORY_ITEMS) {
+                newHistory.shift(); // Remove oldest
+            }
+            await fs.writeFile(DATA_FILE_PATH, JSON.stringify(newHistory, null, 2));
+        } catch (error) {
+            console.warn("FS Write Error:", error);
+        }
+    }
+}
+
 export async function getWaitTimes() {
     const timestamp = new Date().toISOString();
 
@@ -49,33 +110,15 @@ export async function getWaitTimes() {
     };
 
     // 2. Read history
-    let history: WaitTimeSnapshot[] = [];
-    try {
-        await ensureDirectoryExistence(DATA_FILE_PATH);
-        const fileContent = await fs.readFile(DATA_FILE_PATH, "utf-8");
-        history = JSON.parse(fileContent);
-    } catch (error) {
-        // File doesn't exist or is invalid, start new history
-    }
+    const history = await getHistory();
 
-    // 3. Append and Save
-    try {
-        const lastSnapshot = history[history.length - 1];
-        const lastTime = lastSnapshot ? new Date(lastSnapshot.timestamp).getTime() : 0;
-        const currentTime = new Date(timestamp).getTime();
+    // 3. Save new snapshot (fire and forget? better to await so UI gets latest)
+    await saveSnapshot(currentSnapshot, history);
 
-        if (currentTime - lastTime > 60 * 1000) { // Only save every minute
-            history.push(currentSnapshot);
-            // Limit history size
-            if (history.length > 2000) {
-                history = history.slice(-2000);
-            }
-            await fs.writeFile(DATA_FILE_PATH, JSON.stringify(history, null, 2));
-        }
-    } catch (error) {
-        console.warn("Failed to save history (likely read-only fs):", error);
-        // Do not crash the request, just proceed with current data
-    }
-
-    return { current: currentSnapshot, history };
+    // Return current + history. Note: saveSnapshot might have added one, but 
+    // for simplicity we return the history we read + the current one.
+    return {
+        current: currentSnapshot,
+        history: [...history, currentSnapshot]
+    };
 }

@@ -9,6 +9,7 @@ import { HeaderToolbar } from "./dashboard/HeaderToolbar";
 import { RideGrid } from "./dashboard/RideGrid";
 import { RideTable, SortField, SortDirection } from "./dashboard/RideTable";
 import { useFavorites } from "@/hooks/useFavorites";
+import { useAlerts } from "@/hooks/useAlerts";
 import { Skeleton } from "@/components/ui/Skeleton";
 
 const REFRESH_INTERVAL = 60 * 1000; // 1 minute
@@ -21,12 +22,12 @@ export function Dashboard() {
     const [searchQuery, setSearchQuery] = useState("");
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
     const [expandedRideId, setExpandedRideId] = useState<string | null>(null);
-    const [sortField, setSortField] = useState<SortField>('favorite'); // Default to favorite sorting? Or stick to name/ticket?
-    // Actually, let's keep name default but allow favorite sort.
-    const [sortDirection, setSortDirection] = useState<SortDirection>('desc'); // Favs at top
+    const [sortField, setSortField] = useState<SortField>('favorite');
+    const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
     const [showHours, setShowHours] = useState(false);
 
     const { favorites, toggleFavorite } = useFavorites();
+    const { alerts, addAlert, removeAlert, checkAlerts } = useAlerts();
 
     const fetchData = async () => {
         setLoading(true);
@@ -50,14 +51,14 @@ export function Dashboard() {
 
     const rides = useMemo(() => {
         if (!currentPark) return [];
-
+        // ... filtering logic matches original source
         let filtered = currentPark.liveData.filter(
             (ride) =>
                 ride.entityType === "ATTRACTION" &&
                 ride.status !== "REFURBISHMENT" &&
                 ride.name.toLowerCase().includes(searchQuery.toLowerCase())
         );
-
+        // ... sorting logic matches original source
         return filtered.sort((a, b) => {
             let valA: any = '';
             let valB: any = '';
@@ -72,8 +73,6 @@ export function Dashboard() {
                     valB = b.name;
                     break;
                 case 'waitTime':
-                    // Treat closed/down as -1 so they go to bottom in desc sort, top in asc?
-                    // Usually we want highest wait times at top.
                     valA = a.status === 'OPERATING' ? (a.queue?.STANDBY?.waitTime ?? 0) : -1;
                     valB = b.status === 'OPERATING' ? (b.queue?.STANDBY?.waitTime ?? 0) : -1;
                     break;
@@ -86,8 +85,6 @@ export function Dashboard() {
                     valB = b.status;
                     break;
                 case 'ticket':
-                    // E < D < C. We want E to be "larger" or "smaller"?
-                    // Let's map E=5, D=4, C=3, B=2, A=1, -=0
                     const score = (r: Ride) => {
                         const t = getTicketClass(r.name);
                         const map: Record<string, number> = { 'E': 5, 'D': 4, 'C': 3, 'B': 2, 'A': 1 };
@@ -109,12 +106,34 @@ export function Dashboard() {
 
     }, [currentPark, searchQuery, sortField, sortDirection, favorites]);
 
+    // Check alerts whenever rides update
+    useEffect(() => {
+        if (rides.length > 0) {
+            checkAlerts(rides);
+        }
+    }, [rides, checkAlerts]);
+
+    const handleToggleAlert = (rideId: string, rideName: string) => {
+        const existing = alerts.find(a => a.rideId === rideId);
+        if (existing) {
+            removeAlert(rideId);
+        } else {
+            const input = window.prompt(`Alert when wait time for ${rideName} is less than or equal to (minutes):`, "30");
+            if (input) {
+                const threshold = parseInt(input, 10);
+                if (!isNaN(threshold)) {
+                    addAlert(rideId, rideName, threshold);
+                }
+            }
+        }
+    };
+
     const handleSort = (field: SortField) => {
         if (sortField === field) {
             setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
         } else {
             setSortField(field);
-            setSortDirection('desc'); // Default to desc for new columns (usually better for numbers/importance)
+            setSortDirection('desc');
         }
     };
 
@@ -212,6 +231,8 @@ export function Dashboard() {
                         getHighOfDay={getHighOfDay}
                         favorites={favorites}
                         toggleFavorite={toggleFavorite}
+                        alerts={alerts}
+                        onToggleAlert={handleToggleAlert}
                     />
                 ) : (
                     <RideTable

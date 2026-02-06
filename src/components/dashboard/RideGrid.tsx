@@ -6,6 +6,7 @@ import { WaitTimeChart } from "../WaitTimeChart";
 import { getLand, getTicketClass } from "@/lib/parks";
 import { cn } from "@/lib/utils";
 import { TrendingUp } from "lucide-react";
+import { Alert } from "@/hooks/useAlerts";
 
 interface RideGridProps {
     rides: Ride[];
@@ -16,6 +17,8 @@ interface RideGridProps {
     getHighOfDay: (ride: Ride) => number;
     favorites: string[];
     toggleFavorite: (id: string) => void;
+    alerts: Alert[];
+    onToggleAlert: (id: string, name: string) => void;
 }
 
 export function RideGrid({
@@ -26,13 +29,16 @@ export function RideGrid({
     history,
     getHighOfDay,
     favorites,
-    toggleFavorite
+    toggleFavorite,
+    alerts,
+    onToggleAlert
 }: RideGridProps) {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {rides.map((ride) => {
                 const land = getLand(ride.name);
                 const ticket = getTicketClass(ride.name);
+                const hasAlert = alerts.some(a => a.rideId === ride.id);
                 return (
                     <div
                         key={ride.id}
@@ -48,6 +54,8 @@ export function RideGrid({
                                     ride={ride}
                                     isFavorite={favorites.includes(ride.id)}
                                     toggleFavorite={toggleFavorite}
+                                    hasAlert={hasAlert}
+                                    onToggleAlert={onToggleAlert}
                                 />
                                 <div className="absolute top-2 right-2 flex flex-col items-end gap-1 pointer-events-none">
                                     <div className=" text-xs text-gray-400 bg-gray-50 px-2 py-0.5 rounded border dark:bg-zinc-900 dark:border-zinc-700">
