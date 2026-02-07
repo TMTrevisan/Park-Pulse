@@ -146,12 +146,12 @@ export function RideTable({
 
     const baseColumns: ColumnDef[] = [
         { id: 'name', label: 'Ride Name', field: 'name', isSortable: true, className: "w-64" },
-        { id: 'waitTime', label: 'Wait Time', field: 'waitTime', isSortable: true, className: "w-24" },
+        { id: 'waitTime', label: 'Wait Time', field: 'waitTime', isSortable: true, className: "w-24 text-right" },
         { id: 'actions', label: 'Actions', isSortable: false, className: "w-20 text-center" },
-        { id: 'ticket', label: 'Ticket', field: 'ticket', isSortable: true, className: "w-20" },
-        { id: 'status', label: 'Status', field: 'status', isSortable: true, className: "w-24" },
+        { id: 'ticket', label: 'Ticket', field: 'ticket', isSortable: true, className: "w-20 text-center" },
+        { id: 'status', label: 'Status', field: 'status', isSortable: true, className: "w-24 text-center" },
         { id: 'land', label: 'Land', field: 'land', isSortable: true, className: "w-40" },
-        { id: 'peak', label: 'Peak (Est)', field: 'peak', isSortable: true, className: "w-24" },
+        { id: 'peak', label: 'Peak (Est)', field: 'peak', isSortable: true, className: "w-24 text-right" },
         { id: 'trend', label: 'Trend', className: "w-48", isSortable: false },
     ];
 
