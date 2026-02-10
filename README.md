@@ -4,7 +4,11 @@ Park Pulse is a modern, real-time dashboard for tracking wait times at **Disneyl
 
 ## 🚀 Key Features
 
-### ⭐️ Favorites System (**New**)
+### 🔍 Advanced Filtering (**New**)
+*   **Smart Filters**: Drill down by **Land**, **Ticket Class** (E-Ticket, D-Ticket, etc.), **Ride Status**, or max **Wait Time**.
+*   **Dynamic**: Filter options update automatically based on the selected park.
+
+### ⭐️ Favorites System
 *   **Personalized List**: Star your favorite rides to keep them at the top of your view.
 *   **Persistent**: Your favorites are saved automatically to your device, so they're there when you come back.
 
@@ -30,28 +34,6 @@ The table view is optimized for power users and mobile devices:
 ### 🖼️ Grid View
 *   **Visual Cards**: Browse rides with a clean, card-based layout.
 *   **History Charts**: Click any ride card to expand a detailed interactive chart of wait time history.
-
-## 🏗️ Architecture & Refactoring
-The application has been refactored for modularity and maintainability:
-*   **Modular Components**: Broken down into `RideGrid`, `RideTable`, `HeaderToolbar`, and `StatsHeader` for better separation of concerns.
-*   **Strict Typing**: Comprehensive TypeScript interfaces for all data structures (`Ride`, `WaitTimeSnapshot`, etc.).
-*   **Server Actions**: Secure server-side data fetching and file usage.
-
-## 🛠️ Tech Stack
-*   **Framework**: Next.js 16 (App Router)
-*   **Library**: React 19
-*   **Styling**: Tailwind CSS
-*   **Testing**: Vitest & React Testing Library
-*   **Charts**: Recharts
-*   **Icons**: Lucide React
-*   **Interactions**: @dnd-kit (Drag & Drop)
-*   **Language**: TypeScript
-
-## RUNNING TESTS
-To run the automated test suite:
-```bash
-npm test
-```
 
 ## 🏃‍♂️ Getting Started
 

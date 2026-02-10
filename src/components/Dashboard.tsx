@@ -26,6 +26,12 @@ export function Dashboard() {
     const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
     const [showHours, setShowHours] = useState(false);
 
+    // Filters
+    const [ticketFilter, setTicketFilter] = useState("All");
+    const [statusFilter, setStatusFilter] = useState("All");
+    const [landFilter, setLandFilter] = useState("All");
+    const [waitTimeFilter, setWaitTimeFilter] = useState("All");
+
     const { favorites, toggleFavorite } = useFavorites();
     const { alerts, addAlert, removeAlert, checkAlerts } = useAlerts();
 
@@ -53,15 +59,47 @@ export function Dashboard() {
 
     const currentPark = data?.current.parks.find((p) => p.id === selectedParkId);
 
+    const uniqueLands = useMemo(() => {
+        if (!currentPark) return [];
+        const lands = new Set(currentPark.liveData.map(r => getLand(r.name)));
+        return Array.from(lands).sort();
+    }, [currentPark]);
+
     const rides = useMemo(() => {
         if (!currentPark) return [];
-        // ... filtering logic matches original source
-        const filtered = currentPark.liveData.filter(
-            (ride) =>
-                ride.entityType === "ATTRACTION" &&
-                ride.status !== "REFURBISHMENT" &&
-                ride.name.toLowerCase().includes(searchQuery.toLowerCase())
-        );
+
+        const filtered = currentPark.liveData.filter((ride) => {
+            // Basic checks
+            if (ride.entityType !== "ATTRACTION" || ride.status === "REFURBISHMENT") return false;
+            if (!ride.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+
+            // Ticket Filter
+            if (ticketFilter !== "All") {
+                const ticket = getTicketClass(ride.name);
+                if (ticket !== ticketFilter) return false;
+            }
+
+            // Status Filter
+            if (statusFilter !== "All") {
+                if (ride.status !== statusFilter) return false;
+            }
+
+            // Land Filter
+            if (landFilter !== "All") {
+                const land = getLand(ride.name);
+                if (land !== landFilter) return false;
+            }
+
+            // Wait Time Filter
+            if (waitTimeFilter !== "All") {
+                const wait = ride.queue?.STANDBY?.waitTime ?? 0;
+                const maxWait = parseInt(waitTimeFilter);
+                if (wait > maxWait) return false;
+            }
+
+            return true;
+        });
+
         // ... sorting logic matches original source
         return filtered.sort((a, b) => {
             let valA: string | number = '';
@@ -108,7 +146,7 @@ export function Dashboard() {
             return 0;
         });
 
-    }, [currentPark, searchQuery, sortField, sortDirection, favorites]);
+    }, [currentPark, searchQuery, sortField, sortDirection, favorites, ticketFilter, statusFilter, landFilter, waitTimeFilter]);
 
     // Check alerts whenever rides update
     useEffect(() => {
@@ -152,7 +190,7 @@ export function Dashboard() {
     const averageWaitTime = useMemo(() => {
         if (!rides.length) return 0;
         const operatingRides = rides.filter((r) => r.status === "OPERATING");
-        if (!operatingRides.length) return 0;
+        if (operatingRides.length) return 0;
         const totalWait = operatingRides.reduce(
             (acc, ride) => acc + (ride.queue?.STANDBY?.waitTime || 0),
             0
@@ -223,6 +261,15 @@ export function Dashboard() {
                     setShowHours={setShowHours}
                     loading={loading}
                     refreshData={fetchData}
+                    ticketFilter={ticketFilter}
+                    setTicketFilter={setTicketFilter}
+                    statusFilter={statusFilter}
+                    setStatusFilter={setStatusFilter}
+                    landFilter={landFilter}
+                    setLandFilter={setLandFilter}
+                    waitTimeFilter={waitTimeFilter}
+                    setWaitTimeFilter={setWaitTimeFilter}
+                    uniqueLands={uniqueLands}
                 />
 
                 {viewMode === 'grid' ? (

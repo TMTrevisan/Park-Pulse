@@ -16,6 +16,17 @@ interface HeaderToolbarProps {
     setShowHours: (show: boolean) => void;
     loading: boolean;
     refreshData: () => void;
+
+    // Filters
+    ticketFilter: string;
+    setTicketFilter: (v: string) => void;
+    statusFilter: string;
+    setStatusFilter: (v: string) => void;
+    landFilter: string;
+    setLandFilter: (v: string) => void;
+    waitTimeFilter: string;
+    setWaitTimeFilter: (v: string) => void;
+    uniqueLands: string[];
 }
 
 export function HeaderToolbar({
@@ -28,7 +39,16 @@ export function HeaderToolbar({
     showHours,
     setShowHours,
     loading,
-    refreshData
+    refreshData,
+    ticketFilter,
+    setTicketFilter,
+    statusFilter,
+    setStatusFilter,
+    landFilter,
+    setLandFilter,
+    waitTimeFilter,
+    setWaitTimeFilter,
+    uniqueLands
 }: HeaderToolbarProps) {
     return (
         <>
@@ -51,24 +71,78 @@ export function HeaderToolbar({
             </div>
 
             {/* Toolbar */}
-            <div className="flex flex-col sm:flex-row gap-4 mb-6 justify-between">
-                <div className="relative flex-1 max-w-md">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4" />
-                    <input
-                        type="text"
-                        placeholder="Search rides..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pl-9 pr-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 outline-none dark:bg-zinc-800 dark:border-zinc-700"
-                    />
+            <div className="flex flex-col lg:flex-row gap-4 mb-6 justify-between items-start lg:items-center">
+
+                {/* Search & Filters Group */}
+                <div className="flex flex-col sm:flex-row gap-2 flex-1 w-full lg:w-auto">
+                    <div className="relative flex-1 min-w-[200px]">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4" />
+                        <input
+                            type="text"
+                            placeholder="Search rides..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full pl-9 pr-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 outline-none dark:bg-zinc-800 dark:border-zinc-700 h-[42px]"
+                        />
+                    </div>
+
+                    {/* Filters */}
+                    <select
+                        value={landFilter}
+                        onChange={(e) => setLandFilter(e.target.value)}
+                        className="px-3 py-2 rounded-lg border bg-white dark:bg-zinc-800 dark:border-zinc-700 text-sm h-[42px]"
+                    >
+                        <option value="All">All Lands</option>
+                        {uniqueLands.map(land => (
+                            <option key={land} value={land}>{land}</option>
+                        ))}
+                    </select>
+
+                    <select
+                        value={ticketFilter}
+                        onChange={(e) => setTicketFilter(e.target.value)}
+                        className="px-3 py-2 rounded-lg border bg-white dark:bg-zinc-800 dark:border-zinc-700 text-sm h-[42px]"
+                    >
+                        <option value="All">All Tickets</option>
+                        <option value="E">E-Ticket</option>
+                        <option value="D">D-Ticket</option>
+                        <option value="C">C-Ticket</option>
+                        <option value="B">B-Ticket</option>
+                        <option value="A">A-Ticket</option>
+                    </select>
+
+                    <select
+                        value={statusFilter}
+                        onChange={(e) => setStatusFilter(e.target.value)}
+                        className="px-3 py-2 rounded-lg border bg-white dark:bg-zinc-800 dark:border-zinc-700 text-sm h-[42px]"
+                    >
+                        <option value="All">All Status</option>
+                        <option value="OPERATING">Operating</option>
+                        <option value="DOWN">Down</option>
+                        <option value="CLOSED">Closed</option>
+                        <option value="REFURBISHMENT">Refurb</option>
+                    </select>
+
+                    <select
+                        value={waitTimeFilter}
+                        onChange={(e) => setWaitTimeFilter(e.target.value)}
+                        className="px-3 py-2 rounded-lg border bg-white dark:bg-zinc-800 dark:border-zinc-700 text-sm h-[42px]"
+                    >
+                        <option value="All">Any Wait</option>
+                        <option value="15">&lt; 15 min</option>
+                        <option value="30">&lt; 30 min</option>
+                        <option value="45">&lt; 45 min</option>
+                        <option value="60">&lt; 60 min</option>
+                    </select>
                 </div>
 
-                <div className="flex items-center gap-2">
+                {/* Right Actions */}
+                <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
                     {viewMode === 'list' && (
                         <button
                             onClick={() => setShowHours(!showHours)}
                             className={cn(
-                                "px-3 py-2 text-sm font-medium rounded-lg border transition-colors",
+                                "px-3 py-2 text-sm font-medium rounded-lg border transition-colors h-[42px]",
                                 showHours ? "bg-blue-50 border-blue-200 text-blue-700 dark:bg-blue-900/20 dark:border-blue-800 dark:text-blue-400" : "bg-white border-gray-200 text-gray-600 hover:bg-gray-50 dark:bg-zinc-800 dark:border-zinc-700 dark:text-gray-300"
                             )}
                         >
@@ -76,7 +150,7 @@ export function HeaderToolbar({
                         </button>
                     )}
 
-                    <div className="bg-gray-100 dark:bg-zinc-800 p-1 rounded-lg flex border dark:border-zinc-700">
+                    <div className="bg-gray-100 dark:bg-zinc-800 p-1 rounded-lg flex border dark:border-zinc-700 h-[42px] items-center">
                         <button
                             id="view-toggle-grid"
                             onClick={() => setViewMode('grid')}
@@ -109,7 +183,7 @@ export function HeaderToolbar({
                         className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors h-[42px]"
                     >
                         <RefreshCw className={cn("h-4 w-4", loading && "animate-spin")} />
-                        {loading ? "Updating..." : "Refresh"}
+                        <span className="hidden sm:inline">{loading ? "Updating..." : "Refresh"}</span>
                     </button>
                 </div>
             </div>
