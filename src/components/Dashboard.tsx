@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { WaitTimeSnapshot, Ride } from "@/lib/types";
 
-import { PARKS, PARK_NAMES, getTicketClass, getLand } from "@/lib/parks";
+import { PARKS, getTicketClass, getLand } from "@/lib/parks";
 import { StatsHeader } from "./dashboard/StatsHeader";
 import { HeaderToolbar } from "./dashboard/HeaderToolbar";
 import { RideGrid } from "./dashboard/RideGrid";
@@ -56,7 +56,7 @@ export function Dashboard() {
     const rides = useMemo(() => {
         if (!currentPark) return [];
         // ... filtering logic matches original source
-        let filtered = currentPark.liveData.filter(
+        const filtered = currentPark.liveData.filter(
             (ride) =>
                 ride.entityType === "ATTRACTION" &&
                 ride.status !== "REFURBISHMENT" &&
@@ -64,8 +64,8 @@ export function Dashboard() {
         );
         // ... sorting logic matches original source
         return filtered.sort((a, b) => {
-            let valA: any = '';
-            let valB: any = '';
+            let valA: string | number = '';
+            let valB: string | number = '';
 
             switch (sortField) {
                 case 'favorite':

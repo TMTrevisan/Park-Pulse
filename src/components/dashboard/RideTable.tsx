@@ -193,6 +193,7 @@ export function RideTable({
             if (hourly && showHours) return hourly;
             return null;
         }).filter(Boolean) as ColumnDef[];
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [columnOrder, showHours]);
 
     const getForecastForHour = (ride: Ride, hourId: string) => {
@@ -409,7 +410,7 @@ export function RideTable({
             </div>
             {rides.length === 0 && (
                 <div className="text-center py-12 text-gray-500">
-                    No rides found matching "{searchQuery}"
+                    No rides found matching &quot;{searchQuery}&quot;
                 </div>
             )}
         </div>

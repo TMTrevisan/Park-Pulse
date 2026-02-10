@@ -11,6 +11,7 @@ export function useFavorites() {
         const saved = localStorage.getItem("disney-parks-favorites");
         if (saved) {
             try {
+                // eslint-disable-next-line react-hooks/exhaustive-deps
                 setFavorites(JSON.parse(saved));
             } catch (e) {
                 console.error("Failed to parse favorites", e);

@@ -12,8 +12,8 @@ export function getHighOfDay(ride: Ride) {
 
 export function sortRides(rides: Ride[], sortField: SortField, sortDirection: SortDirection): Ride[] {
     return [...rides].sort((a, b) => {
-        let valA: any = '';
-        let valB: any = '';
+        let valA: string | number = '';
+        let valB: string | number = '';
 
         switch (sortField) {
             case 'name':

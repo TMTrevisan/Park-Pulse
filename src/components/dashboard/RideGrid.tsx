@@ -92,7 +92,7 @@ export function RideGrid({
             })}
             {rides.length === 0 && (
                 <div className="col-span-full text-center py-12 text-gray-500">
-                    No rides found matching "{searchQuery}"
+                    No rides found matching &quot;{searchQuery}&quot;
                 </div>
             )}
         </div>

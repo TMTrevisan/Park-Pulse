@@ -18,6 +18,7 @@ export function useAlerts() {
         const stored = localStorage.getItem("disney-alerts");
         if (stored) {
             try {
+                // eslint-disable-next-line react-hooks/exhaustive-deps
                 setAlerts(JSON.parse(stored));
             } catch (e) {
                 console.error("Failed to parse alerts", e);
