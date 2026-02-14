@@ -4,7 +4,7 @@ import fs from "fs/promises";
 import path from "path";
 import { PARKS } from "@/lib/parks";
 import { WaitTimeSnapshot, ParkLiveData } from "@/lib/types";
-import { kv } from "@vercel/kv";
+import { Redis } from "@upstash/redis";
 
 const DATA_FILE_PATH = path.join(process.env.NODE_ENV === 'production' ? '/tmp' : process.cwd(), "wait_times.json");
 const HISTORY_KEY = 'wait_times_history';
@@ -37,15 +37,23 @@ async function fetchParkData(parkId: string): Promise<ParkLiveData> {
 }
 
 /**
- * Determine if we should use Vercel KV or File System
+ * Determine if we should use Vercel KV (Upstash) or File System
+ * Checks for either standard Vercel KV vars or Upstash specific vars
  */
-const useKV = !!process.env.KV_REST_API_URL && !!process.env.KV_REST_API_TOKEN;
+const url = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
+const token = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
+
+// Initialize Redis client if vars are present
+const redis = (url && token)
+    ? new Redis({ url, token })
+    : null;
 
 async function getHistory(): Promise<WaitTimeSnapshot[]> {
-    if (useKV) {
+    if (redis) {
         try {
-            // KV returns typed objects automatically if parsing valid JSON
-            const result = await kv.lrange(HISTORY_KEY, 0, -1);
+            // Fetch only last 50 items (~7MB) to avoid Upstash 10MB limit
+            // Each snapshot is large (~140KB) due to forecasts
+            const result = await redis.lrange(HISTORY_KEY, -50, -1);
             return (result as unknown as WaitTimeSnapshot[]) || [];
         } catch (error) {
             console.error("KV Read Error:", error);
@@ -72,19 +80,30 @@ async function saveSnapshot(snapshot: WaitTimeSnapshot, currentHistory: WaitTime
         return; // Too soon to save
     }
 
-    if (useKV) {
+    // Optimization: Strip forecast data to reduce size
+    const leanSnapshot: WaitTimeSnapshot = {
+        ...snapshot,
+        parks: snapshot.parks.map(park => ({
+            ...park,
+            liveData: park.liveData.map(ride => {
+                const { forecast, ...rest } = ride;
+                return rest;
+            })
+        }))
+    };
+
+    if (redis) {
         try {
             // Push to right (end)
-            await kv.rpush(HISTORY_KEY, snapshot);
+            await redis.rpush(HISTORY_KEY, leanSnapshot);
             // Trim from left (start) to keep only last N items
-            // ltrim indices are inclusive. -2000 to -1 keeps last 2000
-            await kv.ltrim(HISTORY_KEY, -MAX_HISTORY_ITEMS, -1);
+            await redis.ltrim(HISTORY_KEY, -MAX_HISTORY_ITEMS, -1);
         } catch (error) {
             console.error("KV Write Error:", error);
         }
     } else {
         try {
-            const newHistory = [...currentHistory, snapshot];
+            const newHistory = [...currentHistory, leanSnapshot];
             if (newHistory.length > MAX_HISTORY_ITEMS) {
                 newHistory.shift(); // Remove oldest
             }
