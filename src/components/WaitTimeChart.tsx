@@ -20,6 +20,9 @@ interface WaitTimeChartProps {
 }
 
 export function WaitTimeChart({ rideId, ride, history }: WaitTimeChartProps) {
+    // 2. Process Forecast Data
+    const now = new Date();
+
     // 1. Process History Data
     const historyData = history.map((snapshot) => {
         let waitTime = null;
@@ -34,10 +37,9 @@ export function WaitTimeChart({ rideId, ride, history }: WaitTimeChartProps) {
             time: new Date(snapshot.timestamp).getTime(),
             historyWait: waitTime,
         };
-    }).filter(d => d.historyWait !== null);
+    }).filter(d => d.historyWait !== null && isSameDay(new Date(d.time), now));
 
     // 2. Process Forecast Data
-    const now = new Date();
     const forecastData = (ride?.forecast || [])
         .filter((f: Forecast) => isSameDay(new Date(f.time), now))
         .map((f: Forecast) => ({
