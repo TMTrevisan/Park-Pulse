@@ -188,15 +188,24 @@ export function Dashboard() {
     };
 
     const averageWaitTime = useMemo(() => {
-        if (!rides.length) return 0;
-        const operatingRides = rides.filter((r) => r.status === "OPERATING");
-        if (operatingRides.length) return 0;
+        if (!currentPark?.liveData) return 0;
+        const allRides = currentPark.liveData;
+
+        // Filter for operating attractions only
+        const operatingRides = allRides.filter((r) =>
+            r.entityType === "ATTRACTION" &&
+            r.status === "OPERATING" &&
+            typeof r.queue?.STANDBY?.waitTime === 'number'
+        );
+
+        if (!operatingRides.length) return 0;
+
         const totalWait = operatingRides.reduce(
             (acc, ride) => acc + (ride.queue?.STANDBY?.waitTime || 0),
             0
         );
         return Math.round(totalWait / operatingRides.length);
-    }, [rides]);
+    }, [currentPark]);
 
     const busynessLevel = useMemo(() => {
         if (averageWaitTime < 15) return { label: "Quiet", color: "text-green-500" };
