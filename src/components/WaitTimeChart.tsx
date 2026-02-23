@@ -31,23 +31,25 @@ export function WaitTimeChart({ rideId, ride, history }: WaitTimeChartProps) {
             }
         }
         return {
-            time: new Date(snapshot.timestamp),
+            time: new Date(snapshot.timestamp).getTime(),
             historyWait: waitTime,
         };
     }).filter(d => d.historyWait !== null);
 
     // 2. Process Forecast Data
     const now = new Date();
-    const forecastData = (ride?.forecast || []).map((f: Forecast) => ({
-        time: new Date(f.time),
-        forecastWait: f.waitTime
-    })).filter((d: { time: Date; forecastWait: number }) => isSameDay(d.time, now));
+    const forecastData = (ride?.forecast || [])
+        .filter((f: Forecast) => isSameDay(new Date(f.time), now))
+        .map((f: Forecast) => ({
+            time: new Date(f.time).getTime(),
+            forecastWait: f.waitTime
+        }));
 
     // 3. Merge Data
     const combinedData = [
         ...historyData.map((d) => ({ ...d, type: 'history' })),
         ...forecastData.map((d) => ({ ...d, type: 'forecast' }))
-    ].sort((a, b) => a.time.getTime() - b.time.getTime());
+    ].sort((a, b) => a.time - b.time);
 
     if (combinedData.length === 0) return <div className="text-center text-gray-400 py-8">No historic or forecast data available</div>;
 
@@ -58,14 +60,16 @@ export function WaitTimeChart({ rideId, ride, history }: WaitTimeChartProps) {
                     <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
                     <XAxis
                         dataKey="time"
-                        tickFormatter={(time) => format(time, "h a")}
+                        type="number"
+                        domain={['dataMin', 'dataMax']}
+                        tickFormatter={(time) => format(new Date(time), "h a")}
                         stroke="#888"
                         fontSize={12}
                         minTickGap={30}
                     />
                     <YAxis stroke="#888" fontSize={12} label={{ value: 'Min', angle: -90, position: 'insideLeft' }} />
                     <Tooltip
-                        labelFormatter={(time) => format(time, "h:mm a")}
+                        labelFormatter={(time) => format(new Date(time), "h:mm a")}
                         contentStyle={{ borderRadius: "8px" }}
                     />
                     <Legend />
