@@ -10,6 +10,45 @@ const DATA_FILE_PATH = path.join(process.env.NODE_ENV === 'production' ? '/tmp' 
 const HISTORY_KEY = 'wait_times_history';
 const MAX_HISTORY_ITEMS = 2000;
 
+interface CompactSnapshot {
+    t: string;
+    w: Record<string, number>;
+}
+
+function compressSnapshot(snapshot: WaitTimeSnapshot): CompactSnapshot {
+    const compact: CompactSnapshot = { t: snapshot.timestamp, w: {} };
+    for (const park of snapshot.parks) {
+        if (!park.liveData) continue;
+        for (const ride of park.liveData) {
+            if (typeof ride.queue?.STANDBY?.waitTime === 'number') {
+                compact.w[ride.id] = ride.queue.STANDBY.waitTime;
+            }
+        }
+    }
+    return compact;
+}
+
+function expandSnapshot(item: any): WaitTimeSnapshot {
+    if (!item) return item;
+    if (item.t && item.w) {
+        return {
+            timestamp: item.t,
+            parks: [{
+                id: "dummy",
+                name: "dummy",
+                liveData: Object.entries(item.w).map(([id, waitTime]) => ({
+                    id,
+                    name: "dummy",
+                    entityType: "dummy",
+                    status: "dummy",
+                    queue: { STANDBY: { waitTime } }
+                }))
+            }]
+        } as unknown as WaitTimeSnapshot;
+    }
+    return item as WaitTimeSnapshot;
+}
+
 /* Helper to ensure directory exists (Local Only) */
 async function ensureDirectoryExistence(filePath: string) {
     const dirname = path.dirname(filePath);
@@ -51,10 +90,8 @@ const redis = (url && token)
 async function getHistory(): Promise<WaitTimeSnapshot[]> {
     if (redis) {
         try {
-            // Fetch only last 50 items (~7MB) to avoid Upstash 10MB limit
-            // Each snapshot is large (~140KB) due to forecasts
-            const result = await redis.lrange(HISTORY_KEY, -50, -1);
-            return (result as unknown as WaitTimeSnapshot[]) || [];
+            const result = await redis.lrange(HISTORY_KEY, 0, -1);
+            return (result as any[]).map(expandSnapshot) || [];
         } catch (error) {
             console.error("KV Read Error:", error);
             return [];
@@ -63,7 +100,8 @@ async function getHistory(): Promise<WaitTimeSnapshot[]> {
         try {
             await ensureDirectoryExistence(DATA_FILE_PATH);
             const fileContent = await fs.readFile(DATA_FILE_PATH, "utf-8");
-            return JSON.parse(fileContent);
+            const parsed = JSON.parse(fileContent);
+            return parsed.map(expandSnapshot);
         } catch (error) {
             return [];
         }
@@ -94,8 +132,9 @@ async function saveSnapshot(snapshot: WaitTimeSnapshot, currentHistory: WaitTime
 
     if (redis) {
         try {
+            const compact = compressSnapshot(snapshot);
             // Push to right (end)
-            await redis.rpush(HISTORY_KEY, leanSnapshot);
+            await redis.rpush(HISTORY_KEY, compact);
             // Trim from left (start) to keep only last N items
             await redis.ltrim(HISTORY_KEY, -MAX_HISTORY_ITEMS, -1);
         } catch (error) {
