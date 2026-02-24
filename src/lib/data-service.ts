@@ -153,7 +153,7 @@ async function saveSnapshot(snapshot: WaitTimeSnapshot, currentHistory: WaitTime
     }
 }
 
-export async function getWaitTimes() {
+export async function getWaitTimes(includeHistory: boolean = true) {
     const timestamp = new Date().toISOString();
 
     // 1. Fetch live data
@@ -173,10 +173,9 @@ export async function getWaitTimes() {
     // 3. Save new snapshot (fire and forget? better to await so UI gets latest)
     await saveSnapshot(currentSnapshot, history);
 
-    // Return current + history. Note: saveSnapshot might have added one, but 
-    // for simplicity we return the history we read + the current one.
+    // Return current + optional history
     return {
         current: currentSnapshot,
-        history: [...history, currentSnapshot]
+        history: includeHistory ? [...history, currentSnapshot] : []
     };
 }

@@ -35,25 +35,34 @@ export function Dashboard() {
     const { favorites, toggleFavorite } = useFavorites();
     const { alerts, addAlert, removeAlert, checkAlerts } = useAlerts();
 
-    const fetchData = async () => {
-        setLoading(true);
+    const fetchData = async (isInitial = false) => {
+        if (isInitial) setLoading(true);
         try {
-            const response = await fetch('/api/wait-times');
+            const response = await fetch(`/api/wait-times${isInitial ? '' : '?history=false'}`);
             if (!response.ok) {
                 throw new Error('Failed to fetch data');
             }
             const result = await response.json();
-            setData(result);
+
+            setData(prev => {
+                if (!prev || isInitial) return result;
+
+                // Keep the massive history in memory, just append the new live snapshot
+                return {
+                    current: result.current,
+                    history: [...prev.history, result.current]
+                };
+            });
         } catch (error) {
             console.error("Failed to fetch wait times:", error);
         } finally {
-            setLoading(false);
+            if (isInitial) setLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchData();
-        const interval = setInterval(fetchData, REFRESH_INTERVAL);
+        fetchData(true);
+        const interval = setInterval(() => fetchData(false), REFRESH_INTERVAL);
         return () => clearInterval(interval);
     }, []);
 
