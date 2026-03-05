@@ -24,7 +24,7 @@ export function WaitTimeChart({ rideId, ride, history }: WaitTimeChartProps) {
     const now = new Date();
 
     // 1. Process History Data
-    const historyData = history.map((snapshot) => {
+    let processedHistory = history.map((snapshot) => {
         let waitTime = null;
         for (const park of snapshot.parks) {
             const found = park.liveData.find((r) => r.id === rideId);
@@ -37,7 +37,22 @@ export function WaitTimeChart({ rideId, ride, history }: WaitTimeChartProps) {
             time: new Date(snapshot.timestamp).getTime(),
             historyWait: waitTime,
         };
-    }).filter(d => d.historyWait !== null && isSameDay(new Date(d.time), now));
+    }).filter(d => d.historyWait !== null && isSameDay(new Date(d.time), now))
+        .sort((a, b) => a.time - b.time);
+
+    // Insert null points for gaps > 5 minutes (300,000 ms) so the chart line breaks instead of drawing straight across hours
+    const historyData: typeof processedHistory = [];
+    for (let i = 0; i < processedHistory.length; i++) {
+        historyData.push(processedHistory[i]);
+        if (i < processedHistory.length - 1) {
+            const current = processedHistory[i];
+            const next = processedHistory[i + 1];
+            if (next.time - current.time > 5 * 60 * 1000) {
+                // Insert a null point exactly 1ms after the current point to break the line
+                historyData.push({ time: current.time + 1, historyWait: null });
+            }
+        }
+    }
 
     // 2. Process Forecast Data
     const forecastData = (ride?.forecast || [])
@@ -82,7 +97,6 @@ export function WaitTimeChart({ rideId, ride, history }: WaitTimeChartProps) {
                         stroke="#3b82f6"
                         strokeWidth={3}
                         dot={false}
-                        connectNulls
                     />
                     <Line
                         name="Forecast (Avg)"
