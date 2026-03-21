@@ -4,13 +4,13 @@ import { useEffect, useState, useMemo } from "react";
 import { WaitTimeSnapshot, Ride } from "@/lib/types";
 
 import { PARKS, getTicketClass, getLand } from "@/lib/parks";
-import { StatsHeader } from "./dashboard/StatsHeader";
 import { HeaderToolbar } from "./dashboard/HeaderToolbar";
 import { RideGrid } from "./dashboard/RideGrid";
 import { RideTable, SortField, SortDirection } from "./dashboard/RideTable";
 import { useFavorites } from "@/hooks/useFavorites";
 import { useAlerts } from "@/hooks/useAlerts";
 import { Skeleton } from "@/components/ui/Skeleton";
+import { ParkPulseHeader, ParkStats } from "./dashboard/ParkPulseHeader";
 
 const REFRESH_INTERVAL = 60 * 1000; // 1 minute
 const TARGET_HOURS = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21];
@@ -196,32 +196,30 @@ export function Dashboard() {
         return Math.max(...todayForecasts.map(f => f.waitTime));
     };
 
-    const averageWaitTime = useMemo(() => {
-        if (!currentPark?.liveData) return 0;
-        const allRides = currentPark.liveData;
+    const getParkStats = (parkId: string): ParkStats => {
+        const park = data?.current.parks.find(p => p.id === parkId);
+        if (!park?.liveData) return { averageWait: 0, busyness: { label: "Unknown", color: "text-zinc-500", bg: "bg-zinc-500" } };
 
-        // Filter for operating attractions only
-        const operatingRides = allRides.filter((r) =>
+        const operatingRides = park.liveData.filter((r) =>
             r.entityType === "ATTRACTION" &&
             r.status === "OPERATING" &&
             typeof r.queue?.STANDBY?.waitTime === 'number'
         );
 
-        if (!operatingRides.length) return 0;
+        const averageWait = operatingRides.length
+            ? Math.round(operatingRides.reduce((acc, r) => acc + (r.queue?.STANDBY?.waitTime || 0), 0) / operatingRides.length)
+            : 0;
 
-        const totalWait = operatingRides.reduce(
-            (acc, ride) => acc + (ride.queue?.STANDBY?.waitTime || 0),
-            0
-        );
-        return Math.round(totalWait / operatingRides.length);
-    }, [currentPark]);
+        let busyness = { label: "Quiet", color: "text-green-500", bg: "bg-green-500" };
+        if (averageWait >= 50) busyness = { label: "Very Busy", color: "text-red-600", bg: "bg-red-600" };
+        else if (averageWait >= 30) busyness = { label: "Busy", color: "text-orange-500", bg: "bg-orange-500" };
+        else if (averageWait >= 15) busyness = { label: "Moderate", color: "text-yellow-500", bg: "bg-yellow-500" };
 
-    const busynessLevel = useMemo(() => {
-        if (averageWaitTime < 15) return { label: "Quiet", color: "text-green-500" };
-        if (averageWaitTime < 30) return { label: "Moderate", color: "text-yellow-500" };
-        if (averageWaitTime < 50) return { label: "Busy", color: "text-orange-500" };
-        return { label: "Very Busy", color: "text-red-600" };
-    }, [averageWaitTime]);
+        return { averageWait, busyness };
+    };
+
+    const disneylandStats = useMemo(() => getParkStats(PARKS.DISNEYLAND_PARK), [data]);
+    const dcaStats = useMemo(() => getParkStats(PARKS.DISNEY_CALIFORNIA_ADVENTURE), [data]);
 
     if (loading && !data) {
         // ... (Skeleton return)
@@ -263,14 +261,14 @@ export function Dashboard() {
     return (
         <main className="min-h-screen bg-white dark:bg-black p-4 md:p-8 font-sans">
             <div className="max-w-7xl mx-auto">
-                <StatsHeader
-                    averageWaitTime={averageWaitTime}
-                    busynessLevel={busynessLevel}
+                <ParkPulseHeader
+                    disneyland={disneylandStats}
+                    dca={dcaStats}
+                    selectedParkId={selectedParkId}
+                    onParkSelect={setSelectedParkId}
                 />
 
                 <HeaderToolbar
-                    selectedParkId={selectedParkId}
-                    setSelectedParkId={setSelectedParkId}
                     searchQuery={searchQuery}
                     setSearchQuery={setSearchQuery}
                     viewMode={viewMode}

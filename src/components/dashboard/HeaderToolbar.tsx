@@ -30,8 +30,6 @@ interface HeaderToolbarProps {
 }
 
 export function HeaderToolbar({
-    selectedParkId,
-    setSelectedParkId,
     searchQuery,
     setSearchQuery,
     viewMode,
@@ -49,29 +47,9 @@ export function HeaderToolbar({
     waitTimeFilter,
     setWaitTimeFilter,
     uniqueLands
-}: HeaderToolbarProps) {
+}: Omit<HeaderToolbarProps, 'selectedParkId' | 'setSelectedParkId'>) {
     return (
-        <>
-            {/* Tabs */}
-            <div className="flex space-x-1 bg-gray-100 p-1 rounded-xl mb-6 dark:bg-zinc-800 max-w-md">
-                {Object.entries(PARK_NAMES).map(([id, name]) => (
-                    <button
-                        key={id}
-                        onClick={() => setSelectedParkId(id)}
-                        className={cn(
-                            "w-full rounded-lg py-2.5 text-sm font-medium leading-5 transition-all text-center",
-                            selectedParkId === id
-                                ? "bg-white text-blue-700 shadow dark:bg-zinc-700 dark:text-blue-400"
-                                : "text-gray-500 hover:text-gray-700 hover:bg-white/[0.12] dark:text-gray-400"
-                        )}
-                    >
-                        {name.replace("Disney ", "").replace(" Park", "")}
-                    </button>
-                ))}
-            </div>
-
-            {/* Toolbar */}
-            <div className="flex flex-col lg:flex-row gap-4 mb-6 justify-between items-start lg:items-center">
+        <div className="flex flex-col lg:flex-row gap-4 mb-6 justify-between items-start lg:items-center">
 
                 {/* Search & Filters Group */}
                 <div className="flex flex-col sm:flex-row gap-2 flex-1 w-full lg:w-auto">
@@ -187,6 +165,5 @@ export function HeaderToolbar({
                     </button>
                 </div>
             </div>
-        </>
     );
 }
