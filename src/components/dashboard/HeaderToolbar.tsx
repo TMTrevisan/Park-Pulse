@@ -1,17 +1,16 @@
 "use client";
 
 import { ParkLiveData } from "@/lib/types";
-import { Search, LayoutGrid, List as ListIcon, RefreshCw } from "lucide-react";
+import { Search, LayoutGrid, List as ListIcon, RefreshCw, Map as MapIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { PARK_NAMES } from "@/lib/parks";
 
 interface HeaderToolbarProps {
     selectedParkId: string;
     setSelectedParkId: (id: string) => void;
     searchQuery: string;
     setSearchQuery: (query: string) => void;
-    viewMode: 'grid' | 'list';
-    setViewMode: (mode: 'grid' | 'list') => void;
+    viewMode: 'grid' | 'list' | 'map';
+    setViewMode: (mode: 'grid' | 'list' | 'map') => void;
     showHours: boolean;
     setShowHours: (show: boolean) => void;
     loading: boolean;
@@ -152,6 +151,18 @@ export function HeaderToolbar({
                             aria-label="List View"
                         >
                             <ListIcon className="w-4 h-4" />
+                        </button>
+                        <button
+                            id="view-toggle-map"
+                            onClick={() => setViewMode('map')}
+                            className={cn(
+                                "p-2 rounded-md transition-colors",
+                                viewMode === 'map' ? "bg-white shadow-sm dark:bg-zinc-700" : "hover:bg-gray-200 dark:hover:bg-zinc-600 text-gray-500"
+                            )}
+                            title="Map View"
+                            aria-label="Map View"
+                        >
+                            <MapIcon className="w-4 h-4" />
                         </button>
                     </div>
 
