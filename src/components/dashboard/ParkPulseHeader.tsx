@@ -66,11 +66,12 @@ export function ParkPulseHeader({ disneyland, dca, selectedParkId, onParkSelect 
                 {parks.map((park) => (
                     <div 
                         key={park.id}
+                        onClick={() => onParkSelect(park.id)}
                         className={cn(
-                            "relative overflow-hidden group p-5 rounded-3xl border transition-all duration-500",
+                            "relative overflow-hidden group p-5 rounded-3xl border transition-all duration-500 cursor-pointer",
                             selectedParkId === park.id 
-                                ? "bg-white dark:bg-zinc-900/50 border-blue-500/30 shadow-2xl shadow-blue-500/10" 
-                                : "bg-zinc-50/50 dark:bg-zinc-900/20 border-zinc-200 dark:border-zinc-800 opacity-80"
+                                ? "bg-white dark:bg-zinc-900/50 border-blue-500/30 shadow-2xl shadow-blue-500/10 scale-[1.02]" 
+                                : "bg-zinc-50/50 dark:bg-zinc-900/20 border-zinc-200 dark:border-zinc-800 opacity-80 hover:opacity-100 hover:scale-[1.01]"
                         )}
                     >
                         <div className="flex justify-between items-start relative z-10">
