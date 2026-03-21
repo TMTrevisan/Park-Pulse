@@ -28,7 +28,14 @@ export default function MapOverlay({ rides, selectedParkId }: MapOverlayProps) {
   const [hoveredRide, setHoveredRide] = useState<Ride | null>(null);
 
   const mappedRides = useMemo(() => {
-    return rides.filter(r => RIDE_COORDS[r.id]);
+    return rides.filter(r => {
+      if (!RIDE_COORDS[r.id]) return false;
+      if (r.status === "OPERATING") {
+        const waitTime = r.queue?.STANDBY?.waitTime ?? 0;
+        return waitTime > 0;
+      }
+      return true;
+    });
   }, [rides]);
 
   const getWaitColor = (minutes: number) => {
