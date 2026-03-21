@@ -2,13 +2,13 @@
 
 import fs from "fs/promises";
 import path from "path";
-import { PARKS } from "@/lib/parks";
+import { PARKS, RIDE_METADATA_REGISTRY } from "@/lib/parks";
 import { WaitTimeSnapshot, ParkLiveData } from "@/lib/types";
 import { Redis } from "@upstash/redis";
 
 const DATA_FILE_PATH = path.join(process.env.NODE_ENV === 'production' ? '/tmp' : process.cwd(), "wait_times.json");
 const HISTORY_KEY = 'wait_times_history';
-const MAX_HISTORY_ITEMS = 2000;
+const MAX_HISTORY_ITEMS = 1440; // 24 hours of 1-minute snapshots (approx 2MB compressed)
 
 interface CompactSnapshot {
     t: string;
@@ -34,13 +34,13 @@ function expandSnapshot(item: any): WaitTimeSnapshot {
         return {
             timestamp: item.t,
             parks: [{
-                id: "dummy",
-                name: "dummy",
+                id: "history",
+                name: "Historical Data",
                 liveData: Object.entries(item.w).map(([id, waitTime]) => ({
                     id,
-                    name: "dummy",
-                    entityType: "dummy",
-                    status: "dummy",
+                    name: RIDE_METADATA_REGISTRY[id] || "Unknown Ride",
+                    entityType: "ATTRACTION",
+                    status: "OPERATING",
                     queue: { STANDBY: { waitTime } }
                 }))
             }]
@@ -178,4 +178,25 @@ export async function getWaitTimes(includeHistory: boolean = true) {
         current: currentSnapshot,
         history: includeHistory ? [...history, currentSnapshot] : []
     };
+}
+
+/**
+ * Maintenance: Trim the history to ensure we stay within Vercel/Upstash free limits.
+ */
+export async function trimHistory() {
+    if (redis) {
+        try {
+            const len = await redis.llen(HISTORY_KEY);
+            if (len > MAX_HISTORY_ITEMS) {
+                await redis.ltrim(HISTORY_KEY, -MAX_HISTORY_ITEMS, -1);
+                console.log(`Cron: Trimmed Redis history from ${len} to ${MAX_HISTORY_ITEMS}`);
+                return { trimmed: true, original: len, final: MAX_HISTORY_ITEMS };
+            }
+            return { trimmed: false, length: len };
+        } catch (error) {
+            console.error("Cron Trim Error:", error);
+            throw error;
+        }
+    }
+    return { error: "Redis not configured" };
 }
