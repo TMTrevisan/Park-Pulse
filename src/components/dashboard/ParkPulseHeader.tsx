@@ -63,7 +63,7 @@ export function ParkPulseHeader({ disneyland, dca, selectedParkId, onParkSelect 
                                             ? "border-blue-500 bg-blue-500 text-white" 
                                             : "border-zinc-300 dark:border-zinc-700 bg-transparent"
                                     )}>
-                                        {selectedParkId === park.id && <CheckCircle2 className="w-3 h-3 md:w-3.5 md:h-3.5 animate-in zoom-in" strokeWidth={3} />}
+                                        {selectedParkId === park.id && <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-white animate-in zoom-in" />}
                                     </div>
                                 </div>
                                 <div className="flex items-baseline gap-1 md:gap-2">
