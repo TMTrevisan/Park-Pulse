@@ -339,6 +339,15 @@ export function Dashboard() {
                 />
 
                 {renderContent()}
+
+                {/* Attribution Footer */}
+                <footer className="mt-12 text-center text-xs text-zinc-400 dark:text-zinc-600 pb-8">
+                    Wait times powered by ThemeParks API and Queue-Times.com.
+                    <br />
+                    <a href="https://queue-times.com/en-US" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:text-blue-400 transition-colors hover:underline mt-1 inline-block font-medium">
+                        Visit Queue-Times.com
+                    </a>
+                </footer>
             </div>
         </main>
     );

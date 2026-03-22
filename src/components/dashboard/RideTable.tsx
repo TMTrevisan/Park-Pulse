@@ -21,7 +21,8 @@ import {
     useSortable,
 } from "@dnd-kit/sortable";
 import { cn } from "@/lib/utils";
-import { GripVertical, ChevronUp, ChevronDown, Star, Bell, TrendingUp } from "lucide-react";
+import { GripVertical, ChevronUp, ChevronDown, Star, Bell, TrendingUp, ChevronRight } from "lucide-react";
+import Link from "next/link";
 
 import { getLand, getTicketClass } from "@/lib/parks";
 import { WaitTimeChart } from "../WaitTimeChart";
@@ -244,7 +245,16 @@ export function RideTable({
             );
         }
         if (colId === 'name') {
-            return <div className="font-medium text-gray-900 dark:text-white">{ride.name}</div>;
+            return (
+                <Link 
+                    href={`/ride/${ride.id}`} 
+                    onClick={(e) => e.stopPropagation()} 
+                    className="font-bold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-1 group/link"
+                >
+                    {ride.name}
+                    <ChevronRight className="w-3.5 h-3.5 opacity-0 group-hover/link:opacity-100 transition-all -ml-1 text-blue-500" />
+                </Link>
+            );
         }
         if (colId === 'land') {
             const land = getLand(ride.name);

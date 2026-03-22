@@ -88,12 +88,11 @@ export function HeaderToolbar({
                             </span>
                         )}
                     </button>
-                </div>
 
-                        {/* Expandable Filter Drawer */}
-                        {showFilters && (
-                            <div className="absolute top-full left-0 mt-3 w-[calc(100vw-32px)] sm:w-[500px] lg:w-[600px] grid grid-cols-2 lg:grid-cols-4 gap-2 animate-in slide-in-from-top-2 fade-in z-50 bg-zinc-50/95 dark:bg-zinc-800/95 p-3 sm:p-4 rounded-xl border border-zinc-200 dark:border-zinc-700 shadow-xl backdrop-blur-md">
-                                <select
+                    {/* Expandable Filter Drawer */}
+                    {showFilters && (
+                        <div className="absolute top-full left-0 mt-3 w-[calc(100vw-32px)] sm:w-[500px] lg:w-[600px] grid grid-cols-2 lg:grid-cols-4 gap-2 animate-in slide-in-from-top-2 fade-in z-50 bg-zinc-50/95 dark:bg-zinc-800/95 p-3 sm:p-4 rounded-xl border border-zinc-200 dark:border-zinc-700 shadow-xl backdrop-blur-md">
+                            <select
                                     value={landFilter}
                                     onChange={(e) => setLandFilter(e.target.value)}
                                     className="px-3 py-2 rounded-lg border bg-white dark:bg-zinc-800 dark:border-zinc-700 text-sm h-[42px] w-full"
@@ -145,6 +144,68 @@ export function HeaderToolbar({
                 </div>
 
                 {/* Right Actions */}
+                <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+                    {viewMode === 'list' && (
+                        <button
+                            onClick={() => setShowHours(!showHours)}
+                            className={cn(
+                                "px-3 py-2 text-sm font-medium rounded-lg border transition-colors h-[42px]",
+                                showHours ? "bg-blue-50 border-blue-200 text-blue-700 dark:bg-blue-900/20 dark:border-blue-800 dark:text-blue-400" : "bg-white border-zinc-200 text-zinc-600 hover:bg-zinc-50 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-700"
+                            )}
+                        >
+                            {showHours ? "Hide Hours" : "Show Hours"}
+                        </button>
+                    )}
+
+                    <div className="bg-zinc-100 dark:bg-zinc-800 p-1 rounded-lg flex border dark:border-zinc-700 h-[42px] items-center">
+                        <button
+                            id="view-toggle-grid"
+                            onClick={() => setViewMode('grid')}
+                            className={cn(
+                                "p-2 rounded-md transition-colors",
+                                viewMode === 'grid' ? "bg-white shadow-sm dark:bg-zinc-700 dark:text-white" : "hover:bg-zinc-200 dark:hover:bg-zinc-600 text-zinc-500 dark:text-zinc-400"
+                            )}
+                            title="Grid View"
+                            aria-label="Grid View"
+                        >
+                            <LayoutGrid className="w-4 h-4" />
+                        </button>
+                        <button
+                            id="view-toggle-list"
+                            onClick={() => setViewMode('list')}
+                            className={cn(
+                                "p-2 rounded-md transition-colors",
+                                viewMode === 'list' ? "bg-white shadow-sm dark:bg-zinc-700 dark:text-white" : "hover:bg-zinc-200 dark:hover:bg-zinc-600 text-zinc-500 dark:text-zinc-400"
+                            )}
+                            title="List View"
+                            aria-label="List View"
+                        >
+                            <ListIcon className="w-4 h-4" />
+                        </button>
+                        <button
+                            id="view-toggle-map"
+                            onClick={() => setViewMode('map')}
+                            className={cn(
+                                "p-2 rounded-md transition-colors",
+                                viewMode === 'map' ? "bg-white shadow-sm dark:bg-zinc-700 dark:text-white" : "hover:bg-zinc-200 dark:hover:bg-zinc-600 text-zinc-500 dark:text-zinc-400"
+                            )}
+                            title="Map View"
+                            aria-label="Map View"
+                        >
+                            <MapIcon className="w-4 h-4" />
+                        </button>
+                    </div>
+
+                    <button
+                        onClick={refreshData}
+                        disabled={loading}
+                        className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors h-[42px]"
+                    >
+                        <RefreshCw className={cn("h-4 w-4", loading && "animate-spin")} />
+                        <span className="hidden sm:inline">{loading ? "Updating..." : "Refresh"}</span>
+                    </button>
+                </div>
+            </div>
         </div>
     );
 }

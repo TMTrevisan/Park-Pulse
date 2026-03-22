@@ -51,10 +51,10 @@ export function ParkPulseHeader({ disneyland, dca, selectedParkId, onParkSelect 
                                 : "bg-zinc-50/50 dark:bg-zinc-900/20 border-zinc-200 dark:border-zinc-800 opacity-60 hover:opacity-100 hover:scale-[1.01] hover:bg-zinc-100 dark:hover:bg-zinc-800/40 grayscale-[0.5] hover:grayscale-0"
                         )}
                     >
-                        <div className="flex flex-col lg:flex-row justify-between lg:items-center items-start relative z-10 gap-3 lg:gap-0">
-                            <div className="w-full">
+                        <div className="flex flex-col lg:flex-row justify-between lg:items-center items-start relative z-10 gap-3 lg:gap-4 w-full">
+                            <div className="flex-1 min-w-0 pr-2">
                                 <div className="flex justify-between items-start w-full mb-1">
-                                    <h3 className="text-zinc-400 text-[10px] md:text-xs font-black uppercase tracking-wider md:tracking-widest">
+                                    <h3 className="text-zinc-400 text-[10px] md:text-xs font-black uppercase tracking-wider md:tracking-widest truncate">
                                         {park.name}
                                     </h3>
                                     <div className={cn(
@@ -75,7 +75,7 @@ export function ParkPulseHeader({ disneyland, dca, selectedParkId, onParkSelect 
                             </div>
 
                             <div className={cn(
-                                "px-2.5 md:px-4 py-1.5 rounded-full text-[9px] md:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] shadow-sm border truncate max-w-full",
+                                "px-2.5 md:px-4 py-1.5 rounded-full text-[9px] md:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] shadow-sm border flex-shrink-0 whitespace-nowrap",
                                 park.stats.busyness.color,
                                 "bg-white dark:bg-zinc-900 border-current/20"
                             )}>
