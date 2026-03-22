@@ -23,15 +23,14 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "Disney Park Pulse | Wait Times & Trends",
   description: "Real-time wait times and crowd trends for Disneyland & DCA",
-  manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
     title: "Park Pulse",
   },
   icons: {
-    icon: "/icon.png",
-    apple: "/icon.png",
+    icon: "/icon-192x192.png",
+    apple: "/icon-192x192.png",
   },
 };
 
