@@ -200,3 +200,37 @@ export async function trimHistory() {
     }
     return { error: "Redis not configured" };
 }
+
+export async function getRideHistory(rideId: string) {
+    const history = await getHistory();
+    
+    const data = history.map(snapshot => {
+        let waitTime = null;
+        for (const park of snapshot.parks) {
+            if (!park.liveData) continue;
+            const ride = park.liveData.find((r: any) => r.id === rideId);
+            if (ride && ride.queue && ride.queue.STANDBY && typeof ride.queue.STANDBY.waitTime === 'number') {
+                waitTime = ride.queue.STANDBY.waitTime;
+                break;
+            }
+        }
+        return {
+            timestamp: snapshot.timestamp,
+            waitTime
+        };
+    }).filter((point): point is { timestamp: string, waitTime: number } => point.waitTime !== null);
+    
+    return data;
+}
+
+export async function getRideDetails(rideId: string) {
+    const [disneylandData, dcaData] = await Promise.all([
+        fetchParkData(PARKS.DISNEYLAND_PARK).catch(() => ({ liveData: [] })),
+        fetchParkData(PARKS.DISNEY_CALIFORNIA_ADVENTURE).catch(() => ({ liveData: [] })),
+    ]);
+    
+    const ride = (disneylandData.liveData || []).find((r: any) => r.id === rideId) || 
+                 (dcaData.liveData || []).find((r: any) => r.id === rideId);
+                 
+    return ride || null;
+}

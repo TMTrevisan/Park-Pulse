@@ -1,6 +1,7 @@
 import { Ride } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { Clock, AlertCircle, Star, Bell } from "lucide-react";
+import { Clock, AlertCircle, Star, Bell, ChevronRight } from "lucide-react";
+import Link from "next/link";
 
 interface RideCardProps {
     ride: Ride;
@@ -22,16 +23,17 @@ export function RideCard({ ride, isFavorite, toggleFavorite, hasAlert, onToggleA
         : "text-gray-400";
 
     return (
-        <div className="p-4 border rounded-lg shadow-sm bg-white dark:bg-zinc-800 dark:border-zinc-700 flex flex-col justify-between h-full relative group/card">
+        <Link href={`/ride/${ride.id}`} className="p-4 border rounded-lg shadow-sm bg-white dark:bg-zinc-800 dark:border-zinc-700 flex flex-col justify-between h-full relative group/card hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-md transition-all cursor-pointer block">
             <div className="flex justify-between items-start gap-2">
                 <div>
-                    <h3 className="font-semibold text-lg line-clamp-2 pr-12">{ride.name}</h3>
+                    <h3 className="font-semibold text-lg line-clamp-2 pr-12 group-hover/card:text-blue-600 dark:group-hover/card:text-blue-400 transition-colors">{ride.name}</h3>
                     <p className="text-sm text-gray-500 capitalize">{ride.entityType}</p>
                 </div>
                 <div className="flex gap-1 absolute top-4 right-4 z-10">
                     {onToggleAlert && (
                         <button
                             onClick={(e) => {
+                                e.preventDefault();
                                 e.stopPropagation();
                                 onToggleAlert(ride.id, ride.name);
                             }}
@@ -48,6 +50,7 @@ export function RideCard({ ride, isFavorite, toggleFavorite, hasAlert, onToggleA
                     )}
                     <button
                         onClick={(e) => {
+                            e.preventDefault();
                             e.stopPropagation();
                             toggleFavorite(ride.id);
                         }}
@@ -78,7 +81,11 @@ export function RideCard({ ride, isFavorite, toggleFavorite, hasAlert, onToggleA
                         </>
                     )}
                 </div>
+                <div className="flex items-center text-gray-400 group-hover/card:text-blue-500 transition-colors text-xs font-medium">
+                    <span className="opacity-0 group-hover/card:opacity-100 transition-opacity -mr-1">Analyze</span>
+                    <ChevronRight className="w-4 h-4 ml-1 opacity-50 group-hover/card:opacity-100 transition-opacity" />
+                </div>
             </div>
-        </div>
+        </Link>
     );
 }
