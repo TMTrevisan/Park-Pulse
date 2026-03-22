@@ -1,7 +1,6 @@
-"use client";
-
+import { useState } from "react";
 import { ParkLiveData } from "@/lib/types";
-import { Search, LayoutGrid, List as ListIcon, RefreshCw, Map as MapIcon } from "lucide-react";
+import { Search, LayoutGrid, List as ListIcon, RefreshCw, Map as MapIcon, Filter } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface HeaderToolbarProps {
@@ -47,12 +46,21 @@ export function HeaderToolbar({
     setWaitTimeFilter,
     uniqueLands
 }: Omit<HeaderToolbarProps, 'selectedParkId' | 'setSelectedParkId'>) {
-    return (
-        <div className="flex flex-col lg:flex-row gap-4 mb-6 justify-between items-start lg:items-center">
+    const [showFilters, setShowFilters] = useState(false);
 
-                {/* Search & Filters Group */}
-                <div className="flex overflow-x-auto gap-2 w-full sm:w-auto pb-2 sm:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] items-center">
-                    <div className="relative min-w-[200px] flex-shrink-0">
+    const activeFilters = [
+        landFilter !== "All" ? 1 : 0,
+        ticketFilter !== "All" ? 1 : 0,
+        statusFilter !== "All" ? 1 : 0,
+        waitTimeFilter !== "All" ? 1 : 0
+    ].reduce((a, b) => a + b, 0);
+
+    return (
+        <div className="flex flex-col gap-4 mb-6">
+            <div className="flex flex-col lg:flex-row gap-4 justify-between items-start lg:items-center">
+                {/* Search & Toggle Filters Group */}
+                <div className="flex gap-2 w-full sm:w-auto items-center">
+                    <div className="relative flex-1 min-w-[200px] sm:min-w-[240px]">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                         <input
                             type="text"
@@ -62,54 +70,24 @@ export function HeaderToolbar({
                             className="w-full pl-9 pr-4 py-2 rounded-lg border bg-white dark:bg-zinc-800 dark:border-zinc-700 text-sm h-[42px] focus:ring-2 focus:ring-blue-500 transition-all placeholder:text-gray-400"
                         />
                     </div>
-
-                    <select
-                        value={landFilter}
-                        onChange={(e) => setLandFilter(e.target.value)}
-                        className="px-3 py-2 rounded-lg border bg-white dark:bg-zinc-800 dark:border-zinc-700 text-sm h-[42px] flex-shrink-0"
+                    
+                    <button
+                        onClick={() => setShowFilters(!showFilters)}
+                        className={cn(
+                            "px-3 py-2 rounded-lg border text-sm flex items-center gap-2 h-[42px] transition-colors relative flex-shrink-0",
+                            showFilters || activeFilters > 0
+                                ? "bg-blue-50 border-blue-200 text-blue-700 dark:bg-blue-900/20 dark:border-blue-800 dark:text-blue-400" 
+                                : "bg-white dark:bg-zinc-800 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-700"
+                        )}
                     >
-                        <option value="All">All Lands</option>
-                        {uniqueLands.map(land => (
-                            <option key={land} value={land}>{land}</option>
-                        ))}
-                    </select>
-
-                    <select
-                        value={ticketFilter}
-                        onChange={(e) => setTicketFilter(e.target.value)}
-                        className="px-3 py-2 rounded-lg border bg-white dark:bg-zinc-800 dark:border-zinc-700 text-sm h-[42px] flex-shrink-0"
-                    >
-                        <option value="All">All Tickets</option>
-                        <option value="E">E-Ticket</option>
-                        <option value="D">D-Ticket</option>
-                        <option value="C">C-Ticket</option>
-                        <option value="B">B-Ticket</option>
-                        <option value="A">A-Ticket</option>
-                    </select>
-
-                    <select
-                        value={statusFilter}
-                        onChange={(e) => setStatusFilter(e.target.value)}
-                        className="px-3 py-2 rounded-lg border bg-white dark:bg-zinc-800 dark:border-zinc-700 text-sm h-[42px] flex-shrink-0"
-                    >
-                        <option value="All">All Status</option>
-                        <option value="OPERATING">Operating</option>
-                        <option value="DOWN">Down</option>
-                        <option value="CLOSED">Closed</option>
-                        <option value="REFURBISHMENT">Refurb</option>
-                    </select>
-
-                    <select
-                        value={waitTimeFilter}
-                        onChange={(e) => setWaitTimeFilter(e.target.value)}
-                        className="px-3 py-2 rounded-lg border bg-white dark:bg-zinc-800 dark:border-zinc-700 text-sm h-[42px] flex-shrink-0"
-                    >
-                        <option value="All">Any Wait</option>
-                        <option value="15">&lt; 15 min</option>
-                        <option value="30">&lt; 30 min</option>
-                        <option value="45">&lt; 45 min</option>
-                        <option value="60">&lt; 60 min</option>
-                    </select>
+                        <Filter className="w-4 h-4" />
+                        <span className="hidden sm:inline">Filters</span>
+                        {activeFilters > 0 && (
+                            <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-blue-500 text-white text-[10px] font-bold flex items-center justify-center animate-in zoom-in">
+                                {activeFilters}
+                            </span>
+                        )}
+                    </button>
                 </div>
 
                 {/* Right Actions */}
@@ -175,5 +153,59 @@ export function HeaderToolbar({
                     </button>
                 </div>
             </div>
+
+            {/* Expandable Filter Drawer */}
+            {showFilters && (
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 animate-in slide-in-from-top-2 fade-in relative z-10 bg-zinc-50/80 dark:bg-zinc-800/30 p-3 sm:p-4 rounded-xl border border-zinc-200 dark:border-zinc-700/50 mt-1">
+                    <select
+                        value={landFilter}
+                        onChange={(e) => setLandFilter(e.target.value)}
+                        className="px-3 py-2 rounded-lg border bg-white dark:bg-zinc-800 dark:border-zinc-700 text-sm h-[42px] w-full"
+                    >
+                        <option value="All">All Lands</option>
+                        {uniqueLands.map(land => (
+                            <option key={land} value={land}>{land}</option>
+                        ))}
+                    </select>
+
+                    <select
+                        value={ticketFilter}
+                        onChange={(e) => setTicketFilter(e.target.value)}
+                        className="px-3 py-2 rounded-lg border bg-white dark:bg-zinc-800 dark:border-zinc-700 text-sm h-[42px] w-full"
+                    >
+                        <option value="All">All Tickets</option>
+                        <option value="E">E-Ticket</option>
+                        <option value="D">D-Ticket</option>
+                        <option value="C">C-Ticket</option>
+                        <option value="B">B-Ticket</option>
+                        <option value="A">A-Ticket</option>
+                    </select>
+
+                    <select
+                        value={statusFilter}
+                        onChange={(e) => setStatusFilter(e.target.value)}
+                        className="px-3 py-2 rounded-lg border bg-white dark:bg-zinc-800 dark:border-zinc-700 text-sm h-[42px] w-full"
+                    >
+                        <option value="All">All Status</option>
+                        <option value="OPERATING">Operating</option>
+                        <option value="DOWN">Down</option>
+                        <option value="CLOSED">Closed</option>
+                        <option value="REFURBISHMENT">Refurb</option>
+                    </select>
+
+                    <select
+                        value={waitTimeFilter}
+                        onChange={(e) => setWaitTimeFilter(e.target.value)}
+                        className="px-3 py-2 rounded-lg border bg-white dark:bg-zinc-800 dark:border-zinc-700 text-sm h-[42px] w-full"
+                    >
+                        <option value="All">Any Wait</option>
+                        <option value="15">&lt; 15 min</option>
+                        <option value="30">&lt; 30 min</option>
+                        <option value="45">&lt; 45 min</option>
+                        <option value="60">&lt; 60 min</option>
+                    </select>
+                </div>
+            )}
+        </div>
     );
 }

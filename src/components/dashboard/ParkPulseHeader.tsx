@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { PARKS } from "@/lib/parks";
+import { CheckCircle2 } from "lucide-react";
 
 export interface ParkStats {
     averageWait: number;
@@ -44,27 +45,37 @@ export function ParkPulseHeader({ disneyland, dca, selectedParkId, onParkSelect 
                         key={park.id}
                         onClick={() => onParkSelect(park.id)}
                         className={cn(
-                            "relative overflow-hidden group p-5 rounded-3xl border transition-all duration-500 cursor-pointer",
+                            "relative overflow-hidden group p-3 sm:p-5 rounded-3xl border transition-all duration-500 cursor-pointer",
                             selectedParkId === park.id 
-                                ? "bg-white dark:bg-zinc-900/50 border-blue-500/30 shadow-2xl shadow-blue-500/10 scale-[1.02]" 
-                                : "bg-zinc-50/50 dark:bg-zinc-900/20 border-zinc-200 dark:border-zinc-800 opacity-80 hover:opacity-100 hover:scale-[1.01]"
+                                ? "bg-white dark:bg-zinc-900/80 border-blue-500/40 shadow-xl shadow-blue-500/10 scale-[1.02] ring-1 ring-blue-500/20" 
+                                : "bg-zinc-50/50 dark:bg-zinc-900/20 border-zinc-200 dark:border-zinc-800 opacity-60 hover:opacity-100 hover:scale-[1.01] hover:bg-zinc-100 dark:hover:bg-zinc-800/40 grayscale-[0.5] hover:grayscale-0"
                         )}
                     >
-                        <div className="flex justify-between items-start relative z-10">
-                            <div>
-                                <h3 className="text-zinc-400 text-xs font-black uppercase tracking-widest mb-1">
-                                    {park.name} Pulse
-                                </h3>
-                                <div className="flex items-baseline gap-2">
-                                    <span className="text-3xl font-black tabular-nums tracking-tighter">
+                        <div className="flex flex-col lg:flex-row justify-between lg:items-center items-start relative z-10 gap-3 lg:gap-0">
+                            <div className="w-full">
+                                <div className="flex justify-between items-start w-full mb-1">
+                                    <h3 className="text-zinc-400 text-[10px] md:text-xs font-black uppercase tracking-wider md:tracking-widest">
+                                        {park.name}
+                                    </h3>
+                                    <div className={cn(
+                                        "w-4 h-4 md:w-5 md:h-5 rounded-full border-2 flex items-center justify-center transition-colors flex-shrink-0 ml-2",
+                                        selectedParkId === park.id 
+                                            ? "border-blue-500 bg-blue-500 text-white" 
+                                            : "border-zinc-300 dark:border-zinc-700 bg-transparent"
+                                    )}>
+                                        {selectedParkId === park.id && <CheckCircle2 className="w-3 h-3 md:w-3.5 md:h-3.5 animate-in zoom-in" strokeWidth={3} />}
+                                    </div>
+                                </div>
+                                <div className="flex items-baseline gap-1 md:gap-2">
+                                    <span className="text-2xl md:text-3xl font-black tabular-nums tracking-tighter text-zinc-800 dark:text-zinc-100">
                                         {park.stats.averageWait}
                                     </span>
-                                    <span className="text-zinc-500 text-xs font-bold uppercase">min avg</span>
+                                    <span className="text-zinc-500 text-[9px] md:text-xs font-bold uppercase">min avg</span>
                                 </div>
                             </div>
 
                             <div className={cn(
-                                "px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-sm border",
+                                "px-2.5 md:px-4 py-1.5 rounded-full text-[9px] md:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] shadow-sm border truncate max-w-full",
                                 park.stats.busyness.color,
                                 "bg-white dark:bg-zinc-900 border-current/20"
                             )}>
