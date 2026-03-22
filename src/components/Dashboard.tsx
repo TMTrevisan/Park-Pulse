@@ -76,9 +76,11 @@ export function Dashboard() {
     }, [currentPark]);
 
     const rides = useMemo(() => {
-        if (!currentPark) return [];
+        const sourceRides = viewMode === 'map' 
+            ? (data?.current.parks.flatMap(p => p.liveData) || []) 
+            : (currentPark?.liveData || []);
 
-        const filtered = currentPark.liveData.filter((ride) => {
+        const filtered = sourceRides.filter((ride) => {
             // Basic checks
             if (ride.entityType !== "ATTRACTION" || ride.status === "REFURBISHMENT") return false;
             if (!ride.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;

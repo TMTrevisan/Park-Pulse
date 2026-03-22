@@ -51,23 +51,22 @@ export function HeaderToolbar({
         <div className="flex flex-col lg:flex-row gap-4 mb-6 justify-between items-start lg:items-center">
 
                 {/* Search & Filters Group */}
-                <div className="flex flex-col sm:flex-row gap-2 flex-1 w-full lg:w-auto">
-                    <div className="relative flex-1 min-w-[200px]">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4" />
+                <div className="flex overflow-x-auto gap-2 w-full sm:w-auto pb-2 sm:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] items-center">
+                    <div className="relative min-w-[200px] flex-shrink-0">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                         <input
                             type="text"
                             placeholder="Search rides..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-9 pr-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 outline-none dark:bg-zinc-800 dark:border-zinc-700 h-[42px]"
+                            className="w-full pl-9 pr-4 py-2 rounded-lg border bg-white dark:bg-zinc-800 dark:border-zinc-700 text-sm h-[42px] focus:ring-2 focus:ring-blue-500 transition-all placeholder:text-gray-400"
                         />
                     </div>
 
-                    {/* Filters */}
                     <select
                         value={landFilter}
                         onChange={(e) => setLandFilter(e.target.value)}
-                        className="px-3 py-2 rounded-lg border bg-white dark:bg-zinc-800 dark:border-zinc-700 text-sm h-[42px]"
+                        className="px-3 py-2 rounded-lg border bg-white dark:bg-zinc-800 dark:border-zinc-700 text-sm h-[42px] flex-shrink-0"
                     >
                         <option value="All">All Lands</option>
                         {uniqueLands.map(land => (
@@ -78,7 +77,7 @@ export function HeaderToolbar({
                     <select
                         value={ticketFilter}
                         onChange={(e) => setTicketFilter(e.target.value)}
-                        className="px-3 py-2 rounded-lg border bg-white dark:bg-zinc-800 dark:border-zinc-700 text-sm h-[42px]"
+                        className="px-3 py-2 rounded-lg border bg-white dark:bg-zinc-800 dark:border-zinc-700 text-sm h-[42px] flex-shrink-0"
                     >
                         <option value="All">All Tickets</option>
                         <option value="E">E-Ticket</option>
@@ -91,7 +90,7 @@ export function HeaderToolbar({
                     <select
                         value={statusFilter}
                         onChange={(e) => setStatusFilter(e.target.value)}
-                        className="px-3 py-2 rounded-lg border bg-white dark:bg-zinc-800 dark:border-zinc-700 text-sm h-[42px]"
+                        className="px-3 py-2 rounded-lg border bg-white dark:bg-zinc-800 dark:border-zinc-700 text-sm h-[42px] flex-shrink-0"
                     >
                         <option value="All">All Status</option>
                         <option value="OPERATING">Operating</option>
@@ -103,7 +102,7 @@ export function HeaderToolbar({
                     <select
                         value={waitTimeFilter}
                         onChange={(e) => setWaitTimeFilter(e.target.value)}
-                        className="px-3 py-2 rounded-lg border bg-white dark:bg-zinc-800 dark:border-zinc-700 text-sm h-[42px]"
+                        className="px-3 py-2 rounded-lg border bg-white dark:bg-zinc-800 dark:border-zinc-700 text-sm h-[42px] flex-shrink-0"
                     >
                         <option value="All">Any Wait</option>
                         <option value="15">&lt; 15 min</option>

@@ -36,33 +36,9 @@ export function ParkPulseHeader({ disneyland, dca, selectedParkId, onParkSelect 
                         Disneyland Resort Multi-Park Analytics
                     </p>
                 </div>
-
-                <div className="flex items-center gap-3 p-1.5 bg-zinc-100 dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-inner">
-                    {parks.map((park) => {
-                        const isActive = selectedParkId === park.id;
-                        return (
-                            <button
-                                key={park.id}
-                                onClick={() => onParkSelect(park.id)}
-                                className={cn(
-                                    "px-6 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 flex items-center gap-3",
-                                    isActive 
-                                        ? "bg-white dark:bg-zinc-800 text-blue-600 dark:text-blue-400 shadow-lg scale-[1.02]" 
-                                        : "text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
-                                )}
-                            >
-                                <span className={cn(
-                                    "w-2 h-2 rounded-full animate-pulse",
-                                    park.stats.busyness.bg
-                                )} />
-                                {park.name}
-                            </button>
-                        );
-                    })}
-                </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3 md:gap-4 mt-2">
                 {parks.map((park) => (
                     <div 
                         key={park.id}
