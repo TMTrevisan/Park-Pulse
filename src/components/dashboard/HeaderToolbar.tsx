@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ParkLiveData } from "@/lib/types";
-import { Search, LayoutGrid, List as ListIcon, RefreshCw, Map as MapIcon, Filter } from "lucide-react";
+import { Search, LayoutGrid, List as ListIcon, RefreshCw, Map as MapIcon, Filter, TrendingUp } from "lucide-react";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 interface HeaderToolbarProps {
@@ -156,6 +157,14 @@ export function HeaderToolbar({
                             {showHours ? "Hide Hours" : "Show Hours"}
                         </button>
                     )}
+
+                    <Link
+                        href="/analytics"
+                        className="px-3 py-2 text-sm font-medium rounded-lg border bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200 text-purple-700 hover:from-purple-100 hover:to-pink-100 dark:from-purple-900/10 dark:to-pink-900/10 dark:border-purple-800/50 dark:text-purple-300 dark:hover:from-purple-900/20 dark:hover:to-pink-900/20 transition-all h-[42px] flex items-center gap-1.5 shadow-sm hover:shadow"
+                    >
+                        <TrendingUp className="w-4 h-4" />
+                        <span className="hidden sm:inline">Analytics</span>
+                    </Link>
 
                     <div className="bg-zinc-100 dark:bg-zinc-800 p-1 rounded-lg flex border dark:border-zinc-700 h-[42px] items-center">
                         <button

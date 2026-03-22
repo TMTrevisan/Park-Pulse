@@ -87,7 +87,7 @@ const redis = (url && token)
     ? new Redis({ url, token })
     : null;
 
-async function getHistory(): Promise<WaitTimeSnapshot[]> {
+export async function getHistory(): Promise<WaitTimeSnapshot[]> {
     if (redis) {
         try {
             const result = await redis.lrange(HISTORY_KEY, 0, -1);
