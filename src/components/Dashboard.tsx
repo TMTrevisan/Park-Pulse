@@ -278,9 +278,10 @@ export function Dashboard() {
                     />
                 );
             case 'map':
+                const allMapRides = data?.current.parks.flatMap(p => p.liveData) || [];
                 return (
                     <MapOverlay 
-                        rides={currentPark?.liveData || []} 
+                        rides={allMapRides} 
                         selectedParkId={selectedParkId} 
                     />
                 );

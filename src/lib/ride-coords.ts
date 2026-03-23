@@ -538,5 +538,76 @@ export const RIDE_COORDS: Record<string, { lat: number, lng: number, name: strin
     "lat": 33.8123896,
     "lng": -117.9189732,
     "name": "Wondrous Journeys with Fireworks"
+  },
+
+  // ── Disney California Adventure ──────────────────────────
+  "b1d285a7-2444-4a7c-b7bb-d2d4d6428a85": {
+    "lat": 33.806497, "lng": -117.921383, "name": "Grizzly River Run"
+  },
+  "d2aa0987-49a2-45dc-a635-3a8bf7401230": {
+    "lat": 33.805523, "lng": -117.918849, "name": "Animation Academy"
+  },
+  "388ad3f1-5cf5-4a9d-8d0e-6dfb817d7822": {
+    "lat": 33.804861, "lng": -117.918326, "name": "Jessie's Critter Carousel"
+  },
+  "b7678dab-5544-48d5-8fdc-c1a0127cfbcd": {
+    "lat": 33.806251, "lng": -117.917231, "name": "Guardians of the Galaxy - Mission: BREAKOUT!"
+  },
+  "7561bcd8-18ea-4e3f-89d5-c905b7ba3d42": {
+    "lat": 33.805358, "lng": -117.918617, "name": "Turtle Talk with Crush"
+  },
+  "8f586a2f-cef5-46d3-b822-fd622c4e9e33": {
+    "lat": 33.805523, "lng": -117.918582, "name": "Mickey's PhilharMagic"
+  },
+  "f44a5072-3cda-4c7c-8574-33ad09d16cca": {
+    "lat": 33.805115, "lng": -117.920581, "name": "Goofy's Sky School"
+  },
+  "2295351d-ce6b-4c04-92d5-5b416372c5b5": {
+    "lat": 33.806707, "lng": -117.917905, "name": "WEB SLINGERS: A Spider-Man Adventure"
+  },
+  "40524fba-5d84-49e7-9204-f493dbe2d5a4": {
+    "lat": 33.806019, "lng": -117.917658, "name": "Monsters, Inc. Mike & Sulley to the Rescue!"
+  },
+  "e1fbc7a1-2cd1-4282-b373-ac11d9d9d38a": {
+    "lat": 33.805274, "lng": -117.920033, "name": "The Little Mermaid - Ariel's Undersea Adventure"
+  },
+  "c60c768b-3461-465c-8f4f-b44b087506fc": {
+    "lat": 33.805932, "lng": -117.919751, "name": "Radiator Springs Racers"
+  },
+  "86ab3069-110d-49c5-a7e7-29ddf28695a6": {
+    "lat": 33.804588, "lng": -117.918851, "name": "Toy Story Midway Mania!"
+  },
+  "77f205a4-d482-4d91-a5ff-71e54a086ad2": {
+    "lat": 33.807011, "lng": -117.920513, "name": "Soarin' Over California"
+  },
+  "5d07a2b1-49ca-4de7-9d32-6d08edf69b08": {
+    "lat": 33.804366, "lng": -117.919499, "name": "Incredicoaster"
+  },
+  "46097afe-a1ea-4807-93d3-14d14f36e55f": {
+    "lat": 33.805495, "lng": -117.919854, "name": "Mater's Junkyard Jamboree"
+  },
+  "7a09a2f0-e226-4f3e-86f8-2598ab67ec44": {
+    "lat": 33.805766, "lng": -117.919616, "name": "Luigi's Rollickin' Roadsters"
+  },
+  "4f5b28d0-b78e-482b-8e2e-1f90756d6220": {
+    "lat": 33.805271, "lng": -117.920715, "name": "Silly Symphony Swings"
+  },
+  "c9803366-6f37-4406-82af-7692357e3ca9": {
+    "lat": 33.806665, "lng": -117.921192, "name": "Redwood Creek Challenge Trail"
+  },
+  "c8a4b7b1-c1b2-4dfe-b73c-4e834b4a73db": {
+    "lat": 33.805072, "lng": -117.920867, "name": "Jumpin' Jellyfish"
+  },
+  "528016ef-db24-47fa-a0f2-b6d26d61e29f": {
+    "lat": 33.804678, "lng": -117.919794, "name": "Pixar Pal-A-Round - Swinging"
+  },
+  "6d876f4c-c3ff-4ae3-a2d8-d4b831e1039b": {
+    "lat": 33.804455, "lng": -117.919042, "name": "Inside Out Emotional Whirlwind"
+  },
+  "4ca6cdbf-4c5f-45bf-b0dc-db83393ec208": {
+    "lat": 33.804678, "lng": -117.919794, "name": "Pixar Pal-A-Round – Non-Swinging"
+  },
+  "10a5fc6f-5ad3-414b-9bdd-e6bae097b6ad": {
+    "lat": 33.805129, "lng": -117.920956, "name": "Golden Zephyr"
   }
 };

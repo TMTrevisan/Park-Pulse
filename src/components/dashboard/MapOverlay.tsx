@@ -17,9 +17,9 @@ const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || "";
 
 export default function MapOverlay({ rides, selectedParkId }: MapOverlayProps) {
   const [viewState, setViewState] = useState({
-    latitude: selectedParkId === "7340550b-c14d-4def-80bb-acdb51d49a66" ? 33.8121 : 33.8061,
-    longitude: selectedParkId === "7340550b-c14d-4def-80bb-acdb51d49a66" ? -117.9190 : -117.9190,
-    zoom: 16,
+    latitude: 33.8091,    // Midpoint between DL (33.8121) and DCA (33.8061)
+    longitude: -117.9190,
+    zoom: 15.2,           // Zoomed out to show both parks
     pitch: 45,
     bearing: 0
   });
