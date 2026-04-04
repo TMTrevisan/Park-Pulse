@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getWaitTimes } from '@/lib/data-service';
 
-export const revalidate = 60; // Cache response on edge for 60 seconds
+export const dynamic = 'force-dynamic';
 
 export async function GET(request: Request) {
     try {

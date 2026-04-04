@@ -38,6 +38,8 @@ export default function MapOverlay({ rides, selectedParkId }: MapOverlayProps) {
     });
   }, [rides]);
 
+
+
   const getWaitColor = (minutes: number) => {
     if (minutes <= 15) return 'bg-emerald-500 text-white';
     if (minutes <= 35) return 'bg-amber-400 text-black';

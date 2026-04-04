@@ -2,7 +2,7 @@ import { PARKS } from "@/lib/parks";
 import { getHistory } from "@/lib/data-service";
 import AnalyticsDashboard from "./AnalyticsDashboard";
 
-export const revalidate = 60; // Cache the full history payload for 1 minute
+export const dynamic = 'force-dynamic';
 
 export default async function AnalyticsPage() {
     // getHistory returns the raw snapshot array containing info for all parks

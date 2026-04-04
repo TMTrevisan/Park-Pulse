@@ -8,7 +8,7 @@ import { Redis } from "@upstash/redis";
 
 const DATA_FILE_PATH = path.join(process.env.NODE_ENV === 'production' ? '/tmp' : process.cwd(), "wait_times.json");
 const HISTORY_KEY = 'wait_times_history';
-const MAX_HISTORY_ITEMS = 1440; // 24 hours of 1-minute snapshots (approx 2MB compressed)
+const MAX_HISTORY_ITEMS = 10080; // 7 days of 1-minute snapshots (approx 20MB compressed)
 
 interface CompactSnapshot {
     t: string;
@@ -63,7 +63,7 @@ async function fetchParkData(parkId: string): Promise<ParkLiveData> {
     const response = await fetch(
         `https://api.themeparks.wiki/v1/entity/${parkId}/live`,
         {
-            cache: "no-store",
+            next: { revalidate: 60 },
             headers: {
                 'User-Agent': 'DisneyRideTracker/1.0'
             }
