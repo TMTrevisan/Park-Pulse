@@ -213,9 +213,6 @@ export function HeaderToolbar({
                         <RefreshCw className={cn("h-4 w-4", loading && "animate-spin")} />
                         <span className="hidden sm:inline">{loading ? "Updating..." : "Refresh"}</span>
                     </button>
-                    <div className="absolute bottom-[-30px] right-0 bg-red-500 text-white text-xs px-2 py-1 z-50 rounded">
-                        COORD KEYS: {Object.keys(require('@/lib/ride-coords.json') || {}).length}
-                    </div>
                 </div>
             </div>
         </div>

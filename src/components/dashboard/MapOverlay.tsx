@@ -4,7 +4,7 @@ import React, { useState, useMemo } from 'react';
 import Map, { Marker, Popup, NavigationControl, FullscreenControl } from 'react-map-gl/mapbox';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { Ride } from '@/lib/types';
-import { Layers } from 'lucide-react';
+import { Layers, Bug } from 'lucide-react';
 import { clsx } from 'clsx';
 import RIDE_COORDS_DATA from '@/lib/ride-coords.json';
 
@@ -21,15 +21,16 @@ const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || "";
 
 export default function MapOverlay({ rides, selectedParkId }: MapOverlayProps) {
   const [viewState, setViewState] = useState({
-    latitude: 33.8091,    // Midpoint between DL (33.8121) and DCA (33.8061)
+    latitude: 33.8091,
     longitude: -117.9190,
-    zoom: 15.2,           // Zoomed out to show both parks
+    zoom: 15.2,
     pitch: 45,
     bearing: 0
   });
 
   const [mapStyle, setMapStyle] = useState<'streets-v12' | 'satellite-streets-v12'>('streets-v12');
   const [hoveredRide, setHoveredRide] = useState<Ride | null>(null);
+  const [debugMode, setDebugMode] = useState(false);
 
   const mappedRides = useMemo(() => {
     return rides.filter(r => {
@@ -41,8 +42,6 @@ export default function MapOverlay({ rides, selectedParkId }: MapOverlayProps) {
       return true;
     });
   }, [rides]);
-
-
 
   const getWaitColor = (minutes: number) => {
     if (minutes <= 15) return 'bg-emerald-500 text-white';
@@ -79,7 +78,7 @@ export default function MapOverlay({ rides, selectedParkId }: MapOverlayProps) {
                 setHoveredRide(ride);
               }}
             >
-              <div 
+              <div
                 className={clsx(
                   "group relative cursor-pointer transition-transform hover:scale-110",
                   isClosed ? "opacity-60" : "opacity-100"
@@ -102,17 +101,6 @@ export default function MapOverlay({ rides, selectedParkId }: MapOverlayProps) {
             </Marker>
           );
         })}
-
-        {/* STATIC DEBUG MARKER TO VERIFY MARKERS ARE WORKING */}
-        <Marker
-          longitude={-117.919}
-          latitude={33.8121}
-          anchor="bottom"
-        >
-          <div className="w-10 h-10 bg-blue-600 rounded-full shadow-[0_0_15px_rgba(37,99,235,1)] text-white flex items-center gap-1 justify-center font-bold ring-4 ring-white z-50 transform hover:scale-110 transition-transform">
-            <span>🚀</span>
-          </div>
-        </Marker>
 
         {hoveredRide && (
           <Popup
@@ -138,6 +126,7 @@ export default function MapOverlay({ rides, selectedParkId }: MapOverlayProps) {
         )}
       </Map>
 
+      {/* Map Style Toggle */}
       <div className="absolute top-4 left-4 flex flex-col gap-2">
         <button
           onClick={() => setMapStyle(mapStyle === 'streets-v12' ? 'satellite-streets-v12' : 'streets-v12')}
@@ -146,20 +135,45 @@ export default function MapOverlay({ rides, selectedParkId }: MapOverlayProps) {
           <Layers className="w-4 h-4 text-blue-400 group-hover:rotate-12 transition-transform" />
           {mapStyle === 'streets-v12' ? 'Satellite View' : 'Standard View'}
         </button>
+
+        {/* Debug Toggle Button */}
+        <button
+          onClick={() => setDebugMode(d => !d)}
+          className={clsx(
+            "flex items-center gap-2 px-3 py-2 backdrop-blur-xl border rounded-xl text-xs font-medium transition-all shadow-xl",
+            debugMode
+              ? "bg-rose-600/80 border-rose-400/40 text-white"
+              : "bg-black/60 border-white/10 text-zinc-400 hover:text-white hover:bg-black/80"
+          )}
+          title="Toggle debug info"
+        >
+          <Bug className="w-4 h-4" />
+          {debugMode ? 'Debug ON' : 'Debug'}
+        </button>
       </div>
 
+      {/* Debug Panel */}
+      {debugMode && (
+        <div className="absolute top-4 left-[200px] bg-black/80 backdrop-blur-xl border border-rose-500/40 text-rose-300 p-3 z-50 text-xs rounded-xl font-mono shadow-2xl space-y-1">
+          <div className="text-rose-400 font-bold mb-1 flex items-center gap-1">
+            <Bug className="w-3 h-3" /> Debug Info
+          </div>
+          <div>Total rides received: <span className="text-white">{rides.length}</span></div>
+          <div>Rides with coords + wait time: <span className="text-white">{mappedRides.length}</span></div>
+          <div>Coord registry size: <span className="text-white">{Object.keys(RIDE_COORDS).length}</span></div>
+          <div>Map style: <span className="text-white">{mapStyle}</span></div>
+        </div>
+      )}
+
+      {/* Legend */}
       <div className="absolute bottom-4 left-4 bg-black/60 backdrop-blur-xl border border-white/10 p-3 rounded-2xl shadow-xl">
         <div className="text-[10px] text-zinc-400 uppercase tracking-wider font-bold mb-2">Busyness Index</div>
         <div className="flex flex-col gap-1.5">
-          <LegendItem color="bg-emerald-500" label="Walk-on" />
-          <LegendItem color="bg-amber-400" label="Moderate" />
-          <LegendItem color="bg-orange-500" label="Busy" />
-          <LegendItem color="bg-rose-600" label="Very Long" />
+          <LegendItem color="bg-emerald-500" label="Walk-on (≤15 min)" />
+          <LegendItem color="bg-amber-400" label="Moderate (≤35 min)" />
+          <LegendItem color="bg-orange-500" label="Busy (≤60 min)" />
+          <LegendItem color="bg-rose-600" label="Very Long (60+ min)" />
         </div>
-      </div>
-
-      <div className="absolute top-4 left-[200px] bg-red-500 text-white p-2 z-50 text-xs">
-        DEBUG: Rides: {rides.length}, Mapped: {mappedRides.length}, Coords keys: {Object.keys(RIDE_COORDS || {}).length}
       </div>
 
       <style jsx global>{`
@@ -189,7 +203,7 @@ export default function MapOverlay({ rides, selectedParkId }: MapOverlayProps) {
 function LegendItem({ color, label }: { color: string, label: string }) {
   return (
     <div className="flex items-center gap-2">
-      <div className={clsx("w-2 h-2 rounded-full", color)} />
+      <div className={clsx("w-2 h-2 rounded-full flex-shrink-0", color)} />
       <span className="text-[10px] text-white/80 font-medium">{label}</span>
     </div>
   );
