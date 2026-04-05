@@ -4,9 +4,13 @@ import React, { useState, useMemo } from 'react';
 import Map, { Marker, Popup, NavigationControl, FullscreenControl } from 'react-map-gl/mapbox';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { Ride } from '@/lib/types';
-import { RIDE_COORDS } from '@/lib/ride-coords';
 import { Layers } from 'lucide-react';
 import { clsx } from 'clsx';
+import RIDE_COORDS_DATA from '@/lib/ride-coords.json';
+
+// Handle Next.js/Webpack ES module interop defensively
+const rawCoords = (RIDE_COORDS_DATA as any).default || RIDE_COORDS_DATA;
+const RIDE_COORDS: Record<string, any> = rawCoords;
 
 interface MapOverlayProps {
   rides: Ride[];
@@ -99,6 +103,17 @@ export default function MapOverlay({ rides, selectedParkId }: MapOverlayProps) {
           );
         })}
 
+        {/* STATIC DEBUG MARKER TO VERIFY MARKERS ARE WORKING */}
+        <Marker
+          longitude={-117.919}
+          latitude={33.8121}
+          anchor="bottom"
+        >
+          <div className="w-10 h-10 bg-blue-600 rounded-full shadow-[0_0_15px_rgba(37,99,235,1)] text-white flex items-center gap-1 justify-center font-bold ring-4 ring-white z-50 transform hover:scale-110 transition-transform">
+            <span>🚀</span>
+          </div>
+        </Marker>
+
         {hoveredRide && (
           <Popup
             latitude={RIDE_COORDS[hoveredRide.id].lat}
@@ -141,6 +156,10 @@ export default function MapOverlay({ rides, selectedParkId }: MapOverlayProps) {
           <LegendItem color="bg-orange-500" label="Busy" />
           <LegendItem color="bg-rose-600" label="Very Long" />
         </div>
+      </div>
+
+      <div className="absolute top-4 left-[200px] bg-red-500 text-white p-2 z-50 text-xs">
+        DEBUG: Rides: {rides.length}, Mapped: {mappedRides.length}, Coords keys: {Object.keys(RIDE_COORDS || {}).length}
       </div>
 
       <style jsx global>{`
