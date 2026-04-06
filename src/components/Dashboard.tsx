@@ -157,7 +157,7 @@ export function Dashboard() {
             return 0;
         });
 
-    }, [currentPark, searchQuery, sortField, sortDirection, favorites, ticketFilter, statusFilter, landFilter, waitTimeFilter]);
+    }, [currentPark, data, viewMode, searchQuery, sortField, sortDirection, favorites, ticketFilter, statusFilter, landFilter, waitTimeFilter]);
 
     // Check alerts whenever rides update
     useEffect(() => {

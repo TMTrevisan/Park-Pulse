@@ -35,11 +35,9 @@ export default function MapOverlay({ rides, selectedParkId }: MapOverlayProps) {
   const mappedRides = useMemo(() => {
     return rides.filter(r => {
       if (!RIDE_COORDS[r.id]) return false;
-      if (r.status === "OPERATING") {
-        const waitTime = r.queue?.STANDBY?.waitTime ?? 0;
-        return waitTime > 0;
-      }
-      return true;
+      if (r.status !== "OPERATING") return false;           // auto-hide closed rides
+      const waitTime = r.queue?.STANDBY?.waitTime ?? 0;
+      return waitTime > 0;
     });
   }, [rides]);
 
@@ -65,7 +63,6 @@ export default function MapOverlay({ rides, selectedParkId }: MapOverlayProps) {
         {mappedRides.map(ride => {
           const coords = RIDE_COORDS[ride.id];
           const waitTime = ride.queue?.STANDBY?.waitTime ?? 0;
-          const isClosed = ride.status !== "OPERATING";
 
           return (
             <Marker
@@ -79,18 +76,15 @@ export default function MapOverlay({ rides, selectedParkId }: MapOverlayProps) {
               }}
             >
               <div
-                className={clsx(
-                  "group relative cursor-pointer transition-transform hover:scale-110",
-                  isClosed ? "opacity-60" : "opacity-100"
-                )}
+                className="group relative cursor-pointer transition-transform hover:scale-110"
                 onMouseEnter={() => setHoveredRide(ride)}
                 onMouseLeave={() => setHoveredRide(null)}
               >
                 <div className={clsx(
                   "flex items-center justify-center px-2 py-1 rounded-full text-[10px] font-bold shadow-lg border-2 border-white/20 min-w-[32px] h-[32px]",
-                  isClosed ? "bg-zinc-700 text-zinc-300" : getWaitColor(waitTime)
+                  getWaitColor(waitTime)
                 )}>
-                  {isClosed ? "—" : waitTime}
+                  {waitTime}
                 </div>
                 <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block z-50">
                   <div className="bg-black/90 text-white text-[10px] px-2 py-1 rounded whitespace-nowrap backdrop-blur-md border border-white/10">
