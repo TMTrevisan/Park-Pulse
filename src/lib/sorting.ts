@@ -1,5 +1,5 @@
 import { Ride } from "@/lib/types";
-import { getLand, getTicketClass } from "@/lib/parks";
+import { getLand, getTicketClass, ResortId } from "@/lib/parks";
 import { SortField, SortDirection } from "@/components/dashboard/RideTable";
 
 export function getHighOfDay(ride: Ride) {
@@ -10,7 +10,7 @@ export function getHighOfDay(ride: Ride) {
     return Math.max(...todayForecasts.map(f => f.waitTime));
 }
 
-export function sortRides(rides: Ride[], sortField: SortField, sortDirection: SortDirection): Ride[] {
+export function sortRides(rides: Ride[], sortField: SortField, sortDirection: SortDirection, resort: ResortId): Ride[] {
     return [...rides].sort((a, b) => {
         let valA: string | number = '';
         let valB: string | number = '';
@@ -25,8 +25,8 @@ export function sortRides(rides: Ride[], sortField: SortField, sortDirection: So
                 valB = b.status === 'OPERATING' ? (b.queue?.STANDBY?.waitTime ?? 0) : -1;
                 break;
             case 'land':
-                valA = getLand(a.name);
-                valB = getLand(b.name);
+                valA = getLand(a.name, resort);
+                valB = getLand(b.name, resort);
                 break;
             case 'status':
                 valA = a.status;
@@ -34,7 +34,7 @@ export function sortRides(rides: Ride[], sortField: SortField, sortDirection: So
                 break;
             case 'ticket':
                 const score = (r: Ride) => {
-                    const t = getTicketClass(r.name);
+                    const t = getTicketClass(r.name, resort);
                     // E-Ticket is highest value (5), A is lowest (1)
                     const map: Record<string, number> = { 'E': 5, 'D': 4, 'C': 3, 'B': 2, 'A': 1 };
                     return map[t] || 0;
