@@ -87,6 +87,9 @@ export default function MapOverlay({ rides, selectedParkId, resort, activeLand }
   const mappedRides = useMemo(() => {
     return rides.filter(r => {
       if (!RIDE_COORDS[r.id]) return false;
+      const waitTime = r.queue?.STANDBY?.waitTime ?? 0;
+      // Hide if operating but has 0 wait (reduces noise for cafes/shows/walk-ons)
+      if (r.status === "OPERATING" && waitTime === 0) return false;
       return r.status === "OPERATING" || r.status === "DOWN";
     });
   }, [rides]);

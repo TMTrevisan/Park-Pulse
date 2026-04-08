@@ -372,7 +372,7 @@ export function Dashboard() {
                 <footer className="mt-12 text-center text-xs text-zinc-400 dark:text-zinc-600 pb-8">
                     Wait times powered by ThemeParks API and Queue-Times.com.
                     <br />
-                    <span className="opacity-50">Build v1.1.10-Golden</span>
+                    <span className="opacity-50">Build v1.1.11-CleanMap</span>
                     <br />
                     <a href="https://queue-times.com/en-US" target="_blank" rel="noopener noreferrer"
                         className="text-blue-500 hover:text-blue-400 transition-colors hover:underline mt-1 inline-block font-medium">
