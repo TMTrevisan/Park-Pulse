@@ -224,18 +224,24 @@ export const RESORT_LAND_OVERRIDES: Record<ResortId, Record<string, string>> = {
 
 export function getLand(rideName: string, resort: ResortId): string {
     if (!rideName) return '—';
-    const name = rideName.toLowerCase();
+    const name = rideName.toLowerCase().trim().replace(/\s+/g, ' ');
     
     // 1. Resort Overrides (Highest Priority)
     const resortKey = (resort || 'DLR').toUpperCase() as ResortId;
     const overrides = RESORT_LAND_OVERRIDES[resortKey];
     if (overrides) {
-        const overrideMatch = Object.keys(overrides).find(k => name.includes(k.toLowerCase()));
+        const overrideMatch = Object.keys(overrides).find(k => {
+            const normalizedKey = k.toLowerCase().trim().replace(/\s+/g, ' ');
+            return name.includes(normalizedKey);
+        });
         if (overrideMatch) return overrides[overrideMatch];
     }
     
     // 2. Base Mapping (Fallback)
-    const baseMatch = Object.keys(BASE_LAND_MAPPING).find(k => name.includes(k.toLowerCase()));
+    const baseMatch = Object.keys(BASE_LAND_MAPPING).find(k => {
+        const normalizedKey = k.toLowerCase().trim().replace(/\s+/g, ' ');
+        return name.includes(normalizedKey);
+    });
     if (baseMatch) return BASE_LAND_MAPPING[baseMatch];
     
     return '—';
@@ -243,7 +249,7 @@ export function getLand(rideName: string, resort: ResortId): string {
 
 export function getTicketClass(rideName: string, resort: ResortId): string {
     if (!rideName) return '—';
-    const name = rideName.toLowerCase();
+    const name = rideName.toLowerCase().trim().replace(/\s+/g, ' ');
     const resortKey = (resort || 'DLR').toUpperCase() as ResortId;
     
     // Explicit high-priority overrides
