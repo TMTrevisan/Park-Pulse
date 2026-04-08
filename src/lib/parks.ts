@@ -298,6 +298,7 @@ export function getTicketClass(rideName: string, resort: ResortId): string {
         'tower of terror': 'E',
         'rock \'n\' roller': 'E',
         'test track': 'E',
+        'tiana\'s bayou': 'E',
         'haunted mansion': 'D',
         'pirates of the caribbean': 'D',
         'big thunder': 'D',
