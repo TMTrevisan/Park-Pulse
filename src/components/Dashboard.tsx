@@ -280,6 +280,7 @@ export function Dashboard() {
                         rides={allMapRides}
                         selectedParkId={selectedParkId}
                         resort={resort}
+                        activeLand={landFilter}
                     />
                 );
             }
