@@ -140,16 +140,36 @@ export const LAND_MAPPING: Record<string, string> = {
     'Guardians of the Galaxy: Cosmic Rewind': 'World Discovery',
     'Test Track': 'World Discovery',
     'Mission: SPACE': 'World Discovery',
-    'Spaceship Earth': 'World Celebration',
-    'Remy': 'World Celebration',
-    "Remy's Ratatouille Adventure": 'World Celebration',
-    'Frozen': 'World Showcase',
-    'Frozen Ever After': 'World Showcase',
-    'Gran Fiesta Tour': 'World Showcase',
-    'Reflections of China': 'World Showcase',
+    // ── Magic Kingdom ────────────────────────────────────────────────────────
+    'The Barnstormer': 'Fantasyland',
+    "Buzz Lightyear's Space Ranger Spin": 'Tomorrowland',
+    "it's a small world": 'Fantasyland',
+    'Country Bear Musical Jamboree': 'Frontierland',
+    'Under the Sea - Journey of The Little Mermaid': 'Fantasyland',
+    'The Magic Carpets of Aladdin': 'Adventureland',
+    'Tomorrowland Transit Authority PeopleMover': 'Tomorrowland',
+    'Walt Disney\'s Carousel of Progress': 'Tomorrowland',
+    'Liberty Square Riverboat': 'Liberty Square',
+    'Monsters, Inc. Laugh Floor': 'Tomorrowland',
+    'Tomorrowland Speedway': 'Tomorrowland',
+    'Prince Charming Regal Carrousel': 'Fantasyland',
+    'The Hall of Presidents': 'Liberty Square',
+    'Enchanted Tales with Belle': 'Fantasyland',
+    'Main Street Vehicles': 'Main Street, U.S.A.',
+
+    // ── EPCOT ────────────────────────────────────────────────────────────────
+    'Canada Far and Wide': 'World Showcase',
+    'The Seas with Nemo & Friends': 'World Nature',
+    'Journey Into Imagination With Figment': 'World Nature',
+    'Turtle Talk with Crush': 'World Nature',
+    'Gran Fiesta Tour Starring The Three Caballeros': 'World Showcase',
     'Living with the Land': 'World Nature',
-    'Soarin': 'World Nature',
-    "Turtle Talk with Crush": 'World Nature',
+    'Awesome Planet': 'World Nature',
+    'Beauty and the Beast Sing-Along': 'World Showcase',
+    'Impressions de France': 'World Showcase',
+    'Reflections of China': 'World Showcase',
+    'Disney and Pixar Short Film Festival': 'World Nature',
+    'O Canada!': 'World Showcase',
 
     // ── Hollywood Studios ────────────────────────────────────────────────────
     'Slinky Dog Dash': 'Toy Story Land',
@@ -161,6 +181,7 @@ export const LAND_MAPPING: Record<string, string> = {
     'Muppet*Vision 3D': 'Grand Avenue',
     "Mickey & Minnie's Runaway Railway": 'Hollywood Boulevard',
     'Indiana Jones Epic Stunt Spectacular': 'Echo Lake',
+    'Star Wars: Rise of the Resistance': "Galaxy's Edge",
 
     // ── Animal Kingdom ───────────────────────────────────────────────────────
     'Avatar Flight of Passage': 'Pandora',
@@ -170,6 +191,7 @@ export const LAND_MAPPING: Record<string, string> = {
     "Kilimanjaro Safaris": 'Africa',
     "Wildlife Express Train": 'Africa',
     "DINOSAUR": "DinoLand U.S.A.",
+    "It's Tough to be a Bug!": "Discovery Island",
     "Triceratop Spin": "DinoLand U.S.A.",
     "The Boneyard": "DinoLand U.S.A.",
 };
@@ -368,6 +390,16 @@ export const RESORT_SPECIFIC_LANDS: Record<ResortId, Record<string, string>> = {
         'Space Mountain': 'Tomorrowland',
         'Toy Story Mania!': 'Toy Story Land',
         'Tower of Terror': 'Sunset Boulevard',
+        'The Many Adventures of Winnie the Pooh': 'Fantasyland',
+        'Tiana\'s Bayou Adventure': 'Frontierland',
+        'Mickey\'s PhilharMagic': 'Fantasyland',
+        'Haunted Mansion': 'Liberty Square',
+        'Pirates of the Caribbean': 'Adventureland',
+        'Big Thunder Mountain Railroad': 'Frontierland',
+        'Seven Dwarfs Mine Train': 'Fantasyland',
+        'Avatar Flight of Passage': 'Pandora',
+        'DINOSAUR': 'DinoLand U.S.A.',
+        'Expedition Everest': 'Asia',
     }
 };
 
@@ -378,7 +410,8 @@ export const RESORT_SPECIFIC_TICKETS: Record<ResortId, Record<string, string>> =
     },
     WDW: {
         'Space Mountain': 'E',
-        'Big Thunder Mountain': 'D',
+        'Big Thunder Mountain Railroad': 'D',
+        'The Barnstormer': 'A',
     }
 };
 

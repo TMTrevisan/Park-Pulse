@@ -52,7 +52,7 @@ export default function MapOverlay({ rides, selectedParkId, resort }: MapOverlay
       if (!RIDE_COORDS[r.id]) return false;
       if (r.status !== "OPERATING") return false;           // auto-hide closed rides
       const waitTime = r.queue?.STANDBY?.waitTime ?? 0;
-      return waitTime > 0;
+      return waitTime >= 0;
     });
   }, [rides]);
 
