@@ -59,22 +59,9 @@ export function RideGrid({
                                     toggleFavorite={toggleFavorite}
                                     hasAlert={hasAlert}
                                     onToggleAlert={onToggleAlert}
+                                    land={land}
+                                    ticket={ticket}
                                 />
-                                <div className="absolute top-2 right-2 flex flex-col items-end gap-1 pointer-events-none">
-                                    <div className=" text-xs text-gray-400 bg-gray-50 px-2 py-0.5 rounded border dark:bg-zinc-900 dark:border-zinc-700">
-                                        {land}
-                                    </div>
-                                    {ticket !== '—' && (
-                                        <span className={cn(
-                                            "text-[10px] font-bold px-1.5 py-0.5 rounded border shadow-sm uppercase",
-                                            ticket === 'E' ? "bg-purple-50 text-purple-700 border-purple-200" :
-                                                ticket === 'D' ? "bg-blue-50 text-blue-700 border-blue-200" :
-                                                    "bg-gray-50 text-gray-500"
-                                        )}>
-                                            {ticket}-Ticket
-                                        </span>
-                                    )}
-                                </div>
                             </div>
 
                             {expandedRideId === ride.id && (

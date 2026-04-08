@@ -9,9 +9,11 @@ interface RideCardProps {
     toggleFavorite: (id: string) => void;
     hasAlert?: boolean;
     onToggleAlert?: (id: string, name: string) => void;
+    land?: string;
+    ticket?: string;
 }
 
-export function RideCard({ ride, isFavorite, toggleFavorite, hasAlert, onToggleAlert }: RideCardProps) {
+export function RideCard({ ride, isFavorite, toggleFavorite, hasAlert, onToggleAlert, land, ticket }: RideCardProps) {
     const isOperating = ride.status === "OPERATING";
     const waitTime = ride.queue?.STANDBY?.waitTime ?? 0;
     const statusColor = isOperating
@@ -26,8 +28,23 @@ export function RideCard({ ride, isFavorite, toggleFavorite, hasAlert, onToggleA
         <Link href={`/ride/${ride.id}`} className="p-4 border rounded-lg shadow-sm bg-white dark:bg-zinc-800 dark:border-zinc-700 flex flex-col justify-between h-full relative group/card hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-md transition-all cursor-pointer block">
             <div className="flex justify-between items-start gap-2">
                 <div>
-                    <h3 className="font-semibold text-lg line-clamp-2 pr-12 group-hover/card:text-blue-600 dark:group-hover/card:text-blue-400 transition-colors">{ride.name}</h3>
-                    <p className="text-sm text-gray-500 capitalize">{ride.entityType}</p>
+                    <div className="flex items-center gap-2 mb-1">
+                        <h3 className="font-semibold text-lg line-clamp-1 pr-12 group-hover/card:text-blue-600 dark:group-hover/card:text-blue-400 transition-colors">{ride.name}</h3>
+                        {ticket && ticket !== '—' && (
+                            <span className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-700 text-[10px] font-black border dark:border-zinc-600 shrink-0">
+                                {ticket}
+                            </span>
+                        )}
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <p className="text-sm text-gray-500 capitalize">{ride.entityType}</p>
+                        {land && land !== '—' && (
+                            <>
+                                <span className="text-gray-300">|</span>
+                                <p className="text-xs font-medium text-blue-500 dark:text-blue-400">{land}</p>
+                            </>
+                        )}
+                    </div>
                 </div>
                 <div className="flex gap-1 absolute top-4 right-4 z-10">
                     {onToggleAlert && (
