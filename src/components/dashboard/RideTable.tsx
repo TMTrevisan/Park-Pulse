@@ -283,20 +283,22 @@ export function RideTable({
             if (land.includes("Echo Lake")) colorClass = "bg-sky-100 text-sky-700 border-sky-200 dark:bg-sky-900/30 dark:text-sky-300 dark:border-sky-800";
             if (land.includes("Toy Story Land")) colorClass = "bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-800";
             if (land.includes("Grand Avenue")) colorClass = "bg-orange-100 text-orange-700 border-orange-200 dark:bg-orange-900/30 dark:text-orange-300 dark:border-orange-800";
+            if (land.includes("Animation Courtyard")) colorClass = "bg-indigo-100 text-indigo-700 border-indigo-200 dark:bg-indigo-900/30 dark:text-indigo-300 dark:border-indigo-800";
+            if (land.includes("Main Street") || land.includes("Front Entrance")) colorClass = "bg-red-100 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800";
             if (land.includes("Liberty Square")) colorClass = "bg-zinc-200 text-zinc-700 border-zinc-300 dark:bg-zinc-700 dark:text-zinc-300 dark:border-zinc-600";
             
             // EPCOT
-            if (land.includes("World Discovery")) colorClass = "bg-blue-100 text-blue-700 border-blue-200";
-            if (land.includes("World Showcase")) colorClass = "bg-rose-100 text-rose-700 border-rose-200";
-            if (land.includes("World Nature")) colorClass = "bg-green-100 text-green-700 border-green-200";
-            if (land.includes("World Celebration")) colorClass = "bg-purple-100 text-purple-700 border-purple-200";
+            if (land.includes("World Discovery") || land.includes("Discovery")) colorClass = "bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800";
+            if (land.includes("World Showcase") || land.includes("Showcase")) colorClass = "bg-rose-100 text-rose-700 border-rose-200 dark:bg-rose-900/30 dark:text-rose-300 dark:border-rose-800";
+            if (land.includes("World Nature") || land.includes("Nature")) colorClass = "bg-teal-100 text-teal-700 border-teal-200 dark:bg-teal-900/30 dark:text-teal-300 dark:border-teal-800";
+            if (land.includes("World Celebration") || land.includes("Celebration")) colorClass = "bg-purple-100 text-purple-700 border-purple-200 dark:bg-purple-900/30 dark:text-purple-300 dark:border-purple-800";
 
             // Animal Kingdom
-            if (land.includes("Africa")) colorClass = "bg-orange-100 text-orange-800 border-orange-200";
-            if (land.includes("Asia")) colorClass = "bg-red-100 text-red-800 border-red-200";
-            if (land.includes("Pandora")) colorClass = "bg-indigo-100 text-indigo-700 border-indigo-200";
-            if (land.includes("DinoLand")) colorClass = "bg-yellow-100 text-yellow-800 border-yellow-200";
-            if (land.includes("Discovery Island")) colorClass = "bg-emerald-100 text-emerald-800 border-emerald-200";
+            if (land.includes("Africa")) colorClass = "bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900/30 dark:text-orange-300 dark:border-orange-800";
+            if (land.includes("Asia")) colorClass = "bg-red-100 text-red-800 border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800";
+            if (land.includes("Pandora")) colorClass = "bg-indigo-100 text-indigo-700 border-indigo-200 dark:bg-indigo-900/30 dark:text-indigo-300 dark:border-indigo-800";
+            if (land.includes("DinoLand")) colorClass = "bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-800";
+            if (land.includes("Discovery Island")) colorClass = "bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800";
 
             return (
                 <span className={cn("text-xs font-medium px-2 py-1 rounded border whitespace-nowrap", colorClass)}>
