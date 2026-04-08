@@ -3,10 +3,11 @@
 import { Ride, WaitTimeSnapshot } from "@/lib/types";
 import { RideCard } from "../RideCard";
 import { WaitTimeChart } from "../WaitTimeChart";
-import { getLand, getTicketClass } from "@/lib/parks";
+import { getLand, getTicketClass, ResortId } from "@/lib/parks";
 import { cn } from "@/lib/utils";
 import { TrendingUp } from "lucide-react";
 import { Alert } from "@/hooks/useAlerts";
+import { RideHeatmap } from "./RideHeatmap";
 
 interface RideGridProps {
     rides: Ride[];
@@ -19,6 +20,7 @@ interface RideGridProps {
     toggleFavorite: (id: string) => void;
     alerts: Alert[];
     onToggleAlert: (id: string, name: string) => void;
+    resort: ResortId;
 }
 
 export function RideGrid({
@@ -31,13 +33,14 @@ export function RideGrid({
     favorites,
     toggleFavorite,
     alerts,
-    onToggleAlert
+    onToggleAlert,
+    resort
 }: RideGridProps) {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {rides.map((ride) => {
-                const land = getLand(ride.name);
-                const ticket = getTicketClass(ride.name);
+                const land = getLand(ride.name, resort);
+                const ticket = getTicketClass(ride.name, resort);
                 const hasAlert = alerts.some(a => a.rideId === ride.id);
                 return (
                     <div
@@ -84,6 +87,7 @@ export function RideGrid({
                                         </div>
                                     </div>
                                     <WaitTimeChart rideId={ride.id} ride={ride} history={history} />
+                                    <RideHeatmap rideId={ride.id} history={history} />
                                 </div>
                             )}
                         </div>

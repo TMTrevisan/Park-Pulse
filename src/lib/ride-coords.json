@@ -82,12 +82,12 @@
   "f0f57b5c-5bc5-49d6-8b7f-34e4aa03c2e8": {
     "lat": 33.811266,
     "lng": -117.921516,
-    "name": "Tiana\u2019s Palace"
+    "name": "Tiana’s Palace"
   },
   "f8d61baa-dc1a-4e82-ab6b-f24bdd83e6e1": {
     "lat": 33.81547,
     "lng": -117.918682,
-    "name": "Caf\u00e9 Daisy"
+    "name": "Café Daisy"
   },
   "59647168-d239-4161-8b24-92eb128e96fb": {
     "lat": 33.815296,
@@ -107,7 +107,7 @@
   "e27b1db8-9ec9-4f8b-9ca6-fd6377de66ee": {
     "lat": 33.811325,
     "lng": -117.920585,
-    "name": "Adventureland Treehouse inspired by Walt Disney\u2019s Swiss Family Robinson"
+    "name": "Adventureland Treehouse inspired by Walt Disney’s Swiss Family Robinson"
   },
   "e2d460e9-2bef-4613-b126-092ab7cb37e5": {
     "lat": 33.811256,
@@ -207,7 +207,7 @@
   "2aedc657-1ee2-4545-a1ce-14753f28cc66": {
     "lat": 33.81130552,
     "lng": -117.9203269,
-    "name": "Indiana Jones\u2122 Adventure"
+    "name": "Indiana Jones™ Adventure"
   },
   "1b83fda8-d60e-48e4-9a3d-90ddcbcd1001": {
     "lat": 33.81144,
@@ -402,7 +402,7 @@
   "fae2515c-777b-4f37-b647-06383c1904d3": {
     "lat": 33.811889,
     "lng": -117.9203,
-    "name": "Stage Door Caf\u00e9"
+    "name": "Stage Door Café"
   },
   "d2feb649-41ea-4097-a45b-10cfb48d13aa": {
     "lat": 33.8112279116,
@@ -512,7 +512,7 @@
   "a529bc93-e528-4e28-a7aa-47c168f90218": {
     "lat": 33.812449,
     "lng": -117.917296,
-    "name": "Galactic Grill\u2019s Seasonal Novelty Release"
+    "name": "Galactic Grill’s Seasonal Novelty Release"
   },
   "2426de0a-55b7-4994-b31b-fc08b296c79a": {
     "lat": 33.8145219838,
@@ -527,7 +527,7 @@
   "c7ce633e-1f6b-4699-98c9-6772bb196b16": {
     "lat": 33.8110402999,
     "lng": -117.9190407415,
-    "name": "Carnation Caf\u00e9"
+    "name": "Carnation Café"
   },
   "c60e9de0-df2b-4484-9b05-299939dc247a": {
     "lat": 33.81097757,
@@ -647,11 +647,291 @@
   "4ca6cdbf-4c5f-45bf-b0dc-db83393ec208": {
     "lat": 33.804678,
     "lng": -117.919794,
-    "name": "Pixar Pal-A-Round \u2013 Non-Swinging"
+    "name": "Pixar Pal-A-Round – Non-Swinging"
   },
   "10a5fc6f-5ad3-414b-9bdd-e6bae097b6ad": {
     "lat": 33.805129,
     "lng": -117.920956,
     "name": "Golden Zephyr"
+  },
+  "75ea578a-adc8-4116-a54d-dccb60765ef9": {
+    "lat": 28.4177,
+    "lng": -81.5812,
+    "name": "Magic Kingdom"
+  },
+  "352feb94-e52e-45eb-9c92-e4b44c6b1a9d": {
+    "lat": 28.4192,
+    "lng": -81.5839,
+    "name": "Pirates of the Caribbean"
+  },
+  "73cb9445-0695-47a3-87ce-d08ae36b5f3c": {
+    "lat": 28.4212,
+    "lng": -81.5827,
+    "name": "Tiana's Bayou Adventure"
+  },
+  "d9d12438-d999-4482-894b-8955fdb20ccf": {
+    "lat": 28.4181,
+    "lng": -81.5797,
+    "name": "Astro Orbiter"
+  },
+  "5a43d1a7-ad53-4d25-abfe-25625f0da304": {
+    "lat": 28.4185,
+    "lng": -81.5794,
+    "name": "TRON Lightcycle / Run"
+  },
+  "2551a77d-023f-4ab1-9a19-8afec0190f39": {
+    "lat": 28.4201,
+    "lng": -81.5825,
+    "name": "Haunted Mansion"
+  },
+  "924a3b2c-6b4b-49e5-99d3-e9dc3f2e8a48": {
+    "lat": 28.4197,
+    "lng": -81.5815,
+    "name": "The Barnstormer"
+  },
+  "de3309ca-97d5-4211-bffe-739fed47e92f": {
+    "lat": 28.4217,
+    "lng": -81.5844,
+    "name": "Big Thunder Mountain Railroad"
+  },
+  "3cba0cb4-e2a6-402c-93ee-c11ffcb127ef": {
+    "lat": 28.4197,
+    "lng": -81.5814,
+    "name": "Under the Sea - Journey of The Little Mermaid"
+  },
+  "7c5e1e02-3a44-4151-9005-44066d5ba1da": {
+    "lat": 28.4199,
+    "lng": -81.5812,
+    "name": "Mickey's PhilharMagic"
+  },
+  "8183f3f2-1b59-4b9c-b634-6a863bdf8d84": {
+    "lat": 28.4183,
+    "lng": -81.5795,
+    "name": "Walt Disney's Carousel of Progress"
+  },
+  "96455de6-f4f1-403c-9391-bf8396979149": {
+    "lat": 28.4193,
+    "lng": -81.5837,
+    "name": "The Magic Carpets of Aladdin"
+  },
+  "ffcfeaa2-1416-4920-a1ed-543c1a1695c4": {
+    "lat": 28.4182,
+    "lng": -81.58,
+    "name": "Tomorrowland Transit Authority PeopleMover"
+  },
+  "b2260923-9315-40fd-9c6b-44dd811dbe64": {
+    "lat": 28.4183,
+    "lng": -81.5796,
+    "name": "Space Mountain"
+  },
+  "f5aad2d4-a419-4384-bd9a-42f86385c750": {
+    "lat": 28.4203,
+    "lng": -81.5813,
+    "name": "it's a small world"
+  },
+  "72c7343a-f7fb-4f66-95df-c91016de7338": {
+    "lat": 28.4185,
+    "lng": -81.5799,
+    "name": "Buzz Lightyear's Space Ranger Spin"
+  },
+  "9d4d5229-7142-44b6-b4fb-528920969a2c": {
+    "lat": 28.4203,
+    "lng": -81.5815,
+    "name": "Seven Dwarfs Mine Train"
+  },
+  "0aae716c-af13-4439-b638-d75fb1649df3": {
+    "lat": 28.4207,
+    "lng": -81.581,
+    "name": "Mad Tea Party"
+  },
+  "e8f0b426-7645-4ea3-8b41-b94ae7091a41": {
+    "lat": 28.4186,
+    "lng": -81.5802,
+    "name": "Monsters Inc. Laugh Floor"
+  },
+  "f163ddcd-43e1-488d-8276-2381c1db0a39": {
+    "lat": 28.4186,
+    "lng": -81.58,
+    "name": "Tomorrowland Speedway"
+  },
+  "273ddb8d-e7b5-4e34-8657-1113f49262a5": {
+    "lat": 28.42,
+    "lng": -81.5809,
+    "name": "Prince Charming Regal Carrousel"
+  },
+  "796b0a25-c51e-456e-9bb8-50a324e301b3": {
+    "lat": 28.4192,
+    "lng": -81.5838,
+    "name": "Jungle Cruise"
+  },
+  "890fa430-89c0-4a3f-96c9-11597888005e": {
+    "lat": 28.42,
+    "lng": -81.5815,
+    "name": "Dumbo the Flying Elephant"
+  },
+  "86a41273-5f15-4b54-93b6-829f140e5161": {
+    "lat": 28.42,
+    "lng": -81.5812,
+    "name": "Peter Pan's Flight"
+  },
+  "0d94ad60-72f0-4551-83a6-ebaecdd89737": {
+    "lat": 28.4202,
+    "lng": -81.5818,
+    "name": "The Many Adventures of Winnie the Pooh"
+  },
+  "47f90d2c-e191-4239-a466-5892ef59a88b": {
+    "lat": 28.3747,
+    "lng": -81.5494,
+    "name": "EPCOT"
+  },
+  "e3549451-b284-453d-9c31-e3b1207abd79": {
+    "lat": 28.3754,
+    "lng": -81.547,
+    "name": "Guardians of the Galaxy: Cosmic Rewind"
+  },
+  "1f542745-cda1-4786-a536-5fff373e5964": {
+    "lat": 28.37,
+    "lng": -81.5487,
+    "name": "The American Adventure"
+  },
+  "8d7ccdb1-a22b-4e26-8dc8-65b1938ed5f0": {
+    "lat": 28.3729,
+    "lng": -81.5519,
+    "name": "Frozen Ever After"
+  },
+  "dae68dee-dfba-4128-b594-6aa12add1070": {
+    "lat": 28.3745,
+    "lng": -81.5484,
+    "name": "Journey of Water, Inspired by Moana"
+  },
+  "fb076275-0570-4d62-b2a9-4d6515130fa3": {
+    "lat": 28.3738,
+    "lng": -81.5467,
+    "name": "The Seas with Nemo & Friends"
+  },
+  "480fde8f-fe58-4bfb-b3ab-052a39d4db7c": {
+    "lat": 28.3745,
+    "lng": -81.5494,
+    "name": "Spaceship Earth"
+  },
+  "57acb522-a6fc-4aa4-a80e-21f21f317250": {
+    "lat": 28.3738,
+    "lng": -81.5469,
+    "name": "Turtle Talk With Crush"
+  },
+  "8f353879-d6ac-4211-9352-4029efb47c18": {
+    "lat": 28.374,
+    "lng": -81.5464,
+    "name": "Living with the Land"
+  },
+  "5b6475ad-4e9a-4793-b841-501aa382c9c0": {
+    "lat": 28.3754,
+    "lng": -81.5484,
+    "name": "Mission: SPACE"
+  },
+  "37ae57c5-feaf-4e47-8f27-4b385be200f0": {
+    "lat": 28.3754,
+    "lng": -81.5482,
+    "name": "Test Track"
+  },
+  "81b15dfd-cf6a-466f-be59-3dd65d2a2807": {
+    "lat": 28.374,
+    "lng": -81.5466,
+    "name": "Soarin' Around the World"
+  },
+  "22f48b73-01df-460e-8969-9eb2b4ae836c": {
+    "lat": 28.3722,
+    "lng": -81.5525,
+    "name": "Gran Fiesta Tour Starring The Three Caballeros"
+  },
+  "1e735ffb-4868-47f1-b2cd-2ac1156cd5f0": {
+    "lat": 28.373,
+    "lng": -81.5508,
+    "name": "Remy's Ratatouille Adventure"
+  },
+  "75449e85-c410-4cef-a368-9d2ea5d52b58": {
+    "lat": 28.3745,
+    "lng": -81.5479,
+    "name": "Journey Into Imagination With Figment"
+  },
+  "288747d1-8b4f-4a64-867e-ea7c9b27bad8": {
+    "lat": 28.3575,
+    "lng": -81.5583,
+    "name": "Disney's Hollywood Studios"
+  },
+  "1a2e70d9-50d5-4140-b69e-799e950f7d18": {
+    "lat": 28.3545,
+    "lng": -81.5618,
+    "name": "Star Wars: Rise of the Resistance"
+  },
+  "e516f303-e82d-4fd3-8fbf-8e6ab624cf89": {
+    "lat": 28.3578,
+    "lng": -81.5598,
+    "name": "Rock 'n' Roller Coaster Starring Aerosmith"
+  },
+  "6f6998e8-a629-412c-b964-2cb06af8e26b": {
+    "lat": 28.3572,
+    "lng": -81.5596,
+    "name": "The Twilight Zone™ Tower of Terror"
+  },
+  "3b290419-8ca2-44bc-a710-a6c83fca76ec": {
+    "lat": 28.3579,
+    "lng": -81.5613,
+    "name": "Star Tours – The Adventures Continue"
+  },
+  "34c4916b-989b-4ff1-a7e3-a6a846a3484f": {
+    "lat": 28.3549,
+    "lng": -81.5615,
+    "name": "Millennium Falcon: Smugglers Run"
+  },
+  "20b5daa8-e1ea-436f-830c-2d7d18d929b5": {
+    "lat": 28.3562,
+    "lng": -81.5568,
+    "name": "Toy Story Mania!"
+  },
+  "6e118e37-5002-408d-9d88-0b5d9cdb5d14": {
+    "lat": 28.3588,
+    "lng": -81.5582,
+    "name": "Mickey & Minnie's Runaway Railway"
+  },
+  "399aa0a1-98e2-4d2b-b297-2b451e9665e1": {
+    "lat": 28.3556,
+    "lng": -81.556,
+    "name": "Slinky Dog Dash"
+  },
+  "d56506e2-6ad3-443a-8065-fea37987248d": {
+    "lat": 28.3555,
+    "lng": -81.5563,
+    "name": "Alien Swirling Saucers"
+  },
+  "1c84a229-8862-4648-9c71-378ddd2c7693": {
+    "lat": 28.3589,
+    "lng": -81.59,
+    "name": "Disney's Animal Kingdom"
+  },
+  "d58d9262-ec95-4161-80a0-07ca43b2f5f3": {
+    "lat": 28.3607,
+    "lng": -81.5921,
+    "name": "Kali River Rapids"
+  },
+  "7a5af3b7-9bc1-4962-92d0-3ea9c9ce35f0": {
+    "lat": 28.3643,
+    "lng": -81.5896,
+    "name": "Na'vi River Journey"
+  },
+  "24cf863c-b6ba-4826-a056-0b698989cbf7": {
+    "lat": 28.364,
+    "lng": -81.5893,
+    "name": "Avatar Flight of Passage"
+  },
+  "64a6915f-a835-4226-ba5c-8389fc4cade3": {
+    "lat": 28.3603,
+    "lng": -81.5927,
+    "name": "Expedition Everest - Legend of the Forbidden Mountain"
+  },
+  "32e01181-9a5f-4936-8a77-0dace1de836c": {
+    "lat": 28.3561,
+    "lng": -81.5884,
+    "name": "Kilimanjaro Safaris"
   }
 }

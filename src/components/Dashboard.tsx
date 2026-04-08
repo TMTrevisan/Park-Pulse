@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { WaitTimeSnapshot, Ride } from "@/lib/types";
-
-import { PARKS, getTicketClass, getLand } from "@/lib/parks";
+import { PARKS, RESORT_PARKS, getTicketClass, getLand, getDefaultParkForResort } from "@/lib/parks";
+import type { ResortId } from "@/lib/parks";
 import { HeaderToolbar } from "./dashboard/HeaderToolbar";
 import { RideGrid } from "./dashboard/RideGrid";
 import { RideTable, SortField, SortDirection } from "./dashboard/RideTable";
@@ -13,10 +13,11 @@ import { useAlerts } from "@/hooks/useAlerts";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { ParkPulseHeader, ParkStats } from "./dashboard/ParkPulseHeader";
 
-const REFRESH_INTERVAL = 60 * 1000; // 1 minute
+const REFRESH_INTERVAL = 60 * 1000;
 const TARGET_HOURS = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21];
 
 export function Dashboard() {
+    const [resort, setResort] = useState<ResortId>('DLR');
     const [data, setData] = useState<{ current: WaitTimeSnapshot; history: WaitTimeSnapshot[] } | null>(null);
     const [loading, setLoading] = useState(true);
     const [selectedParkId, setSelectedParkId] = useState(PARKS.DISNEYLAND_PARK);
@@ -27,7 +28,6 @@ export function Dashboard() {
     const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
     const [showHours, setShowHours] = useState(false);
 
-    // Filters
     const [ticketFilter, setTicketFilter] = useState("All");
     const [statusFilter, setStatusFilter] = useState("All");
     const [landFilter, setLandFilter] = useState("All");
@@ -36,19 +36,16 @@ export function Dashboard() {
     const { favorites, toggleFavorite } = useFavorites();
     const { alerts, addAlert, removeAlert, checkAlerts } = useAlerts();
 
-    const fetchData = async (isInitial = false) => {
+    const fetchData = useCallback(async (isInitial = false, currentResort: ResortId = resort) => {
         if (isInitial) setLoading(true);
         try {
-            const response = await fetch(`/api/wait-times${isInitial ? '' : '?history=false'}`);
-            if (!response.ok) {
-                throw new Error('Failed to fetch data');
-            }
+            const url = `/api/wait-times?resort=${currentResort}${isInitial ? '' : '&history=false'}`;
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Failed to fetch data');
             const result = await response.json();
 
             setData(prev => {
                 if (!prev || isInitial) return result;
-
-                // Keep the massive history in memory, just append the new live snapshot
                 return {
                     current: result.current,
                     history: [...prev.history, result.current]
@@ -59,56 +56,60 @@ export function Dashboard() {
         } finally {
             if (isInitial) setLoading(false);
         }
+    }, [resort]);
+
+    // When resort changes: reset park selection, clear data, re-fetch
+    const handleResortChange = (newResort: ResortId) => {
+        setResort(newResort);
+        setSelectedParkId(getDefaultParkForResort(newResort));
+        setData(null);
+        setLoading(true);
+        // Reset filters too since lands differ
+        setLandFilter("All");
+        setTicketFilter("All");
+        setStatusFilter("All");
+        setWaitTimeFilter("All");
     };
 
     useEffect(() => {
-        fetchData(true);
-        const interval = setInterval(() => fetchData(false), REFRESH_INTERVAL);
+        fetchData(true, resort);
+        const interval = setInterval(() => fetchData(false, resort), REFRESH_INTERVAL);
         return () => clearInterval(interval);
-    }, []);
+    }, [resort]);
 
     const currentPark = data?.current.parks.find((p) => p.id === selectedParkId);
 
     const uniqueLands = useMemo(() => {
         if (!currentPark) return [];
-        const lands = new Set(currentPark.liveData.map(r => getLand(r.name)));
+        const lands = new Set(currentPark.liveData.map(r => getLand(r.name, resort)));
         return Array.from(lands).sort();
-    }, [currentPark]);
+    }, [currentPark, resort]);
 
     const rides = useMemo(() => {
-        const sourceRides = viewMode === 'map' 
-            ? (data?.current.parks.flatMap(p => p.liveData) || []) 
+        const sourceRides = viewMode === 'map'
+            ? (data?.current.parks.flatMap(p => p.liveData) || [])
             : (currentPark?.liveData || []);
 
         const filtered = sourceRides.filter((ride) => {
-            // Basic checks
             if (ride.entityType !== "ATTRACTION" || ride.status === "REFURBISHMENT") return false;
             if (!ride.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
 
-            // Ticket Filter
             if (ticketFilter !== "All") {
-                const ticket = getTicketClass(ride.name);
+                const ticket = getTicketClass(ride.name, resort);
                 if (ticket !== ticketFilter) return false;
             }
-
-            // Status Filter
             if (statusFilter !== "All") {
                 if (ride.status !== statusFilter) return false;
             }
-
-            // Land Filter
             if (landFilter !== "All") {
-                const land = getLand(ride.name);
+                const land = getLand(ride.name, resort);
                 if (land !== landFilter) return false;
             }
-
-            // Wait Time Filter
             if (waitTimeFilter !== "All") {
                 const wait = ride.queue?.STANDBY?.waitTime ?? 0;
                 const maxWait = parseInt(waitTimeFilter);
                 if (wait > maxWait) return false;
             }
-
             return true;
         });
 
@@ -122,33 +123,29 @@ export function Dashboard() {
                     valB = favorites.includes(b.id) ? 1 : 0;
                     break;
                 case 'name':
-                    valA = a.name;
-                    valB = b.name;
+                    valA = a.name; valB = b.name;
                     break;
                 case 'waitTime':
                     valA = a.status === 'OPERATING' ? (a.queue?.STANDBY?.waitTime ?? 0) : -1;
                     valB = b.status === 'OPERATING' ? (b.queue?.STANDBY?.waitTime ?? 0) : -1;
                     break;
                 case 'land':
-                    valA = getLand(a.name);
-                    valB = getLand(b.name);
+                    valA = getLand(a.name, resort); valB = getLand(b.name, resort);
                     break;
                 case 'status':
-                    valA = a.status;
-                    valB = b.status;
+                    valA = a.status; valB = b.status;
                     break;
-                case 'ticket':
+                case 'ticket': {
                     const score = (r: Ride) => {
-                        const t = getTicketClass(r.name);
-                        const map: Record<string, number> = { 'E': 5, 'D': 4, 'C': 3, 'B': 2, 'A': 1 };
+                        const t = getTicketClass(r.name, resort);
+                        const map: Record<string, number> = { E: 5, D: 4, C: 3, B: 2, A: 1 };
                         return map[t] || 0;
                     };
-                    valA = score(a);
-                    valB = score(b);
+                    valA = score(a); valB = score(b);
                     break;
+                }
                 case 'peak':
-                    valA = getHighOfDay(a);
-                    valB = getHighOfDay(b);
+                    valA = getHighOfDay(a); valB = getHighOfDay(b);
                     break;
             }
 
@@ -157,13 +154,11 @@ export function Dashboard() {
             return 0;
         });
 
-    }, [currentPark, data, viewMode, searchQuery, sortField, sortDirection, favorites, ticketFilter, statusFilter, landFilter, waitTimeFilter]);
+    }, [currentPark, data, viewMode, searchQuery, sortField, sortDirection, favorites,
+        ticketFilter, statusFilter, landFilter, waitTimeFilter]);
 
-    // Check alerts whenever rides update
     useEffect(() => {
-        if (rides.length > 0) {
-            checkAlerts(rides);
-        }
+        if (rides.length > 0) checkAlerts(rides);
     }, [rides, checkAlerts]);
 
     const handleToggleAlert = (rideId: string, rideName: string) => {
@@ -171,12 +166,10 @@ export function Dashboard() {
         if (existing) {
             removeAlert(rideId);
         } else {
-            const input = window.prompt(`Alert when wait time for ${rideName} is less than or equal to (minutes):`, "30");
+            const input = window.prompt(`Alert when ${rideName} is ≤ (minutes):`, "30");
             if (input) {
                 const threshold = parseInt(input, 10);
-                if (!isNaN(threshold)) {
-                    addAlert(rideId, rideName, threshold);
-                }
+                if (!isNaN(threshold)) addAlert(rideId, rideName, threshold);
             }
         }
     };
@@ -194,13 +187,15 @@ export function Dashboard() {
         if (!ride.forecast) return 0;
         const today = new Date().toDateString();
         const todayForecasts = ride.forecast.filter(f => new Date(f.time).toDateString() === today);
-        if (todayForecasts.length === 0) return 0;
-        return Math.max(...todayForecasts.map(f => f.waitTime));
+        return todayForecasts.length === 0 ? 0 : Math.max(...todayForecasts.map(f => f.waitTime));
     };
 
     const getParkStats = (parkId: string): ParkStats => {
         const park = data?.current.parks.find(p => p.id === parkId);
-        if (!park?.liveData) return { averageWait: 0, busyness: { label: "Unknown", color: "text-zinc-500", bg: "bg-zinc-500" } };
+        if (!park?.liveData) return {
+            averageWait: 0,
+            busyness: { label: "Unknown", color: "text-zinc-500", bg: "bg-zinc-500" }
+        };
 
         const operatingRides = park.liveData.filter((r) =>
             r.entityType === "ATTRACTION" &&
@@ -220,14 +215,19 @@ export function Dashboard() {
         return { averageWait, busyness };
     };
 
-    const disneylandStats = useMemo(() => getParkStats(PARKS.DISNEYLAND_PARK), [data]);
-    const dcaStats = useMemo(() => getParkStats(PARKS.DISNEY_CALIFORNIA_ADVENTURE), [data]);
+    // Build stats for all parks in the current resort
+    const parkStats = useMemo(() => {
+        const stats: Record<string, ParkStats> = {};
+        for (const parkId of RESORT_PARKS[resort]) {
+            stats[parkId] = getParkStats(parkId);
+        }
+        return stats;
+    }, [data, resort]);
 
     if (loading && !data) {
         return (
             <main className="min-h-screen bg-white dark:bg-black p-4 md:p-8 font-sans">
                 <div className="max-w-7xl mx-auto">
-                    {/* Header Skeleton */}
                     <div className="mb-8 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                         <div>
                             <Skeleton className="h-10 w-64 mb-2" />
@@ -235,8 +235,6 @@ export function Dashboard() {
                         </div>
                         <Skeleton className="h-12 w-48 rounded-lg" />
                     </div>
-
-                    {/* Toolbar Skeleton */}
                     <div className="mb-6">
                         <Skeleton className="h-10 w-full max-w-md rounded-xl mb-6" />
                         <div className="flex flex-col sm:flex-row gap-4 justify-between">
@@ -244,12 +242,9 @@ export function Dashboard() {
                             <div className="flex gap-2">
                                 <Skeleton className="h-10 w-24" />
                                 <Skeleton className="h-10 w-24" />
-                                <Skeleton className="h-10 w-24" />
                             </div>
                         </div>
                     </div>
-
-                    {/* Grid Skeleton */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                         {Array.from({ length: 8 }).map((_, i) => (
                             <Skeleton key={i} className="h-32 w-full rounded-lg" />
@@ -275,16 +270,19 @@ export function Dashboard() {
                         toggleFavorite={toggleFavorite}
                         alerts={alerts}
                         onToggleAlert={handleToggleAlert}
+                        resort={resort}
                     />
                 );
-            case 'map':
+            case 'map': {
                 const allMapRides = data?.current.parks.flatMap(p => p.liveData) || [];
                 return (
-                    <MapOverlay 
-                        rides={allMapRides} 
-                        selectedParkId={selectedParkId} 
+                    <MapOverlay
+                        rides={allMapRides}
+                        selectedParkId={selectedParkId}
+                        resort={resort}
                     />
                 );
+            }
             case 'list':
             default:
                 return (
@@ -304,6 +302,7 @@ export function Dashboard() {
                         toggleFavorite={toggleFavorite}
                         alerts={alerts}
                         onToggleAlert={handleToggleAlert}
+                        resort={resort}
                     />
                 );
         }
@@ -313,10 +312,11 @@ export function Dashboard() {
         <main className="min-h-screen bg-white dark:bg-black p-4 md:p-8 font-sans">
             <div className="max-w-7xl mx-auto">
                 <ParkPulseHeader
-                    disneyland={disneylandStats}
-                    dca={dcaStats}
+                    parkStats={parkStats}
                     selectedParkId={selectedParkId}
                     onParkSelect={setSelectedParkId}
+                    resort={resort}
+                    onResortChange={handleResortChange}
                 />
 
                 <HeaderToolbar
@@ -341,11 +341,11 @@ export function Dashboard() {
 
                 {renderContent()}
 
-                {/* Attribution Footer */}
                 <footer className="mt-12 text-center text-xs text-zinc-400 dark:text-zinc-600 pb-8">
                     Wait times powered by ThemeParks API and Queue-Times.com.
                     <br />
-                    <a href="https://queue-times.com/en-US" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:text-blue-400 transition-colors hover:underline mt-1 inline-block font-medium">
+                    <a href="https://queue-times.com/en-US" target="_blank" rel="noopener noreferrer"
+                        className="text-blue-500 hover:text-blue-400 transition-colors hover:underline mt-1 inline-block font-medium">
                         Visit Queue-Times.com
                     </a>
                 </footer>

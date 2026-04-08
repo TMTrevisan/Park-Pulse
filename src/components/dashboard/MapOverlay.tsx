@@ -7,6 +7,7 @@ import { Ride } from '@/lib/types';
 import { Layers, Bug } from 'lucide-react';
 import { clsx } from 'clsx';
 import RIDE_COORDS_DATA from '@/lib/ride-coords.json';
+import type { ResortId } from '@/lib/parks';
 
 // Handle Next.js/Webpack ES module interop defensively
 const rawCoords = (RIDE_COORDS_DATA as any).default || RIDE_COORDS_DATA;
@@ -15,18 +16,32 @@ const RIDE_COORDS: Record<string, any> = rawCoords;
 interface MapOverlayProps {
   rides: Ride[];
   selectedParkId: string;
+  resort: ResortId;
 }
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || "";
 
-export default function MapOverlay({ rides, selectedParkId }: MapOverlayProps) {
+const RESORT_VIEWPORTS: Record<ResortId, { latitude: number; longitude: number; zoom: number }> = {
+  DLR: { latitude: 33.8091, longitude: -117.9190, zoom: 15.2 },
+  WDW: { latitude: 28.3852, longitude: -81.5639, zoom: 13.5 },
+};
+
+export default function MapOverlay({ rides, selectedParkId, resort }: MapOverlayProps) {
+  const defaultView = RESORT_VIEWPORTS[resort];
   const [viewState, setViewState] = useState({
-    latitude: 33.8091,
-    longitude: -117.9190,
-    zoom: 15.2,
+    ...defaultView,
     pitch: 45,
-    bearing: 0
+    bearing: 0,
   });
+
+  // Sync viewState when resort changes
+  React.useEffect(() => {
+    setViewState({
+      ...RESORT_VIEWPORTS[resort],
+      pitch: 45,
+      bearing: 0,
+    });
+  }, [resort]);
 
   const [mapStyle, setMapStyle] = useState<'streets-v12' | 'satellite-streets-v12'>('streets-v12');
   const [hoveredRide, setHoveredRide] = useState<Ride | null>(null);
