@@ -76,6 +76,8 @@ export const LAND_CENTROIDS: Record<string, { lat: number; lng: number; zoom: nu
 
 // ─── Massive Land Mapping (Fuzzy Support) ────────────────────────────────────
 
+// ─── Massive Land Mapping (Fuzzy Support) ────────────────────────────────────
+
 const BASE_LAND_MAPPING: Record<string, string> = {
     'Rise of the Resistance': "Galaxy's Edge",
     'Smugglers Run': "Galaxy's Edge",
@@ -87,7 +89,6 @@ const BASE_LAND_MAPPING: Record<string, string> = {
     'Peter Pan': 'Fantasyland',
     'Tomorrowland Speedway': 'Tomorrowland',
     'Seven Dwarfs': 'Fantasyland',
-    'Runaway Railway': 'Mickey\'s Toontown',
     'Slinky Dog': 'Toy Story Land',
     'Toy Story Mania': 'Toy Story Land',
     'Soarin': 'World Nature',
@@ -95,6 +96,7 @@ const BASE_LAND_MAPPING: Record<string, string> = {
     'Flight of Passage': 'Pandora',
     'Spaceship Earth': 'World Celebration',
     'Test Track': 'World Discovery',
+    'Test Track 2.0': 'World Discovery',
     'Frozen Ever After': 'World Showcase',
     'Ratatouille': 'World Showcase',
     'Tower of Terror': 'Sunset Boulevard',
@@ -111,8 +113,30 @@ const BASE_LAND_MAPPING: Record<string, string> = {
     'Wildlife Express': 'Africa',
     'TriceraTop Spin': 'DinoLand U.S.A.',
     'Alien Swirling Saucers': 'Toy Story Land',
-    'Star Tours': 'Echo Lake',
     'Indiana Jones': 'Adventureland',
+    'Haunted Mansion': 'Liberty Square',
+    'Space Mountain': 'Tomorrowland',
+    'Pirates of the Caribbean': 'Adventureland',
+    'Matterhorn': 'Fantasyland',
+    'Submarine Voyage': 'Tomorrowland',
+    'Autopia': 'Tomorrowland',
+    'Alice in Wonderland': 'Fantasyland',
+    'Mr. Toad': 'Fantasyland',
+    'Pinocchio': 'Fantasyland',
+    'Snow White': 'Fantasyland',
+    'Roger Rabbit': 'Mickey\'s Toontown',
+    'Gadget\'s Go Coaster': 'Mickey\'s Toontown',
+    'Goofy\'s Sky School': 'Pixar Pier',
+    'Incredicoaster': 'Pixar Pier',
+    'Web Slingers': 'Avengers Campus',
+    'Guardians of the Galaxy Mission': 'Avengers Campus',
+    'Radiator Springs': 'Cars Land',
+    'Luigi\'s': 'Cars Land',
+    'Mater\'s': 'Cars Land',
+    'Soarin\' Around': 'Grizzly Peak',
+    'Grizzly River Run': 'Grizzly Peak',
+    'Monsters, Inc. Mike & Sulley': 'Hollywood Land',
+    'Little Mermaid': 'Fantasyland'
 };
 
 export const RESORT_LAND_OVERRIDES: Record<ResortId, Record<string, string>> = {
@@ -122,16 +146,28 @@ export const RESORT_LAND_OVERRIDES: Record<ResortId, Record<string, string>> = {
         'Space Mountain': 'Tomorrowland',
         'Indiana Jones': 'Adventureland',
         'Winnie the Pooh': 'Critter Country',
-        'Tiana\'s Bayou': 'Critter Country',
+        'Tiana\'s Bayou': 'Critter Country', // For Disneyland it's in Critter Country (for now)
+        'Star Tours': 'Tomorrowland',
+        'Matterhorn': 'Fantasyland',
+        'Runaway Railway': 'Mickey\'s Toontown',
+        'Splash Mountain': 'Critter Country',
+        'Casey Jr.': 'Fantasyland',
+        'Storybook Land': 'Fantasyland',
+        'King Arthur': 'Fantasyland',
+        'Astro Orbitor': 'Tomorrowland',
+        'Monorail': 'Tomorrowland',
+        'Great Moments with Mr. Lincoln': 'Main Street, U.S.A.',
     },
     WDW: {
-        // Magic Kingdom
         'Haunted Mansion': 'Liberty Square',
         'Pirates of the Caribbean': 'Adventureland',
         'Space Mountain': 'Tomorrowland',
+        'Winnie the Pooh': 'Fantasyland',
+        'Tiana\'s Bayou': 'Frontierland',
+        'Star Tours': 'Echo Lake',
+        'Runaway Railway': 'Hollywood Boulevard',
         'Buzz Lightyear': 'Tomorrowland',
         'Under the Sea': 'Fantasyland',
-        'Winnie the Pooh': 'Fantasyland',
         'TRON': 'Tomorrowland',
         'Seven Dwarfs': 'Fantasyland',
         'Dumbo': 'Fantasyland',
@@ -150,43 +186,30 @@ export const RESORT_LAND_OVERRIDES: Record<ResortId, Record<string, string>> = {
         'Magic Carpets of Aladdin': 'Adventureland',
         'Swiss Family Treehouse': 'Adventureland',
         'Walt Disney World Railroad': 'Main Street, U.S.A.',
-        'Main Street Vehicles': 'Main Street, U.S.A.',
         'Hall of Presidents': 'Liberty Square',
         'Liberty Belle': 'Liberty Square',
         'Tom Sawyer Island': 'Frontierland',
         'Carousel of Progress': 'Tomorrowland',
         'Country Bear Jamboree': 'Frontierland',
-
-        // EPCOT
         'Cosmic Rewind': 'World Discovery',
-        'Remy\'s Ratatouille': 'World Showcase',
-        'Frozen Ever After': 'World Showcase',
-        'Test Track': 'World Discovery',
+        'Mission: SPACE': 'World Discovery',
         'Soarin': 'World Nature',
         'Living with the Land': 'World Nature',
+        'The Seas with Nemo': 'World Nature',
         'Spaceship Earth': 'World Celebration',
         'Journey into Imagination': 'World Celebration',
-        'The Seas with Nemo': 'World Nature',
-        'Mission: SPACE': 'World Discovery',
-        'Gran Fiesta Tour': 'World Showcase',
         'Turtle Talk': 'World Nature',
-
-        // Hollywood Studios
-        'Star Tours': 'Echo Lake',
-        'Runaway Railway': 'Hollywood Boulevard',
+        'Remy\'s Ratatouille': 'World Showcase',
+        'Frozen Ever After': 'World Showcase',
+        'Gran Fiesta Tour': 'World Showcase',
+        'Rock \'n\' Roller Coaster': 'Sunset Boulevard',
+        'Tower of Terror': 'Sunset Boulevard',
         'Slinky Dog': 'Toy Story Land',
         'Toy Story Mania': 'Toy Story Land',
-        'Tower of Terror': 'Sunset Boulevard',
-        'Rock \'n\' Roller Coaster': 'Sunset Boulevard',
+        'Alien Swirling Saucers': 'Toy Story Land',
         'Rise of the Resistance': 'Galaxy\'s Edge',
         'Smugglers Run': 'Galaxy\'s Edge',
-        'Alien Swirling Saucers': 'Toy Story Land',
         'Muppet*Vision 3D': 'Grand Avenue',
-        'Beauty and the Beast': 'Sunset Boulevard',
-        'Indiana Jones Epic Stunt': 'Echo Lake',
-        'Lightning McQueen\'s Racing Academy': 'Sunset Boulevard',
-
-        // Animal Kingdom
         'Flight of Passage': 'Pandora',
         'Na\'vi River Journey': 'Pandora',
         'Expedition Everest': 'Asia',
@@ -194,10 +217,6 @@ export const RESORT_LAND_OVERRIDES: Record<ResortId, Record<string, string>> = {
         'DINOSAUR': 'DinoLand U.S.A.',
         'Kali River Rapids': 'Asia',
         'It\'s Tough to be a Bug': 'Discovery Island',
-        'TriceraTop Spin': 'DinoLand U.S.A.',
-        'Wildlife Express': 'Africa',
-        'Gorilla Falls': 'Africa',
-        'Maharajah Jungle Trek': 'Asia',
     }
 };
 
@@ -219,7 +238,6 @@ export function getLand(rideName: string, resort: ResortId): string {
     const baseMatch = Object.keys(BASE_LAND_MAPPING).find(k => name.includes(k.toLowerCase()));
     if (baseMatch) return BASE_LAND_MAPPING[baseMatch];
     
-    // 3. Robust Fallback
     return '—';
 }
 
@@ -228,42 +246,51 @@ export function getTicketClass(rideName: string, resort: ResortId): string {
     const name = rideName.toLowerCase();
     const resortKey = (resort || 'DLR').toUpperCase() as ResortId;
     
-    // 1. High-priority explicit matches (Resort-aware)
-    if (resortKey === 'WDW') {
-        if (name.includes('cosmic rewind') || name.includes('guardians')) return 'E';
-        if (name.includes('tron')) return 'E';
-        if (name.includes('remy') || name.includes('ratatouille')) return 'E';
-        if (name.includes('rise of the resistance')) return 'E';
-        if (name.includes('flight of passage')) return 'E';
-        if (name.includes('everest')) return 'E';
-        if (name.includes('slinky dog')) return 'E';
-        if (name.includes('tower of terror')) return 'E';
-        if (name.includes('test track')) return 'E';
-        if (name.includes('frozen')) return 'D';
-        if (name.includes('pirates')) return 'D';
-        if (name.includes('mansion')) return 'D';
-        if (name.includes('kilimanjaro')) return 'D';
-        if (name.includes('dumbo')) return 'B';
-        if (name.includes('barnstormer')) return 'B';
-    }
-
-    const baseTickets: Record<string, string> = {
-        'resistance': 'E', 'avatar': 'E', 'tron': 'E', 'space mountain': 'E',
-        'guardians': 'E', 'slinky': 'E', 'radiator': 'E', 'seven dwarfs': 'E',
-        'mickey & minnie': 'E', 'tower of terror': 'E', 'test track': 'E',
-        'pirates': 'D', 'haunted': 'D', 'big thunder': 'D', 'indiana jones': 'D',
-        'jungle cruise': 'D', 'soarin': 'D', 'frozen': 'D', 'peter pan': 'D',
-        'toy story mania': 'D', 'mission': 'D', 'everest': 'D', 'kilimanjaro': 'D',
-        'small world': 'C', 'pooh': 'C', 'buzz': 'C', 'navigation': 'C',
-        'barnstormer': 'B', 'dumbo': 'B', 'mad tea': 'B', 'nemo': 'B',
+    // Explicit high-priority overrides
+    const ticketOverrides: Record<string, string> = {
+        'rise of the resistance': 'E',
+        'flight of passage': 'E',
+        'cosmic rewind': 'E',
+        'tron': 'E',
+        'slinky dog': 'E',
+        'radiator springs': 'E',
+        'space mountain': 'E',
+        'matterhorn': 'E',
+        'indiana jones': 'E',
+        'smugglers run': 'E',
+        'remy': 'E',
+        'frozen': 'E',
+        'seven dwarfs': 'E',
+        'mickey & minnie': 'E',
+        'tower of terror': 'E',
+        'rock \'n\' roller': 'E',
+        'test track': 'E',
+        'haunted mansion': 'D',
+        'pirates of the caribbean': 'D',
+        'big thunder': 'D',
+        'jungle cruise': 'D',
+        'soarin': 'D',
+        'kilimanjaro': 'D',
+        'everest': 'D',
+        'toy story mania': 'D',
+        'mission: space': 'D',
+        'peter pan': 'D',
+        'small world': 'C',
+        'buzz lightyear': 'C',
+        'winnie the pooh': 'C',
+        'nemo': 'C',
+        'dumbo': 'B',
+        'mad tea party': 'B',
+        'barnstormer': 'B'
     };
-    
-    const match = Object.keys(baseTickets).find(k => name.includes(k));
-    if (match) return baseTickets[match];
-    
+
+    const overrideMatch = Object.keys(ticketOverrides).find(k => name.includes(k));
+    if (overrideMatch) return ticketOverrides[overrideMatch];
+
     return '—';
 }
 
 export function getDefaultParkForResort(resort: ResortId): string {
-    return RESORT_PARKS[resort][0];
+    const resortKey = (resort || 'DLR').toUpperCase() as ResortId;
+    return RESORT_PARKS[resortKey]?.[0] || RESORT_PARKS['DLR'][0];
 }
