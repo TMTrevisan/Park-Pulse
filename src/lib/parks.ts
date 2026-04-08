@@ -256,7 +256,7 @@ export function getLand(rideName: string, resort: ResortId): string {
     const resortKey = (resort || 'DLR').toUpperCase() as ResortId;
 
     // 1. Check Resort Overrides (Specific names)
-    const overrides = RESORT_LAND_OVERRIDES[resortKey] || {};
+    const overrides = (RESORT_LAND_OVERRIDES[resortKey] || {}) as Record<string, string>;
     const overrideMatch = Object.keys(overrides).find(key => {
         const normalizedKey = normalizeRideName(key);
         return term.includes(normalizedKey);
@@ -264,7 +264,7 @@ export function getLand(rideName: string, resort: ResortId): string {
     if (overrideMatch) return overrides[overrideMatch];
 
     // 2. Check Base Land Mapping (Registry of attraction -> land)
-    const registry = BASE_LAND_MAPPING[resortKey] || {};
+    const registry = (BASE_LAND_MAPPING[resortKey] || {}) as Record<string, string>;
     const match = Object.keys(registry).find(key => {
         const normalizedKey = normalizeRideName(key);
         return term.includes(normalizedKey);
