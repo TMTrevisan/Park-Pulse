@@ -204,21 +204,26 @@ export const RESORT_LAND_OVERRIDES: Record<ResortId, Record<string, string>> = {
 // ─── Fuzzy Search Logic ──────────────────────────────────────────────────────
 
 export function getLand(rideName: string, resort: ResortId): string {
+    if (!rideName) return '—';
     const name = rideName.toLowerCase();
     
-    // 1. Resort Overrides
+    // 1. Resort Overrides (Highest Priority)
     const overrides = RESORT_LAND_OVERRIDES[resort];
-    const overrideMatch = Object.keys(overrides).find(k => name.includes(k.toLowerCase()));
-    if (overrideMatch) return overrides[overrideMatch];
+    if (overrides) {
+        const overrideMatch = Object.keys(overrides).find(k => name.includes(k.toLowerCase()));
+        if (overrideMatch) return overrides[overrideMatch];
+    }
     
-    // 2. Base Mapping
+    // 2. Base Mapping (Fallback)
     const baseMatch = Object.keys(BASE_LAND_MAPPING).find(k => name.includes(k.toLowerCase()));
     if (baseMatch) return BASE_LAND_MAPPING[baseMatch];
     
+    // 3. Robust Fallback
     return '—';
 }
 
 export function getTicketClass(rideName: string, resort: ResortId): string {
+    if (!rideName) return '—';
     const name = rideName.toLowerCase();
     
     // 1. High-priority explicit matches (Resort-aware)
