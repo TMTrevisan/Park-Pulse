@@ -275,6 +275,9 @@ export function RideTable({
             if (land.includes("Toontown")) colorClass = "bg-rose-100 text-rose-700 border-rose-200 dark:bg-rose-900/30 dark:text-rose-300 dark:border-rose-800";
             if (land.includes("Grizzly Peak")) colorClass = "bg-green-100 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800";
             if (land.includes("Hollywood Land")) colorClass = "bg-fuchsia-100 text-fuchsia-700 border-fuchsia-200 dark:bg-fuchsia-900/30 dark:text-fuchsia-300 dark:border-fuchsia-800";
+            if (land.includes("Bayou Country")) colorClass = "bg-green-100 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800";
+            if (land.includes("Critter Country")) colorClass = "bg-lime-100 text-lime-700 border-lime-200 dark:bg-lime-900/30 dark:text-lime-300 dark:border-lime-800";
+            if (land.includes("Batuu") || land.includes("Galaxy")) colorClass = "bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700";
 
             return (
                 <span className={cn("text-xs font-medium px-2 py-1 rounded border whitespace-nowrap", colorClass)}>

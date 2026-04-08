@@ -87,7 +87,7 @@ const BASE_LAND_MAPPING: Record<string, string> = {
     'Peter Pan': 'Fantasyland',
     'Tomorrowland Speedway': 'Tomorrowland',
     'Seven Dwarfs': 'Fantasyland',
-    'Runaway Railway': 'Toontown',
+    'Runaway Railway': 'Mickey\'s Toontown',
     'Slinky Dog': 'Toy Story Land',
     'Toy Story Mania': 'Toy Story Land',
     'Soarin': 'World Nature',
@@ -105,6 +105,14 @@ const BASE_LAND_MAPPING: Record<string, string> = {
     'Kali River Rapids': 'Asia',
     'Living with the Land': 'World Nature',
     'Journey into Imagination': 'World Celebration',
+    'Remy\'s Ratatouille': 'World Showcase',
+    'Gran Fiesta Tour': 'World Showcase',
+    'Na\'vi River Journey': 'Pandora',
+    'Wildlife Express': 'Africa',
+    'TriceraTop Spin': 'DinoLand U.S.A.',
+    'Alien Swirling Saucers': 'Toy Story Land',
+    'Star Tours': 'Echo Lake',
+    'Indiana Jones': 'Adventureland',
 };
 
 export const RESORT_LAND_OVERRIDES: Record<ResortId, Record<string, string>> = {
@@ -113,17 +121,83 @@ export const RESORT_LAND_OVERRIDES: Record<ResortId, Record<string, string>> = {
         'Pirates of the Caribbean': 'New Orleans Square',
         'Space Mountain': 'Tomorrowland',
         'Indiana Jones': 'Adventureland',
+        'Winnie the Pooh': 'Critter Country',
+        'Tiana\'s Bayou': 'Critter Country',
     },
     WDW: {
+        // Magic Kingdom
         'Haunted Mansion': 'Liberty Square',
         'Pirates of the Caribbean': 'Adventureland',
         'Space Mountain': 'Tomorrowland',
-        'Star Tours': 'Echo Lake',
-        'Cosmic Rewind': 'World Discovery',
         'Buzz Lightyear': 'Tomorrowland',
         'Under the Sea': 'Fantasyland',
         'Winnie the Pooh': 'Fantasyland',
         'TRON': 'Tomorrowland',
+        'Seven Dwarfs': 'Fantasyland',
+        'Dumbo': 'Fantasyland',
+        'Barnstormer': 'Fantasyland',
+        'Big Thunder': 'Frontierland',
+        'Jungle Cruise': 'Adventureland',
+        'Tomorrowland Speedway': 'Tomorrowland',
+        'PeopleMover': 'Tomorrowland',
+        'Mad Tea Party': 'Fantasyland',
+        'Peter Pan': 'Fantasyland',
+        'small world': 'Fantasyland',
+        'PhilharMagic': 'Fantasyland',
+        'Enchanted Tales': 'Fantasyland',
+        'Monsters, Inc. Laugh Floor': 'Tomorrowland',
+        'Astro Orbiter': 'Tomorrowland',
+        'Magic Carpets of Aladdin': 'Adventureland',
+        'Swiss Family Treehouse': 'Adventureland',
+        'Walt Disney World Railroad': 'Main Street, U.S.A.',
+        'Main Street Vehicles': 'Main Street, U.S.A.',
+        'Hall of Presidents': 'Liberty Square',
+        'Liberty Belle': 'Liberty Square',
+        'Tom Sawyer Island': 'Frontierland',
+        'Carousel of Progress': 'Tomorrowland',
+        'Country Bear Jamboree': 'Frontierland',
+
+        // EPCOT
+        'Cosmic Rewind': 'World Discovery',
+        'Remy\'s Ratatouille': 'World Showcase',
+        'Frozen Ever After': 'World Showcase',
+        'Test Track': 'World Discovery',
+        'Soarin': 'World Nature',
+        'Living with the Land': 'World Nature',
+        'Spaceship Earth': 'World Celebration',
+        'Journey into Imagination': 'World Celebration',
+        'The Seas with Nemo': 'World Nature',
+        'Mission: SPACE': 'World Discovery',
+        'Gran Fiesta Tour': 'World Showcase',
+        'Turtle Talk': 'World Nature',
+
+        // Hollywood Studios
+        'Star Tours': 'Echo Lake',
+        'Runaway Railway': 'Hollywood Boulevard',
+        'Slinky Dog': 'Toy Story Land',
+        'Toy Story Mania': 'Toy Story Land',
+        'Tower of Terror': 'Sunset Boulevard',
+        'Rock \'n\' Roller Coaster': 'Sunset Boulevard',
+        'Rise of the Resistance': 'Galaxy\'s Edge',
+        'Smugglers Run': 'Galaxy\'s Edge',
+        'Alien Swirling Saucers': 'Toy Story Land',
+        'Muppet*Vision 3D': 'Grand Avenue',
+        'Beauty and the Beast': 'Sunset Boulevard',
+        'Indiana Jones Epic Stunt': 'Echo Lake',
+        'Lightning McQueen\'s Racing Academy': 'Sunset Boulevard',
+
+        // Animal Kingdom
+        'Flight of Passage': 'Pandora',
+        'Na\'vi River Journey': 'Pandora',
+        'Expedition Everest': 'Asia',
+        'Kilimanjaro Safaris': 'Africa',
+        'DINOSAUR': 'DinoLand U.S.A.',
+        'Kali River Rapids': 'Asia',
+        'It\'s Tough to be a Bug': 'Discovery Island',
+        'TriceraTop Spin': 'DinoLand U.S.A.',
+        'Wildlife Express': 'Africa',
+        'Gorilla Falls': 'Africa',
+        'Maharajah Jungle Trek': 'Asia',
     }
 };
 
@@ -146,6 +220,26 @@ export function getLand(rideName: string, resort: ResortId): string {
 
 export function getTicketClass(rideName: string, resort: ResortId): string {
     const name = rideName.toLowerCase();
+    
+    // 1. High-priority explicit matches (Resort-aware)
+    if (resort === 'WDW') {
+        if (name.includes('cosmic rewind') || name.includes('guardians')) return 'E';
+        if (name.includes('tron')) return 'E';
+        if (name.includes('remy') || name.includes('ratatouille')) return 'E';
+        if (name.includes('rise of the resistance')) return 'E';
+        if (name.includes('flight of passage')) return 'E';
+        if (name.includes('everest')) return 'E';
+        if (name.includes('slinky dog')) return 'E';
+        if (name.includes('tower of terror')) return 'E';
+        if (name.includes('test track')) return 'E';
+        if (name.includes('frozen')) return 'D';
+        if (name.includes('pirates')) return 'D';
+        if (name.includes('mansion')) return 'D';
+        if (name.includes('kilimanjaro')) return 'D';
+        if (name.includes('dumbo')) return 'B';
+        if (name.includes('barnstormer')) return 'B';
+    }
+
     const baseTickets: Record<string, string> = {
         'resistance': 'E', 'avatar': 'E', 'tron': 'E', 'space mountain': 'E',
         'guardians': 'E', 'slinky': 'E', 'radiator': 'E', 'seven dwarfs': 'E',
@@ -158,7 +252,9 @@ export function getTicketClass(rideName: string, resort: ResortId): string {
     };
     
     const match = Object.keys(baseTickets).find(k => name.includes(k));
-    return match ? baseTickets[match] : '—';
+    if (match) return baseTickets[match];
+    
+    return '—';
 }
 
 export function getDefaultParkForResort(resort: ResortId): string {

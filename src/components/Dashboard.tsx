@@ -183,12 +183,39 @@ export function Dashboard() {
         }
     };
 
-    const getHighOfDay = (ride: Ride) => {
-        if (!ride.forecast) return 0;
+    const getHighOfDay = useCallback((ride: Ride) => {
+        let max = 0;
+
+        // 1. Try real-time API forecast for today
         const today = new Date().toDateString();
-        const todayForecasts = ride.forecast.filter(f => new Date(f.time).toDateString() === today);
-        return todayForecasts.length === 0 ? 0 : Math.max(...todayForecasts.map(f => f.waitTime));
-    };
+        const todayForecasts = ride.forecast?.filter(f => new Date(f.time).toDateString() === today) || [];
+        if (todayForecasts.length > 0) {
+            max = Math.max(...todayForecasts.map(f => f.waitTime));
+        }
+
+        // 2. Fallback: Check historical snapshots from the data.history state
+        if (data?.history && data.history.length > 0) {
+            const snapshots = data.history;
+            for (const snapshot of snapshots) {
+                // Check all parks in the snapshot for this ride
+                for (const park of snapshot.parks) {
+                    const matchedRide = park.liveData.find(r => r.id === ride.id);
+                    const wait = matchedRide?.queue?.STANDBY?.waitTime;
+                    if (typeof wait === 'number' && wait > max) {
+                        max = wait;
+                    }
+                }
+            }
+        }
+
+        // 3. Final check against current wait time
+        const currentWait = ride.queue?.STANDBY?.waitTime;
+        if (typeof currentWait === 'number' && currentWait > max) {
+            max = currentWait;
+        }
+
+        return max;
+    }, [data]);
 
     const getParkStats = (parkId: string): ParkStats => {
         const park = data?.current.parks.find(p => p.id === parkId);
@@ -344,6 +371,8 @@ export function Dashboard() {
 
                 <footer className="mt-12 text-center text-xs text-zinc-400 dark:text-zinc-600 pb-8">
                     Wait times powered by ThemeParks API and Queue-Times.com.
+                    <br />
+                    <span className="opacity-50">Build v1.1.2-Stabilized</span>
                     <br />
                     <a href="https://queue-times.com/en-US" target="_blank" rel="noopener noreferrer"
                         className="text-blue-500 hover:text-blue-400 transition-colors hover:underline mt-1 inline-block font-medium">
