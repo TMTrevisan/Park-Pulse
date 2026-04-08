@@ -239,37 +239,47 @@ export const RESORT_LAND_OVERRIDES: Record<ResortId, Record<string, string>> = {
 
 // ─── Fuzzy Search Logic ──────────────────────────────────────────────────────
 
+function normalizeRideName(name: string): string {
+    if (!name) return "";
+    return name
+        .toLowerCase()
+        .replace(/[’‘]/g, "'")
+        .replace(/–/g, "-")
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
 export function getLand(rideName: string, resort: ResortId): string {
     if (!rideName) return '—';
-    const name = rideName.toLowerCase().trim().replace(/\s+/g, ' ');
-    
-    // 1. Resort Overrides (Highest Priority)
+
+    const term = normalizeRideName(rideName);
     const resortKey = (resort || 'DLR').toUpperCase() as ResortId;
-    const overrides = RESORT_LAND_OVERRIDES[resortKey];
-    if (overrides) {
-        const overrideMatch = Object.keys(overrides).find(k => {
-            const normalizedKey = k.toLowerCase().trim().replace(/\s+/g, ' ');
-            return name.includes(normalizedKey);
-        });
-        if (overrideMatch) return overrides[overrideMatch];
-    }
-    
-    // 2. Base Mapping (Fallback)
-    const baseMatch = Object.keys(BASE_LAND_MAPPING).find(k => {
-        const normalizedKey = k.toLowerCase().trim().replace(/\s+/g, ' ');
-        return name.includes(normalizedKey);
+
+    // 1. Check Resort Overrides (Specific names)
+    const overrides = RESORT_LAND_OVERRIDES[resortKey] || {};
+    const overrideMatch = Object.keys(overrides).find(key => {
+        const normalizedKey = normalizeRideName(key);
+        return term.includes(normalizedKey);
     });
-    if (baseMatch) return BASE_LAND_MAPPING[baseMatch];
-    
+    if (overrideMatch) return overrides[overrideMatch];
+
+    // 2. Check Base Land Mapping (Registry of attraction -> land)
+    const registry = BASE_LAND_MAPPING[resortKey] || {};
+    const match = Object.keys(registry).find(key => {
+        const normalizedKey = normalizeRideName(key);
+        return term.includes(normalizedKey);
+    });
+    if (match) return registry[match];
+
     return '—';
 }
 
+
 export function getTicketClass(rideName: string, resort: ResortId): string {
     if (!rideName) return '—';
-    const name = rideName.toLowerCase().trim().replace(/\s+/g, ' ');
-    const resortKey = (resort || 'DLR').toUpperCase() as ResortId;
+
+    const term = normalizeRideName(rideName);
     
-    // Explicit high-priority overrides
     const ticketOverrides: Record<string, string> = {
         'rise of the resistance': 'E',
         'flight of passage': 'E',
@@ -307,7 +317,10 @@ export function getTicketClass(rideName: string, resort: ResortId): string {
         'barnstormer': 'B'
     };
 
-    const overrideMatch = Object.keys(ticketOverrides).find(k => name.includes(k));
+    const overrideMatch = Object.keys(ticketOverrides).find(k => {
+        const normalizedKey = normalizeRideName(k);
+        return term.includes(normalizedKey);
+    });
     if (overrideMatch) return ticketOverrides[overrideMatch];
 
     return '—';
