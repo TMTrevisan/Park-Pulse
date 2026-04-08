@@ -208,7 +208,8 @@ export function getLand(rideName: string, resort: ResortId): string {
     const name = rideName.toLowerCase();
     
     // 1. Resort Overrides (Highest Priority)
-    const overrides = RESORT_LAND_OVERRIDES[resort];
+    const resortKey = (resort || 'DLR').toUpperCase() as ResortId;
+    const overrides = RESORT_LAND_OVERRIDES[resortKey];
     if (overrides) {
         const overrideMatch = Object.keys(overrides).find(k => name.includes(k.toLowerCase()));
         if (overrideMatch) return overrides[overrideMatch];
@@ -225,9 +226,10 @@ export function getLand(rideName: string, resort: ResortId): string {
 export function getTicketClass(rideName: string, resort: ResortId): string {
     if (!rideName) return '—';
     const name = rideName.toLowerCase();
+    const resortKey = (resort || 'DLR').toUpperCase() as ResortId;
     
     // 1. High-priority explicit matches (Resort-aware)
-    if (resort === 'WDW') {
+    if (resortKey === 'WDW') {
         if (name.includes('cosmic rewind') || name.includes('guardians')) return 'E';
         if (name.includes('tron')) return 'E';
         if (name.includes('remy') || name.includes('ratatouille')) return 'E';
