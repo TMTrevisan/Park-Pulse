@@ -25,8 +25,8 @@ export function sortRides(rides: Ride[], sortField: SortField, sortDirection: So
                 valB = b.status === 'OPERATING' ? (b.queue?.STANDBY?.waitTime ?? 0) : -1;
                 break;
             case 'land':
-                valA = getLand(a.name, resort);
-                valB = getLand(b.name, resort);
+                valA = getLand(a.name, resort, a.id);
+                valB = getLand(b.name, resort, b.id);
                 break;
             case 'status':
                 valA = a.status;
@@ -34,7 +34,7 @@ export function sortRides(rides: Ride[], sortField: SortField, sortDirection: So
                 break;
             case 'ticket':
                 const score = (r: Ride) => {
-                    const t = getTicketClass(r.name, resort);
+                    const t = getTicketClass(r.name, resort, r.id);
                     // E-Ticket is highest value (5), A is lowest (1)
                     const map: Record<string, number> = { 'E': 5, 'D': 4, 'C': 3, 'B': 2, 'A': 1 };
                     return map[t] || 0;
