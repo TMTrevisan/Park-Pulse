@@ -239,6 +239,16 @@ export const RESORT_LAND_OVERRIDES: Record<ResortId, Record<string, string>> = {
 
 // ─── Fuzzy Search Logic ──────────────────────────────────────────────────────
 
+type RideMetadataOverride = {
+    land: string;
+    ticket: string;
+};
+
+const RESORT_RIDE_ID_OVERRIDES: Record<ResortId, Record<string, RideMetadataOverride>> = {
+    DLR: {},
+    WDW: {}
+};
+
 function normalizeRideName(name: string): string {
     if (!name) return "";
     return name
@@ -375,8 +385,11 @@ function lookupByFuzzyMap(term: string, map: Record<string, string>): string | n
 export function getLand(rideName: string, resort: ResortId): string {
     if (!rideName) return '—';
 
-    const term = normalizeRideName(rideName);
     const resortKey = (resort || 'DLR').toUpperCase() as ResortId;
+    const byId = getRideIdOverride(rideId, resortKey);
+    if (byId?.land) return byId.land;
+
+    const term = normalizeRideName(rideName);
 
     // 1. Check Resort Overrides (Specific names)
     const overrides = (RESORT_LAND_OVERRIDES[resortKey] || {}) as Record<string, string>;

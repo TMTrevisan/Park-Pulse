@@ -81,7 +81,7 @@ export function Dashboard() {
 
     const uniqueLands = useMemo(() => {
         if (!currentPark) return [];
-        const lands = new Set(currentPark.liveData.map(r => getLand(r.name, resort)));
+        const lands = new Set(currentPark.liveData.map(r => getLand(r.name, resort, r.id)));
         return Array.from(lands).sort();
     }, [currentPark, resort]);
 
@@ -95,14 +95,14 @@ export function Dashboard() {
             if (!ride.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
 
             if (ticketFilter !== "All") {
-                const ticket = getTicketClass(ride.name, resort);
+                const ticket = getTicketClass(ride.name, resort, ride.id);
                 if (ticket !== ticketFilter) return false;
             }
             if (statusFilter !== "All") {
                 if (ride.status !== statusFilter) return false;
             }
             if (landFilter !== "All") {
-                const land = getLand(ride.name, resort);
+                const land = getLand(ride.name, resort, ride.id);
                 if (land !== landFilter) return false;
             }
             if (waitTimeFilter !== "All") {
@@ -130,14 +130,14 @@ export function Dashboard() {
                     valB = b.status === 'OPERATING' ? (b.queue?.STANDBY?.waitTime ?? 0) : -1;
                     break;
                 case 'land':
-                    valA = getLand(a.name, resort); valB = getLand(b.name, resort);
+                    valA = getLand(a.name, resort, a.id); valB = getLand(b.name, resort, b.id);
                     break;
                 case 'status':
                     valA = a.status; valB = b.status;
                     break;
                 case 'ticket': {
                     const score = (r: Ride) => {
-                        const t = getTicketClass(r.name, resort);
+                        const t = getTicketClass(r.name, resort, r.id);
                         const map: Record<string, number> = { E: 5, D: 4, C: 3, B: 2, A: 1 };
                         return map[t] || 0;
                     };

@@ -260,7 +260,7 @@ export function RideTable({
             );
         }
         if (colId === 'land') {
-            const land = getLand(ride.name, resort);
+            const land = getLand(ride.name, resort, ride.id);
             let colorClass = "bg-gray-100 text-gray-600 dark:bg-zinc-800 dark:text-gray-400";
 
             if (land.includes("Tomorrowland")) colorClass = "bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800";
@@ -307,7 +307,7 @@ export function RideTable({
             );
         }
         if (colId === 'ticket') {
-            const ticket = getTicketClass(ride.name, resort);
+            const ticket = getTicketClass(ride.name, resort, ride.id);
             if (ticket === '—') return <span className="text-gray-300">-</span>;
 
             let badgeColor = "bg-gray-100 text-gray-600";
