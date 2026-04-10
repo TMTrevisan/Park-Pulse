@@ -9,13 +9,13 @@ const rideClosed: Ride = { id: '3', name: 'Charlie', entityType: 'ATTRACTION', p
 
 describe('sortRides', () => {
     it('sorts by name ascending', () => {
-        const sorted = sortRides([rideB, rideA], 'name', 'asc');
+        const sorted = sortRides([rideB, rideA], 'name', 'asc', 'DLR');
         expect(sorted[0].name).toBe('Alice');
         expect(sorted[1].name).toBe('Bob');
     });
 
     it('sorts by name descending', () => {
-        const sorted = sortRides([rideA, rideB], 'name', 'desc');
+        const sorted = sortRides([rideA, rideB], 'name', 'desc', 'DLR');
         expect(sorted[0].name).toBe('Bob');
         expect(sorted[1].name).toBe('Alice');
     });
@@ -23,7 +23,7 @@ describe('sortRides', () => {
     it('sorts by waitTime ascending (Closed rides at bottom? logic check)', () => {
         // Current logic: Closed rides get -1 wait time.
         // Ascending sort (-1, 10, 30) -> Closed, 10, 30
-        const sorted = sortRides([rideB, rideClosed, rideA], 'waitTime', 'asc');
+        const sorted = sortRides([rideB, rideClosed, rideA], 'waitTime', 'asc', 'DLR');
         expect(sorted[0].name).toBe('Charlie'); // Closed (-1)
         expect(sorted[1].name).toBe('Alice');   // 10
         expect(sorted[2].name).toBe('Bob');     // 30
@@ -31,7 +31,7 @@ describe('sortRides', () => {
 
     it('sorts by waitTime descending', () => {
         // Descending sort (30, 10, -1) -> 30, 10, Closed
-        const sorted = sortRides([rideA, rideClosed, rideB], 'waitTime', 'desc');
+        const sorted = sortRides([rideA, rideClosed, rideB], 'waitTime', 'desc', 'DLR');
         expect(sorted[0].name).toBe('Bob');     // 30
         expect(sorted[1].name).toBe('Alice');   // 10
         expect(sorted[2].name).toBe('Charlie'); // Closed
