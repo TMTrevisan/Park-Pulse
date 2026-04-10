@@ -49,9 +49,14 @@ export const PARK_NAMES: Record<string, string> = {
 
 // ─── Ride Metadata Registry (Mapping ID to Name) ───────────────────────────
 
-const rawCoords = (RIDE_COORDS_DATA as any).default || RIDE_COORDS_DATA;
+type RideCoordEntry = { name: string };
+type RideCoordsRegistry = Record<string, RideCoordEntry>;
+
+const rideCoordsImport = RIDE_COORDS_DATA as unknown as RideCoordsRegistry & { default?: RideCoordsRegistry };
+const rawCoords: RideCoordsRegistry = rideCoordsImport.default ?? rideCoordsImport;
+
 export const RIDE_METADATA_REGISTRY: Record<string, string> = Object.entries(rawCoords).reduce(
-    (acc, [id, data]: [string, any]) => ({ ...acc, [id]: data.name }),
+    (acc, [id, data]) => ({ ...acc, [id]: data.name }),
     {}
 );
 
@@ -239,92 +244,202 @@ export const RESORT_LAND_OVERRIDES: Record<ResortId, Record<string, string>> = {
 
 // ─── Fuzzy Search Logic ──────────────────────────────────────────────────────
 
+type RideMetadataOverride = {
+    land: string;
+    ticket: string;
+};
+
+const RESORT_RIDE_ID_OVERRIDES: Record<ResortId, Record<string, RideMetadataOverride>> = {
+    DLR: {},
+    WDW: {}
+};
+
 function normalizeRideName(name: string): string {
     if (!name) return "";
     return name
         .toLowerCase()
         .replace(/[’‘]/g, "'")
         .replace(/–/g, "-")
+        .replace(/[^a-z0-9'\s-]/g, " ")
         .replace(/\s+/g, ' ')
         .trim();
 }
 
-export function getLand(rideName: string, resort: ResortId): string {
+const LAND_KEYWORD_FALLBACKS: Record<ResortId, Array<{ keyword: string; land: string }>> = {
+    DLR: [
+        { keyword: 'main street', land: 'Main Street, U.S.A.' },
+        { keyword: 'adventureland', land: 'Adventureland' },
+        { keyword: 'new orleans', land: 'New Orleans Square' },
+        { keyword: 'frontierland', land: 'Frontierland' },
+        { keyword: 'fantasyland', land: 'Fantasyland' },
+        { keyword: 'tomorrowland', land: 'Tomorrowland' },
+        { keyword: 'toontown', land: "Mickey's Toontown" },
+        { keyword: 'cars land', land: 'Cars Land' },
+        { keyword: 'pixar pier', land: 'Pixar Pier' },
+        { keyword: 'avengers', land: 'Avengers Campus' },
+        { keyword: 'grizzly', land: 'Grizzly Peak' },
+        { keyword: 'buena vista', land: 'Buena Vista Street' },
+        { keyword: 'hollywood land', land: 'Hollywood Land' },
+        { keyword: 'critter', land: 'Critter Country' },
+        { keyword: 'bayou country', land: 'Bayou Country' }
+    ],
+    WDW: [
+        { keyword: 'main street', land: 'Main Street, U.S.A.' },
+        { keyword: 'adventureland', land: 'Adventureland' },
+        { keyword: 'frontierland', land: 'Frontierland' },
+        { keyword: 'liberty square', land: 'Liberty Square' },
+        { keyword: 'fantasyland', land: 'Fantasyland' },
+        { keyword: 'tomorrowland', land: 'Tomorrowland' },
+        { keyword: 'world showcase', land: 'World Showcase' },
+        { keyword: 'world discovery', land: 'World Discovery' },
+        { keyword: 'world nature', land: 'World Nature' },
+        { keyword: 'world celebration', land: 'World Celebration' },
+        { keyword: "galaxy's edge", land: "Galaxy's Edge" },
+        { keyword: 'toy story land', land: 'Toy Story Land' },
+        { keyword: 'sunset boulevard', land: 'Sunset Boulevard' },
+        { keyword: 'echo lake', land: 'Echo Lake' },
+        { keyword: 'grand avenue', land: 'Grand Avenue' },
+        { keyword: 'animation courtyard', land: 'Animation Courtyard' },
+        { keyword: 'pandora', land: 'Pandora' },
+        { keyword: 'africa', land: 'Africa' },
+        { keyword: 'asia', land: 'Asia' },
+        { keyword: 'dinoland', land: 'DinoLand U.S.A.' },
+        { keyword: 'discovery island', land: 'Discovery Island' }
+    ]
+};
+
+const BASE_TICKET_MAPPING: Record<string, string> = {
+    'rise of the resistance': 'E',
+    'flight of passage': 'E',
+    'cosmic rewind': 'E',
+    'tron': 'E',
+    'slinky dog': 'E',
+    'radiator springs': 'E',
+    'space mountain': 'E',
+    'matterhorn': 'E',
+    'indiana jones': 'E',
+    'smugglers run': 'E',
+    'remy': 'E',
+    'frozen': 'E',
+    'seven dwarfs': 'E',
+    'mickey minnie runaway railway': 'E',
+    'tower of terror': 'E',
+    "rock n roller": 'E',
+    'test track': 'E',
+    'tianas bayou': 'E',
+    'incredicoaster': 'E',
+    'guardians of the galaxy': 'E',
+    'haunted mansion': 'D',
+    'pirates of the caribbean': 'D',
+    'big thunder': 'D',
+    'jungle cruise': 'D',
+    'soarin': 'D',
+    'kilimanjaro': 'D',
+    'everest': 'D',
+    'toy story mania': 'D',
+    'mission space': 'D',
+    'peter pan': 'D',
+    'small world': 'C',
+    'buzz lightyear': 'C',
+    'winnie the pooh': 'C',
+    'nemo': 'C',
+    'dumbo': 'B',
+    'mad tea party': 'B',
+    'barnstormer': 'B'
+};
+
+const RESORT_TICKET_OVERRIDES: Record<ResortId, Record<string, string>> = {
+    DLR: {
+        'alice in wonderland': 'D',
+        'roger rabbit': 'D',
+        'web slingers': 'D',
+        'goofys sky school': 'C',
+        'monsters inc mike sulley': 'C',
+        'little mermaid': 'C',
+        'jessie critter carousel': 'B',
+        'pixar pal around': 'B',
+        'inside out emotional whirlwind': 'B',
+        'luigis': 'C',
+        'maters': 'B',
+        'mark twain riverboat': 'A',
+        'disneyland railroad': 'A',
+        'disneyland monorail': 'A'
+    },
+    WDW: {
+        'peoplemover': 'B',
+        'carousel of progress': 'B',
+        'tomorrowland speedway': 'C',
+        'safaris': 'D',
+        'navi river journey': 'D',
+        'kali river rapids': 'C',
+        'dinosaur': 'D',
+        'living with the land': 'C',
+        'spaceship earth': 'C',
+        'journey into imagination': 'C',
+        'gran fiesta tour': 'B',
+        'seas with nemo': 'B',
+        'walt disney world railroad': 'A'
+    }
+};
+
+function lookupByFuzzyMap(term: string, map: Record<string, string>): string | null {
+    const match = Object.keys(map).find(key => term.includes(normalizeRideName(key)));
+    return match ? map[match] : null;
+}
+
+function getRideIdOverride(rideId: string | undefined, resort: ResortId): RideMetadataOverride | null {
+    if (!rideId) return null;
+    return RESORT_RIDE_ID_OVERRIDES[resort][rideId] || null;
+}
+
+export function getLand(rideName: string, resort: ResortId, rideId?: string): string {
     if (!rideName) return '—';
 
-    const term = normalizeRideName(rideName);
     const resortKey = (resort || 'DLR').toUpperCase() as ResortId;
+    const byId = getRideIdOverride(rideId, resortKey);
+    if (byId?.land) return byId.land;
+
+    const term = normalizeRideName(rideName);
 
     // 1. Check Resort Overrides (Specific names)
     const overrides = (RESORT_LAND_OVERRIDES[resortKey] || {}) as Record<string, string>;
-    const overrideMatch = Object.keys(overrides).find(key => {
-        const normalizedKey = normalizeRideName(key);
-        return term.includes(normalizedKey);
-    });
-    if (overrideMatch) return overrides[overrideMatch];
+    const overrideMatch = lookupByFuzzyMap(term, overrides);
+    if (overrideMatch) return overrideMatch;
 
     // 2. Check Base Land Mapping (Registry of attraction -> land)
-    const registry = (BASE_LAND_MAPPING[resortKey] || {}) as Record<string, string>;
-    const match = Object.keys(registry).find(key => {
-        const normalizedKey = normalizeRideName(key);
-        return term.includes(normalizedKey);
-    });
-    if (match) return registry[match];
+    const baseMatch = lookupByFuzzyMap(term, BASE_LAND_MAPPING);
+    if (baseMatch) return baseMatch;
 
-    return '—';
+    // 3. Keyword fallback by resort/park naming conventions
+    const keywordMatch = LAND_KEYWORD_FALLBACKS[resortKey].find(({ keyword }) => term.includes(keyword));
+    if (keywordMatch) return keywordMatch.land;
+
+    return resortKey === 'DLR' ? 'Disneyland Resort Area' : 'Walt Disney World Area';
 }
 
 
-export function getTicketClass(rideName: string, resort: ResortId): string {
-    if (!rideName) return '—';
+export function getTicketClass(rideName: string, resort: ResortId, rideId?: string): string {
+    if (!rideName) return 'C';
+
+    const resortKey = (resort || 'DLR').toUpperCase() as ResortId;
+    const byId = getRideIdOverride(rideId, resortKey);
+    if (byId?.ticket) return byId.ticket;
 
     const term = normalizeRideName(rideName);
-    
-    const ticketOverrides: Record<string, string> = {
-        'rise of the resistance': 'E',
-        'flight of passage': 'E',
-        'cosmic rewind': 'E',
-        'tron': 'E',
-        'slinky dog': 'E',
-        'radiator springs': 'E',
-        'space mountain': 'E',
-        'matterhorn': 'E',
-        'indiana jones': 'E',
-        'smugglers run': 'E',
-        'remy': 'E',
-        'frozen': 'E',
-        'seven dwarfs': 'E',
-        'mickey & minnie': 'E',
-        'tower of terror': 'E',
-        'rock \'n\' roller': 'E',
-        'test track': 'E',
-        'tiana\'s bayou': 'E',
-        'haunted mansion': 'D',
-        'pirates of the caribbean': 'D',
-        'big thunder': 'D',
-        'jungle cruise': 'D',
-        'soarin': 'D',
-        'kilimanjaro': 'D',
-        'everest': 'D',
-        'toy story mania': 'D',
-        'mission: space': 'D',
-        'peter pan': 'D',
-        'small world': 'C',
-        'buzz lightyear': 'C',
-        'winnie the pooh': 'C',
-        'nemo': 'C',
-        'dumbo': 'B',
-        'mad tea party': 'B',
-        'barnstormer': 'B'
-    };
 
-    const overrideMatch = Object.keys(ticketOverrides).find(k => {
-        const normalizedKey = normalizeRideName(k);
-        return term.includes(normalizedKey);
-    });
-    if (overrideMatch) return ticketOverrides[overrideMatch];
+    const resortOverride = lookupByFuzzyMap(term, RESORT_TICKET_OVERRIDES[resortKey]);
+    if (resortOverride) return resortOverride;
 
-    return '—';
+    const baseMatch = lookupByFuzzyMap(term, BASE_TICKET_MAPPING);
+    if (baseMatch) return baseMatch;
+
+    // Fallback heuristic keeps every attraction classified.
+    if (term.includes('railroad') || term.includes('riverboat') || term.includes('monorail') || term.includes('main street vehicle')) return 'A';
+    if (term.includes('carousel') || term.includes('tea party') || term.includes('spinner') || term.includes('saucers')) return 'B';
+    if (term.includes('cruise') || term.includes('adventure') || term.includes('tour') || term.includes('safari')) return 'C';
+    if (term.includes('mountain') || term.includes('coaster') || term.includes('guardians') || term.includes('resistance')) return 'E';
+
+    return 'C';
 }
 
 export function getDefaultParkForResort(resort: ResortId): string {

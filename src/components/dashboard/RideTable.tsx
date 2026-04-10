@@ -308,7 +308,6 @@ export function RideTable({
         }
         if (colId === 'ticket') {
             const ticket = getTicketClass(ride.name, resort);
-            if (ticket === '—') return <span className="text-gray-300">-</span>;
 
             let badgeColor = "bg-gray-100 text-gray-600";
             if (ticket === 'E') badgeColor = "bg-purple-100 text-purple-700 border-purple-200";
