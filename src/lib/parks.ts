@@ -49,9 +49,14 @@ export const PARK_NAMES: Record<string, string> = {
 
 // ─── Ride Metadata Registry (Mapping ID to Name) ───────────────────────────
 
-const rawCoords = (RIDE_COORDS_DATA as any).default || RIDE_COORDS_DATA;
+type RideCoordEntry = { name: string };
+type RideCoordsRegistry = Record<string, RideCoordEntry>;
+
+const rideCoordsImport = RIDE_COORDS_DATA as unknown as RideCoordsRegistry & { default?: RideCoordsRegistry };
+const rawCoords: RideCoordsRegistry = rideCoordsImport.default ?? rideCoordsImport;
+
 export const RIDE_METADATA_REGISTRY: Record<string, string> = Object.entries(rawCoords).reduce(
-    (acc, [id, data]: [string, any]) => ({ ...acc, [id]: data.name }),
+    (acc, [id, data]) => ({ ...acc, [id]: data.name }),
     {}
 );
 
@@ -239,6 +244,16 @@ export const RESORT_LAND_OVERRIDES: Record<ResortId, Record<string, string>> = {
 
 // ─── Fuzzy Search Logic ──────────────────────────────────────────────────────
 
+type RideMetadataOverride = {
+    land: string;
+    ticket: string;
+};
+
+const RESORT_RIDE_ID_OVERRIDES: Record<ResortId, Record<string, RideMetadataOverride>> = {
+    DLR: {},
+    WDW: {}
+};
+
 function normalizeRideName(name: string): string {
     if (!name) return "";
     return name
@@ -375,8 +390,11 @@ function lookupByFuzzyMap(term: string, map: Record<string, string>): string | n
 export function getLand(rideName: string, resort: ResortId): string {
     if (!rideName) return '—';
 
-    const term = normalizeRideName(rideName);
     const resortKey = (resort || 'DLR').toUpperCase() as ResortId;
+    const byId = getRideIdOverride(rideId, resortKey);
+    if (byId?.land) return byId.land;
+
+    const term = normalizeRideName(rideName);
 
     // 1. Check Resort Overrides (Specific names)
     const overrides = (RESORT_LAND_OVERRIDES[resortKey] || {}) as Record<string, string>;

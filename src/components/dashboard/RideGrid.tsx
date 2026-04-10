@@ -39,8 +39,8 @@ export function RideGrid({
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {rides.map((ride) => {
-                const land = getLand(ride.name, resort);
-                const ticket = getTicketClass(ride.name, resort);
+                const land = getLand(ride.name, resort, ride.id);
+                const ticket = getTicketClass(ride.name, resort, ride.id);
                 const hasAlert = alerts.some(a => a.rideId === ride.id);
                 return (
                     <div

@@ -21,6 +21,12 @@ interface CompactSnapshot {
     w: Record<string, number>;
 }
 
+function isCompactSnapshot(item: unknown): item is CompactSnapshot {
+    if (!item || typeof item !== 'object') return false;
+    const record = item as Record<string, unknown>;
+    return typeof record.t === 'string' && typeof record.w === 'object' && record.w !== null;
+}
+
 function compressSnapshot(snapshot: WaitTimeSnapshot): CompactSnapshot {
     const compact: CompactSnapshot = { t: snapshot.timestamp, w: {} };
     for (const park of snapshot.parks) {
@@ -34,9 +40,9 @@ function compressSnapshot(snapshot: WaitTimeSnapshot): CompactSnapshot {
     return compact;
 }
 
-function expandSnapshot(item: any): WaitTimeSnapshot {
-    if (!item) return item;
-    if (item.t && item.w) {
+function expandSnapshot(item: unknown): WaitTimeSnapshot {
+    if (!item) return item as WaitTimeSnapshot;
+    if (isCompactSnapshot(item)) {
         return {
             timestamp: item.t,
             parks: [{
@@ -89,7 +95,7 @@ export async function getHistory(resort: ResortId = 'DLR'): Promise<WaitTimeSnap
     if (redis) {
         try {
             const result = await redis.lrange(HISTORY_KEY(resort), 0, -1);
-            return (result as any[]).map(expandSnapshot) || [];
+            return (result as unknown[]).map(expandSnapshot) || [];
         } catch (error) {
             console.error("KV Read Error:", error);
             return [];
@@ -191,7 +197,7 @@ export async function getRideHistory(rideId: string, resort: ResortId = 'DLR') {
         let waitTime = null;
         for (const park of snapshot.parks) {
             if (!park.liveData) continue;
-            const ride = park.liveData.find((r: any) => r.id === rideId);
+            const ride = park.liveData.find((r) => r.id === rideId);
             if (ride?.queue?.STANDBY && typeof ride.queue.STANDBY.waitTime === 'number') {
                 waitTime = ride.queue.STANDBY.waitTime;
                 break;
@@ -207,7 +213,7 @@ export async function getRideDetails(rideId: string, resort: ResortId = 'DLR') {
         parkIds.map(id => fetchParkData(id).catch(() => ({ liveData: [] })))
     );
     for (const data of results) {
-        const ride = (data.liveData || []).find((r: any) => r.id === rideId);
+        const ride = (data.liveData || []).find((r) => r.id === rideId);
         if (ride) return ride;
     }
     return null;
