@@ -244,15 +244,29 @@ export const RESORT_LAND_OVERRIDES: Record<ResortId, Record<string, string>> = {
 
 // ─── Fuzzy Search Logic ──────────────────────────────────────────────────────
 
+import RIDE_METADATA_JSON from './ride-metadata.json';
+
 type RideMetadataOverride = {
     land: string;
     ticket: string;
 };
 
-const RESORT_RIDE_ID_OVERRIDES: Record<ResortId, Record<string, RideMetadataOverride>> = {
+const rawMetadata = (RIDE_METADATA_JSON || {}) as Record<string, { resort: string; land: string; ticket: string; name: string }>;
+
+export const RESORT_RIDE_ID_OVERRIDES: Record<ResortId, Record<string, RideMetadataOverride>> = {
     DLR: {},
     WDW: {}
 };
+
+// Populate overrides statically
+Object.entries(rawMetadata).forEach(([id, data]) => {
+    if (data.resort === 'DLR' || data.resort === 'WDW') {
+        RESORT_RIDE_ID_OVERRIDES[data.resort][id] = {
+            land: data.land,
+            ticket: data.ticket
+        };
+    }
+});
 
 function normalizeRideName(name: string): string {
     if (!name) return "";
