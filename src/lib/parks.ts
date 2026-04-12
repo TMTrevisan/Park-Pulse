@@ -387,12 +387,15 @@ function lookupByFuzzyMap(term: string, map: Record<string, string>): string | n
     return match ? map[match] : null;
 }
 
-export function getLand(rideName: string, resort: ResortId): string {
+export function getLand(rideName: string, resort: ResortId, rideId?: string): string {
     if (!rideName) return '—';
 
     const resortKey = (resort || 'DLR').toUpperCase() as ResortId;
-    const byId = getRideIdOverride(rideId, resortKey);
-    if (byId?.land) return byId.land;
+    
+    if (rideId) {
+        const byId = RESORT_RIDE_ID_OVERRIDES[resortKey]?.[rideId];
+        if (byId?.land) return byId.land;
+    }
 
     const term = normalizeRideName(rideName);
 
@@ -413,11 +416,17 @@ export function getLand(rideName: string, resort: ResortId): string {
 }
 
 
-export function getTicketClass(rideName: string, resort: ResortId): string {
+export function getTicketClass(rideName: string, resort: ResortId, rideId?: string): string {
     if (!rideName) return 'C';
 
-    const term = normalizeRideName(rideName);
     const resortKey = (resort || 'DLR').toUpperCase() as ResortId;
+    
+    if (rideId) {
+        const byId = RESORT_RIDE_ID_OVERRIDES[resortKey]?.[rideId];
+        if (byId?.ticket) return byId.ticket;
+    }
+
+    const term = normalizeRideName(rideName);
 
     const resortOverride = lookupByFuzzyMap(term, RESORT_TICKET_OVERRIDES[resortKey]);
     if (resortOverride) return resortOverride;
