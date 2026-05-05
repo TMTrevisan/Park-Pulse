@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState, useMemo, useRef, useEffect } from 'react';
-import Map, { Marker, Popup, NavigationControl, FullscreenControl, MapRef } from 'react-map-gl/mapbox';
+import Map, { Marker, Popup, NavigationControl, FullscreenControl, MapRef, Source, Layer } from 'react-map-gl/mapbox';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import { useItinerary } from '@/hooks/useItinerary';
 import { Ride } from '@/lib/types';
 import { Layers, Bug } from 'lucide-react';
 import { clsx } from 'clsx';
@@ -43,6 +44,34 @@ export default function MapOverlay({ rides, selectedParkId, resort, activeLand }
     pitch: 45,
     bearing: 0,
   });
+
+  const { itinerary } = useItinerary(resort);
+
+  const itineraryPathData = useMemo(() => {
+    const incompleteItems = itinerary.filter(i => !i.completed);
+    if (incompleteItems.length < 2) return null;
+    
+    const coordinates = incompleteItems.map(item => {
+      const coords = RIDE_COORDS[item.rideId];
+      if (!coords) return null;
+      return [coords.lng, coords.lat];
+    }).filter(Boolean);
+    
+    if (coordinates.length < 2) return null;
+    
+    return {
+      type: 'FeatureCollection',
+      features: [
+        {
+          type: 'Feature',
+          geometry: {
+            type: 'LineString',
+            coordinates
+          }
+        }
+      ]
+    };
+  }, [itinerary]);
 
   // 1. Zoom to Park when selectedParkId changes
   useEffect(() => {
@@ -120,6 +149,10 @@ export default function MapOverlay({ rides, selectedParkId, resort, activeLand }
           const coords = RIDE_COORDS[ride.id];
           const waitTime = ride.queue?.STANDBY?.waitTime ?? 0;
           const isSelected = hoveredRide?.id === ride.id;
+          
+          const incompleteItems = itinerary.filter(i => !i.completed);
+          const itineraryIndex = incompleteItems.findIndex(i => i.rideId === ride.id);
+          const inItinerary = itineraryIndex !== -1;
 
           return (
             <Marker
@@ -140,12 +173,18 @@ export default function MapOverlay({ rides, selectedParkId, resort, activeLand }
                 <div className={clsx(
                   "flex items-center justify-center px-1.5 py-1.5 rounded-full text-[11px] font-black shadow-2xl border-2 transition-all duration-300",
                   getWaitColor(waitTime, ride.status),
-                  isSelected ? "scale-150 z-50 ring-4 ring-white/30" : "scale-100 hover:scale-110"
+                  isSelected ? "scale-150 z-50 ring-4 ring-white/30" : "scale-100 hover:scale-110",
+                  inItinerary && "ring-4 ring-blue-500 shadow-[0_0_20px_rgba(59,130,246,0.8)]"
                 )}>
                    <span className="min-w-[20px] text-center">
                     {ride.status === "DOWN" ? "!" : waitTime}
                    </span>
                 </div>
+                {inItinerary && (
+                  <div className="absolute -top-2 -right-2 bg-blue-600 text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-black border border-white shadow-xl z-50">
+                    {itineraryIndex + 1}
+                  </div>
+                )}
               </div>
             </Marker>
           );
@@ -172,6 +211,20 @@ export default function MapOverlay({ rides, selectedParkId, resort, activeLand }
               </div>
             </div>
           </Popup>
+        )}
+
+        {itineraryPathData && (
+          <Source id="itinerary-route" type="geojson" data={itineraryPathData as any}>
+            <Layer
+              id="route-line"
+              type="line"
+              paint={{
+                'line-color': '#3b82f6',
+                'line-width': 4,
+                'line-dasharray': [2, 2]
+              }}
+            />
+          </Source>
         )}
       </Map>
 

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Ride } from "@/lib/types";
 import { useItinerary, ItineraryItem } from "@/hooks/useItinerary";
 import { ResortId } from "@/lib/parks";
-import { Search, Plus, GripVertical, Check, Trash2, Clock, Route as RouteIcon, MapPin } from "lucide-react";
+import { Search, Plus, GripVertical, Check, Trash2, Clock, Route as RouteIcon, MapPin, PersonStanding, Play } from "lucide-react";
 import { cn, getWaitTimeDelta, calculateDistance, estimateWalkTimeMinutes } from "@/lib/utils";
 import rideCoords from "@/lib/ride-coords.json";
 
@@ -32,11 +32,11 @@ function SortableItineraryRow({
     ride, 
     onToggle, 
     onRemove 
-}: { 
-    item: ItineraryItem, 
-    ride?: Ride, 
-    onToggle: (id: string) => void, 
-    onRemove: (id: string) => void 
+    item: ItineraryItem & { walkTimeMins?: number; arrivalTimeMs?: number; expectedWaitMins?: number; departureTimeMs?: number };
+    ride?: Ride;
+    onToggle: (id: string) => void;
+    onRemove: (id: string) => void;
+    isFirstIncomplete: boolean;
 }) {
     const {
         attributes,
@@ -98,22 +98,38 @@ function SortableItineraryRow({
                 </div>
                 
                 {!item.completed && (
-                    <div className="flex items-center gap-3 text-sm">
-                        {ride.status === 'OPERATING' && ride.queue?.STANDBY?.waitTime !== undefined && (
-                            <div className="flex items-center gap-1">
-                                <Clock className="w-3.5 h-3.5 text-zinc-400" />
-                                <span className="font-bold">{ride.queue.STANDBY.waitTime}m</span>
+                    <div className="flex flex-col gap-1 mt-2 sm:mt-0">
+                        <div className="flex items-center gap-3 text-sm">
+                            {ride.status === 'OPERATING' && item.expectedWaitMins !== undefined && (
+                                <div className="flex items-center gap-1">
+                                    <Clock className="w-3.5 h-3.5 text-zinc-400" />
+                                    <span className="font-bold">{item.expectedWaitMins}m wait</span>
+                                </div>
+                            )}
+                            {item.walkTimeMins !== undefined && item.walkTimeMins > 0 && (
+                                <div className="flex items-center gap-1 text-zinc-500">
+                                    <PersonStanding className="w-3.5 h-3.5" />
+                                    <span>{item.walkTimeMins}m walk</span>
+                                </div>
+                            )}
+                        </div>
+                        {item.arrivalTimeMs !== undefined && (
+                            <div className="text-xs text-zinc-400 font-medium">
+                                Arrive: {new Date(item.arrivalTimeMs).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}
+                                {item.departureTimeMs && ` • Done: ${new Date(item.departureTimeMs).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`}
                             </div>
                         )}
-                        {delta !== null && (
-                            <span className={cn(
-                                "px-1.5 py-0.5 rounded text-[10px] font-black tracking-tight",
-                                isBetter ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" :
-                                isWorse ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400" :
-                                "bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400"
-                            )}>
-                                {delta > 0 ? '+' : ''}{delta}m vs Avg
-                            </span>
+                        {delta !== null && delta !== 0 && (
+                            <div className="mt-1">
+                                <span className={cn(
+                                    "px-1.5 py-0.5 rounded text-[10px] font-black tracking-tight",
+                                    isBetter ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" :
+                                    isWorse ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400" :
+                                    "bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400"
+                                )}>
+                                    {delta > 0 ? '+' : ''}{delta}m vs Avg
+                                </span>
+                            </div>
                         )}
                     </div>
                 )}
@@ -136,8 +152,10 @@ export function RopeDropItinerary({ rides, resort }: { rides: Ride[], resort: Re
         isLoaded, 
         addItem, 
         removeItem, 
-        toggleComplete, 
-        reorderItems 
+        toggleComplete,
+        reorderItems,
+        simulationStartTime,
+        setSimulationTime
     } = useItinerary(resort);
     
     const [searchQuery, setSearchQuery] = useState("");
@@ -168,6 +186,73 @@ export function RopeDropItinerary({ rides, resort }: { rides: Ride[], resort: Re
     const incompleteItems = itinerary.filter(i => !i.completed);
     const completedItems = itinerary.filter(i => i.completed);
 
+    // Timeline Math Engine
+    let runningTimeMs = simulationStartTime || Date.now();
+    let previousRideId: string | null = null;
+    
+    const augmentedIncompleteItems = incompleteItems.map((item, index) => {
+        const ride = rides.find(r => r.id === item.rideId);
+        
+        let walkTimeMins = 0;
+        if (previousRideId && ride) {
+            const prevCoords = (rideCoords as any)[previousRideId];
+            const currCoords = (rideCoords as any)[ride.id];
+            if (prevCoords && currCoords) {
+                const dist = calculateDistance(prevCoords.lat, prevCoords.lng, currCoords.lat, currCoords.lng);
+                walkTimeMins = estimateWalkTimeMinutes(dist);
+            }
+        }
+        
+        const arrivalTimeMs = runningTimeMs + (walkTimeMins * 60000);
+        
+        // Wait time (use live if it's the first item and no simulation, else use forecast for the arrival hour)
+        let expectedWaitMins = 15; // default fallback
+        if (ride) {
+            if (!simulationStartTime && index === 0) {
+                // Live mode, first ride: Use actual live wait time
+                expectedWaitMins = ride.queue?.STANDBY?.waitTime ?? 15;
+            } else if (ride.forecast) {
+                // Future ride or Simulation mode: look up forecast for arrivalTimeMs
+                const arrivalHour = new Date(arrivalTimeMs).getHours();
+                const forecastMatch = ride.forecast.find(f => new Date(f.time).getHours() === arrivalHour);
+                if (forecastMatch) {
+                    expectedWaitMins = forecastMatch.waitTime;
+                } else {
+                    expectedWaitMins = ride.queue?.STANDBY?.waitTime ?? 15;
+                }
+            } else {
+                expectedWaitMins = ride.queue?.STANDBY?.waitTime ?? 15;
+            }
+        }
+        
+        const rideDurationMins = 5; // Assumed fixed
+        
+        const departureTimeMs = arrivalTimeMs + (expectedWaitMins * 60000) + (rideDurationMins * 60000);
+        
+        runningTimeMs = departureTimeMs;
+        previousRideId = item.rideId;
+        
+        return {
+            ...item,
+            walkTimeMins,
+            arrivalTimeMs,
+            expectedWaitMins,
+            departureTimeMs
+        };
+    });
+
+    const toggleSimulation = () => {
+        if (simulationStartTime) {
+            setSimulationTime(null);
+        } else {
+            // Set simulation to 8:00 AM tomorrow
+            const d = new Date();
+            d.setDate(d.getDate() + 1);
+            d.setHours(8, 0, 0, 0);
+            setSimulationTime(d.getTime());
+        }
+    };
+
     return (
         <div className="flex flex-col h-full bg-white dark:bg-zinc-900 rounded-xl border dark:border-zinc-800 overflow-hidden shadow-sm">
             {/* Header */}
@@ -179,6 +264,18 @@ export function RopeDropItinerary({ rides, resort }: { rides: Ride[], resort: Re
                     </h2>
                     <p className="text-xs text-zinc-500">Plan your perfect morning route</p>
                 </div>
+                <button
+                    onClick={toggleSimulation}
+                    className={cn(
+                        "text-xs px-3 py-1.5 rounded-full font-bold flex items-center gap-1.5 transition-colors border",
+                        simulationStartTime 
+                            ? "bg-purple-100 text-purple-700 border-purple-200 dark:bg-purple-900/30 dark:text-purple-300 dark:border-purple-800" 
+                            : "bg-white text-zinc-600 border-zinc-200 hover:bg-zinc-50 dark:bg-zinc-800 dark:text-zinc-300 dark:border-zinc-700"
+                    )}
+                >
+                    <Play className="w-3 h-3" />
+                    {simulationStartTime ? "Simulating 8:00 AM" : "Live Mode"}
+                </button>
             </div>
 
             {/* Itinerary List */}
@@ -193,13 +290,14 @@ export function RopeDropItinerary({ rides, resort }: { rides: Ride[], resort: Re
                     <div className="pb-24">
                         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
                             <SortableContext items={itinerary.map(i => i.id)} strategy={verticalListSortingStrategy}>
-                                {incompleteItems.map((item) => (
+                                {augmentedIncompleteItems.map((item, index) => (
                                     <SortableItineraryRow
                                         key={item.id}
                                         item={item}
                                         ride={rides.find(r => r.id === item.rideId)}
                                         onToggle={toggleComplete}
                                         onRemove={removeItem}
+                                        isFirstIncomplete={index === 0}
                                     />
                                 ))}
                             </SortableContext>
@@ -215,6 +313,7 @@ export function RopeDropItinerary({ rides, resort }: { rides: Ride[], resort: Re
                                         ride={rides.find(r => r.id === item.rideId)}
                                         onToggle={toggleComplete}
                                         onRemove={removeItem}
+                                        isFirstIncomplete={false}
                                     />
                                 ))}
                             </div>
