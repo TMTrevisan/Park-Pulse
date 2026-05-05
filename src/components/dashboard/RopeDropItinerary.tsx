@@ -1,13 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Ride } from "@/lib/types";
 import { useItinerary, ItineraryItem } from "@/hooks/useItinerary";
 import { ResortId, getLand } from "@/lib/parks";
 import { Search, Plus, GripVertical, Check, Trash2, Clock, Route as RouteIcon, MapPin, PersonStanding, Play, Trash, Save, FolderOpen } from "lucide-react";
 import { cn, getWaitTimeDelta, calculateDistance, estimateWalkTimeMinutes } from "@/lib/utils";
 import rideCoords from "@/lib/ride-coords.json";
-import { useEffect } from "react";
 
 import {
     DndContext,
@@ -63,6 +62,34 @@ function SortableItineraryRow({
         zIndex: isDragging ? 50 : 'auto',
     };
 
+    const prevWait = useRef(item.expectedWaitMins);
+    const prevWalk = useRef(item.walkTimeMins);
+    const [flashColor, setFlashColor] = useState<string | null>(null);
+
+    useEffect(() => {
+        let changed = false;
+        let isWorseChange = false;
+
+        if (prevWait.current !== undefined && item.expectedWaitMins !== undefined && prevWait.current !== item.expectedWaitMins) {
+            changed = true;
+            if (item.expectedWaitMins > prevWait.current) isWorseChange = true;
+        }
+        if (prevWalk.current !== undefined && item.walkTimeMins !== undefined && prevWalk.current !== item.walkTimeMins) {
+            changed = true;
+            if (item.walkTimeMins > prevWalk.current) isWorseChange = true;
+        }
+
+        if (changed) {
+            setFlashColor(isWorseChange ? 'bg-red-100/50 dark:bg-red-900/30' : 'bg-green-100/50 dark:bg-green-900/30');
+            const t = setTimeout(() => setFlashColor(null), 1000);
+            prevWait.current = item.expectedWaitMins;
+            prevWalk.current = item.walkTimeMins;
+            return () => clearTimeout(t);
+        }
+        prevWait.current = item.expectedWaitMins;
+        prevWalk.current = item.walkTimeMins;
+    }, [item.expectedWaitMins, item.walkTimeMins]);
+
     if (!ride && item.rideId !== 'custom-break') return null;
 
     const delta = ride ? getWaitTimeDelta(ride) : null;
@@ -74,35 +101,48 @@ function SortableItineraryRow({
             ref={setNodeRef}
             style={style}
             className={cn(
-                "group relative flex gap-3 p-3 sm:p-4 bg-white dark:bg-zinc-800 transition-all border-b border-zinc-100 dark:border-zinc-700/50",
-                isDragging && "shadow-xl opacity-90 scale-[1.02] border-blue-200 dark:border-blue-900 z-50",
-                item.completed && "opacity-60 bg-zinc-50 dark:bg-zinc-900/50",
-                isFirstIncomplete && "is-first-incomplete ring-inset ring-2 ring-blue-500/10"
+                "group relative transition-all",
+                isDragging && "shadow-xl opacity-90 scale-[1.02] z-50",
+                item.completed && "opacity-60 grayscale-[0.5]",
             )}
         >
-            <div className="relative flex flex-col items-center w-6 z-10 pt-1">
-                <button
-                    {...attributes}
-                    {...listeners}
-                    className="cursor-grab active:cursor-grabbing text-zinc-300 hover:text-zinc-600 transition-colors focus:outline-none p-0.5 rounded touch-none mb-1"
-                >
-                    <GripVertical className="w-4 h-4" />
-                </button>
-                <button
-                    onClick={() => onToggle(item.id)}
-                    className={cn(
-                        "w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors bg-white dark:bg-zinc-800 relative z-10",
-                        item.completed 
-                            ? "bg-green-500 border-green-500 text-white dark:bg-green-500" 
-                            : "border-zinc-300 dark:border-zinc-600 hover:border-blue-400 dark:hover:border-blue-500"
-                    )}
-                >
-                    {item.completed && <Check className="w-3 h-3" />}
-                </button>
-                <div className="absolute top-[32px] bottom-[-24px] w-[2px] bg-zinc-200 dark:bg-zinc-700 z-0 group-last:hidden" />
-            </div>
+            {/* Walk time connector pill (only show if there is walk time and we are not dragging) */}
+            {!isDragging && item.walkTimeMins !== undefined && item.walkTimeMins > 0 && (
+                <div className="flex justify-center -mb-3 relative z-20 pointer-events-none">
+                    <div className="bg-zinc-100 dark:bg-zinc-800 text-zinc-500 border border-zinc-200 dark:border-zinc-700 rounded-full px-2 py-0.5 text-[10px] font-bold flex items-center gap-1 shadow-sm">
+                        <PersonStanding className="w-3 h-3" />
+                        {item.walkTimeMins}m walk
+                    </div>
+                </div>
+            )}
 
-            <div className="flex-1 min-w-0 flex flex-col pt-0.5">
+            <div className={cn(
+                "flex gap-3 p-3 sm:p-4 bg-white dark:bg-zinc-800 border-b border-zinc-100 dark:border-zinc-700/50 transition-colors duration-700",
+                flashColor,
+                isFirstIncomplete && "is-first-incomplete ring-inset ring-2 ring-blue-500/10 bg-blue-50/10"
+            )}>
+                <div className="relative flex flex-col items-center w-6 z-10 pt-1">
+                    <button
+                        {...attributes}
+                        {...listeners}
+                        className="cursor-grab active:cursor-grabbing text-zinc-300 hover:text-zinc-600 transition-colors focus:outline-none p-0.5 rounded touch-none mb-1"
+                    >
+                        <GripVertical className="w-4 h-4" />
+                    </button>
+                    <button
+                        onClick={() => onToggle(item.id)}
+                        className={cn(
+                            "w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors bg-white dark:bg-zinc-800 relative z-10",
+                            item.completed 
+                                ? "bg-green-500 border-green-500 text-white dark:bg-green-500" 
+                                : "border-zinc-300 dark:border-zinc-600 hover:border-blue-400 dark:hover:border-blue-500"
+                        )}
+                    >
+                        {item.completed && <Check className="w-3 h-3" />}
+                    </button>
+                </div>
+
+                <div className="flex-1 min-w-0 flex flex-col pt-0.5">
                 <div className="flex justify-between items-start gap-4">
                     <div className="flex-1 min-w-0">
                         <p className={cn("font-bold text-zinc-900 dark:text-zinc-100 truncate", item.completed && "line-through text-zinc-500 dark:text-zinc-400")}>
@@ -138,12 +178,6 @@ function SortableItineraryRow({
                                             </span>
                                         )}
                                     </div>
-                                </div>
-                            )}
-                            {item.walkTimeMins !== undefined && item.walkTimeMins > 0 && (
-                                <div className="flex items-center gap-1 text-zinc-500">
-                                    <PersonStanding className="w-3.5 h-3.5" />
-                                    <span>{item.walkTimeMins}m walk</span>
                                 </div>
                             )}
                             {delta !== null && delta !== 0 && !item.completed && (
@@ -191,6 +225,7 @@ export function RopeDropItinerary({ rides, resort }: { rides: Ride[], resort: Re
     
     const [searchQuery, setSearchQuery] = useState("");
     const [isSearching, setIsSearching] = useState(false);
+    const [focusedIndex, setFocusedIndex] = useState(-1);
     const [showSavesMenu, setShowSavesMenu] = useState(false);
 
     const sensors = useSensors(
@@ -220,6 +255,42 @@ export function RopeDropItinerary({ rides, resort }: { rides: Ride[], resort: Re
             return r.name.toLowerCase().includes(q) || (land && land.toLowerCase().includes(q));
         })
         .sort((a, b) => a.name.localeCompare(b.name));
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (!isSearching) return;
+        
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            setFocusedIndex(prev => Math.min(prev + 1, Math.min(availableRides.length, 20)));
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            setFocusedIndex(prev => Math.max(prev - 1, 0));
+        } else if (e.key === 'Enter') {
+            e.preventDefault();
+            if (focusedIndex === 0) {
+                const name = prompt("Name of break/meal:");
+                if (!name) return;
+                const duration = parseInt(prompt("Duration in minutes:") || "30", 10);
+                if (!isNaN(duration)) {
+                    addCustomBreak(name, duration);
+                }
+                setIsSearching(false);
+                setSearchQuery("");
+                setFocusedIndex(-1);
+            } else if (focusedIndex > 0) {
+                const ride = availableRides[focusedIndex - 1];
+                if (ride) {
+                    addItem(ride.id);
+                    setSearchQuery("");
+                    setIsSearching(false);
+                    setFocusedIndex(-1);
+                }
+            }
+        } else if (e.key === 'Escape') {
+            setIsSearching(false);
+            setFocusedIndex(-1);
+        }
+    };
 
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
@@ -324,6 +395,8 @@ export function RopeDropItinerary({ rides, resort }: { rides: Ride[], resort: Re
         return acc + (r ? (getWaitTimeDelta(r) || 0) : 0);
     }, 0);
 
+    const estCompletionMs = augmentedItems.length > 0 ? augmentedItems[augmentedItems.length - 1].departureTimeMs : null;
+
 
 
     return (
@@ -389,6 +462,13 @@ export function RopeDropItinerary({ rides, resort }: { rides: Ride[], resort: Re
                             <span className="text-[10px] text-zinc-400 uppercase font-black tracking-wider">Vs Average</span>
                             <span className={cn("font-bold", totalDelta < 0 ? "text-green-500" : totalDelta > 0 ? "text-red-500" : "text-zinc-500")}>
                                 {totalDelta > 0 ? '+' : ''}{totalDelta}m
+                            </span>
+                        </div>
+                        <div className="w-[1px] h-6 bg-zinc-200 dark:bg-zinc-700" />
+                        <div className="flex flex-col">
+                            <span className="text-[10px] text-zinc-400 uppercase font-black tracking-wider">Est Completion</span>
+                            <span className="font-bold text-zinc-900 dark:text-zinc-100">
+                                {estCompletionMs ? new Date(estCompletionMs).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) : '--:--'}
                             </span>
                         </div>
                     </div>
@@ -471,8 +551,10 @@ export function RopeDropItinerary({ rides, resort }: { rides: Ride[], resort: Re
                         onChange={(e) => {
                             setSearchQuery(e.target.value);
                             setIsSearching(true);
+                            setFocusedIndex(-1);
                         }}
                         onFocus={() => setIsSearching(true)}
+                        onKeyDown={handleKeyDown}
                         className="w-full pl-9 pr-4 py-2.5 rounded-xl border bg-zinc-50 dark:bg-zinc-800 dark:border-zinc-700 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                     />
                     
@@ -491,9 +573,14 @@ export function RopeDropItinerary({ rides, resort }: { rides: Ride[], resort: Re
                                                 addCustomBreak(name, duration);
                                             }
                                             setIsSearching(false);
-                                            setSearchQuery("");
+                                            setFocusedIndex(-1);
                                         }}
-                                        className="w-full text-left px-4 py-2 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors flex items-center justify-between text-sm font-bold"
+                                        className={cn(
+                                            "w-full text-left px-4 py-2 rounded-lg transition-colors flex items-center justify-between text-sm font-bold",
+                                            focusedIndex === 0 
+                                                ? "bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300" 
+                                                : "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/40"
+                                        )}
                                     >
                                         Add Custom Break/Meal
                                         <Plus className="w-4 h-4" />
@@ -502,15 +589,21 @@ export function RopeDropItinerary({ rides, resort }: { rides: Ride[], resort: Re
                                 {availableRides.length === 0 ? (
                                     <div className="p-4 text-center text-zinc-500 text-sm">No rides found</div>
                                 ) : (
-                                    availableRides.slice(0, 20).map(ride => (
+                                    availableRides.slice(0, 20).map((ride, idx) => (
                                         <button
                                             key={ride.id}
                                             onClick={() => {
                                                 addItem(ride.id);
                                                 setSearchQuery("");
                                                 setIsSearching(false);
+                                                setFocusedIndex(-1);
                                             }}
-                                            className="w-full text-left px-4 py-3 hover:bg-zinc-50 dark:hover:bg-zinc-700/50 flex items-center justify-between border-b last:border-b-0 dark:border-zinc-700/50 transition-colors"
+                                            className={cn(
+                                                "w-full text-left px-4 py-3 flex items-center justify-between border-b last:border-b-0 dark:border-zinc-700/50 transition-colors",
+                                                focusedIndex === idx + 1 
+                                                    ? "bg-zinc-100 dark:bg-zinc-700" 
+                                                    : "hover:bg-zinc-50 dark:hover:bg-zinc-700/50"
+                                            )}
                                         >
                                             <div>
                                                 <div className="font-medium text-sm">{ride.name}</div>
