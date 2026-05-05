@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Ride } from "@/lib/types";
 import { useItinerary, ItineraryItem } from "@/hooks/useItinerary";
-import { ResortId } from "@/lib/parks";
+import { ResortId, getLand } from "@/lib/parks";
 import { Search, Plus, GripVertical, Check, Trash2, Clock, Route as RouteIcon, MapPin, PersonStanding, Play, Trash, Save, FolderOpen } from "lucide-react";
 import { cn, getWaitTimeDelta, calculateDistance, estimateWalkTimeMinutes } from "@/lib/utils";
 import rideCoords from "@/lib/ride-coords.json";
@@ -201,7 +201,8 @@ export function RopeDropItinerary({ rides, resort }: { rides: Ride[], resort: Re
     const availableRides = rides
         .filter(r => {
             const q = searchQuery.toLowerCase();
-            return r.name.toLowerCase().includes(q) || (r.land && r.land.toLowerCase().includes(q));
+            const land = getLand(r.name, resort, r.id);
+            return r.name.toLowerCase().includes(q) || (land && land.toLowerCase().includes(q));
         })
         .sort((a, b) => a.name.localeCompare(b.name));
 
