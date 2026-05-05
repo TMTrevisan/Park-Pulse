@@ -48,10 +48,9 @@ export default function MapOverlay({ rides, selectedParkId, resort, activeLand }
   const { itinerary } = useItinerary(resort);
 
   const itineraryPathData = useMemo(() => {
-    const incompleteItems = itinerary.filter(i => !i.completed);
-    if (incompleteItems.length < 2) return null;
+    if (itinerary.length < 2) return null;
     
-    const coordinates = incompleteItems.map(item => {
+    const coordinates = itinerary.map(item => {
       const coords = RIDE_COORDS[item.rideId];
       if (!coords) return null;
       return [coords.lng, coords.lat];
@@ -150,9 +149,9 @@ export default function MapOverlay({ rides, selectedParkId, resort, activeLand }
           const waitTime = ride.queue?.STANDBY?.waitTime ?? 0;
           const isSelected = hoveredRide?.id === ride.id;
           
-          const incompleteItems = itinerary.filter(i => !i.completed);
-          const itineraryIndex = incompleteItems.findIndex(i => i.rideId === ride.id);
+          const itineraryIndex = itinerary.findIndex(i => i.rideId === ride.id);
           const inItinerary = itineraryIndex !== -1;
+          const isCompleted = inItinerary ? itinerary[itineraryIndex].completed : false;
 
           return (
             <Marker
@@ -172,16 +171,20 @@ export default function MapOverlay({ rides, selectedParkId, resort, activeLand }
               >
                 <div className={clsx(
                   "flex items-center justify-center px-1.5 py-1.5 rounded-full text-[11px] font-black shadow-2xl border-2 transition-all duration-300",
-                  getWaitColor(waitTime, ride.status),
+                  isCompleted ? "bg-zinc-100 text-zinc-400 border-zinc-200 dark:bg-zinc-800 dark:text-zinc-600 dark:border-zinc-700/50" : getWaitColor(waitTime, ride.status),
                   isSelected ? "scale-150 z-50 ring-4 ring-white/30" : "scale-100 hover:scale-110",
-                  inItinerary && "ring-4 ring-blue-500 shadow-[0_0_20px_rgba(59,130,246,0.8)]"
+                  inItinerary && !isCompleted && "ring-4 ring-blue-500 shadow-[0_0_20px_rgba(59,130,246,0.8)]",
+                  isCompleted && "opacity-60 grayscale"
                 )}>
                    <span className="min-w-[20px] text-center">
                     {ride.status === "DOWN" ? "!" : waitTime}
                    </span>
                 </div>
                 {inItinerary && (
-                  <div className="absolute -top-2 -right-2 bg-blue-600 text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-black border border-white shadow-xl z-50">
+                  <div className={clsx(
+                    "absolute -top-2 -right-2 text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-black border shadow-xl z-50",
+                    isCompleted ? "bg-green-500 border-green-600" : "bg-blue-600 border-white"
+                  )}>
                     {itineraryIndex + 1}
                   </div>
                 )}

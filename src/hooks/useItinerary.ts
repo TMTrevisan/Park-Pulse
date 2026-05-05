@@ -7,9 +7,16 @@ export interface ItineraryItem {
     completedAt?: number;
 }
 
+export interface SavedStrategy {
+    id: string;
+    name: string;
+    items: ItineraryItem[];
+}
+
 export interface RopeDropState {
     items: ItineraryItem[];
     simulationStartTime: number | null; // e.g. timestamp for 8:00 AM simulation, null = Live
+    savedStrategies: SavedStrategy[];
 }
 
 export function useItinerary(resort: string) {
@@ -17,7 +24,8 @@ export function useItinerary(resort: string) {
     
     const [state, setState] = useState<RopeDropState>({
         items: [],
-        simulationStartTime: null
+        simulationStartTime: null,
+        savedStrategies: []
     });
 
     const [isLoaded, setIsLoaded] = useState(false);
@@ -26,7 +34,12 @@ export function useItinerary(resort: string) {
         const saved = localStorage.getItem(STORAGE_KEY);
         if (saved) {
             try {
-                setState(JSON.parse(saved));
+                const parsed = JSON.parse(saved);
+                setState({
+                    items: parsed.items || [],
+                    simulationStartTime: parsed.simulationStartTime || null,
+                    savedStrategies: parsed.savedStrategies || []
+                });
             } catch (e) {
                 console.error("Failed to parse itinerary", e);
             }
@@ -94,20 +107,56 @@ export function useItinerary(resort: string) {
 
     const clearItinerary = () => {
         saveState({
+            ...state,
             items: [],
             simulationStartTime: null
+        });
+    };
+
+    const saveCurrentStrategy = (name: string) => {
+        const newStrategy: SavedStrategy = {
+            id: crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 9),
+            name,
+            items: state.items
+        };
+        saveState({
+            ...state,
+            savedStrategies: [...state.savedStrategies, newStrategy]
+        });
+    };
+
+    const loadStrategy = (id: string) => {
+        const strategy = state.savedStrategies.find(s => s.id === id);
+        if (strategy) {
+            saveState({
+                ...state,
+                items: strategy.items,
+                // keep simulation mode as is or reset? Resetting makes sense.
+                simulationStartTime: null 
+            });
+        }
+    };
+
+    const deleteStrategy = (id: string) => {
+        saveState({
+            ...state,
+            savedStrategies: state.savedStrategies.filter(s => s.id !== id)
         });
     };
 
     return {
         itinerary: state.items,
         simulationStartTime: state.simulationStartTime,
+        savedStrategies: state.savedStrategies,
         isLoaded,
         addItem,
         removeItem,
         toggleComplete,
         reorderItems,
         setSimulationTime,
-        clearItinerary
+        clearItinerary,
+        saveCurrentStrategy,
+        loadStrategy,
+        deleteStrategy
     };
 }
