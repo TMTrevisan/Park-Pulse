@@ -548,16 +548,15 @@ export function RopeDropItinerary({ rides, resort }: { rides: Ride[], resort: Re
                         <div className="mb-4">
                             <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-2 block">Expert Presets</span>
                             <div className="grid grid-cols-2 gap-2">
-                                {resort === 'disneyland' ? (
+                                {resort === 'DLR' ? (
                                     <>
-                                        <button onClick={() => loadPreset('DL_Fantasyland')} className="text-xs p-2 bg-zinc-50 dark:bg-zinc-700/50 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded border border-zinc-200 dark:border-zinc-600 font-medium text-left">Fantasyland Dash</button>
-                                        <button onClick={() => loadPreset('DL_Thrill')} className="text-xs p-2 bg-zinc-50 dark:bg-zinc-700/50 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded border border-zinc-200 dark:border-zinc-600 font-medium text-left">E-Ticket Thrills</button>
+                                        <button onClick={() => loadPreset('DL_Fantasyland')} className="text-xs p-2 bg-zinc-50 dark:bg-zinc-700/50 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded border border-zinc-200 dark:border-zinc-600 font-medium text-left">DL: Fantasyland</button>
+                                        <button onClick={() => loadPreset('DL_Thrill')} className="text-xs p-2 bg-zinc-50 dark:bg-zinc-700/50 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded border border-zinc-200 dark:border-zinc-600 font-medium text-left">DL: E-Ticket Thrills</button>
+                                        <button onClick={() => loadPreset('DCA_Radiator')} className="text-xs p-2 bg-zinc-50 dark:bg-zinc-700/50 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded border border-zinc-200 dark:border-zinc-600 font-medium text-left">DCA: Radiator Springs</button>
+                                        <button onClick={() => loadPreset('DCA_Guardians')} className="text-xs p-2 bg-zinc-50 dark:bg-zinc-700/50 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded border border-zinc-200 dark:border-zinc-600 font-medium text-left">DCA: Avengers Campus</button>
                                     </>
                                 ) : (
-                                    <>
-                                        <button onClick={() => loadPreset('DCA_Radiator')} className="text-xs p-2 bg-zinc-50 dark:bg-zinc-700/50 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded border border-zinc-200 dark:border-zinc-600 font-medium text-left">Radiator Springs</button>
-                                        <button onClick={() => loadPreset('DCA_Guardians')} className="text-xs p-2 bg-zinc-50 dark:bg-zinc-700/50 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded border border-zinc-200 dark:border-zinc-600 font-medium text-left">Avengers Campus</button>
-                                    </>
+                                    <div className="text-xs text-zinc-500 col-span-2">Presets not available yet.</div>
                                 )}
                             </div>
                         </div>
