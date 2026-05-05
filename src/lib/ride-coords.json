@@ -1,14 +1,4 @@
 {
-  "7340550b-c14d-4def-80bb-acdb51d49a66": {
-    "lat": 33.8121,
-    "lng": -117.919,
-    "name": "Disneyland Park"
-  },
-  "0df49a66-7340-4def-80bb-acdb51d49a66": {
-    "lat": 33.8061,
-    "lng": -117.919,
-    "name": "Disney California Adventure"
-  },
   "3638ac09-9fce-4a43-8c79-8ebbe17afce2": {
     "lat": 33.8144,
     "lng": -117.917782,
@@ -34,11 +24,6 @@
     "lng": -117.9189609,
     "name": "The Celebrate Happy Cavalcade"
   },
-  "9167db1d-e5e7-46da-a07f-ae30a87bc4c4": {
-    "lat": 33.811548,
-    "lng": -117.917056,
-    "name": "Space Mountain"
-  },
   "6e2af074-3a67-4f38-9bcf-2f5a572c87df": {
     "lat": 33.81025839377293,
     "lng": -117.91843056689687,
@@ -48,6 +33,16 @@
     "lat": 33.810265,
     "lng": -117.918559,
     "name": "Great Moments with Mr. Lincoln"
+  },
+  "9167db1d-e5e7-46da-a07f-ae30a87bc4c4": {
+    "lat": 33.811548,
+    "lng": -117.917056,
+    "name": "Hyperspace Mountain"
+  },
+  "888525b0-5a6f-4b8e-9f07-b6a32812b04d": {
+    "lat": 33.814615,
+    "lng": -117.918825,
+    "name": "Bluey’s Best Day Ever! at Fantasyland Theatre"
   },
   "ff52cb64-c1d5-4feb-9d43-5dbd429bac81": {
     "lat": 33.811656,
@@ -424,6 +419,51 @@
     "lng": -117.9177229106,
     "name": "Edelweiss Snacks"
   },
+  "768a7b9b-f76f-4f21-b048-96be477a821d": {
+    "lat": 33.8119,
+    "lng": -117.91898,
+    "name": "Galactic DJ Party Zone"
+  },
+  "9cbaca86-7600-4916-99dc-21b5b21cebde": {
+    "lat": 33.814773,
+    "lng": -117.921216,
+    "name": "A Lightsaber Summoning "
+  },
+  "c2fa1da7-b822-4ce5-bdc6-b2d993a98249": {
+    "lat": 33.8119,
+    "lng": -117.91898,
+    "name": "Fans of the Force Costume Cavalcade – A Star Wars Nite Costume (Cosplay) Showcase"
+  },
+  "a3bfc620-11c4-4248-8a48-a77d8dd0583c": {
+    "lat": 33.81153,
+    "lng": -117.920839,
+    "name": "Figrin D'an and the Modal Nodes"
+  },
+  "44f34af2-7ae8-4327-9670-58a5cc095bcb": {
+    "lat": 33.81012,
+    "lng": -117.918991,
+    "name": "Fond Farewell"
+  },
+  "0b5260a9-836f-45ad-bc0c-b78586c67607": {
+    "lat": 33.811546,
+    "lng": -117.92099,
+    "name": "Lightsaber Instructional"
+  },
+  "dc8ed343-2326-41b1-a5c3-06a26e34583c": {
+    "lat": 33.811933,
+    "lng": -117.917,
+    "name": "March of the First Order"
+  },
+  "48a945d2-7c26-4dac-9c09-74aee2867fec": {
+    "lat": 33.814988,
+    "lng": -117.921242,
+    "name": "Shadows of Memory: A Skywalker Saga at Star Wars Nite"
+  },
+  "6126194f-6163-4b29-8e41-68c932fe8f11": {
+    "lat": 33.810995,
+    "lng": -117.918966,
+    "name": "Choose Your Path"
+  },
   "cb84b53c-dbb5-483d-a717-00d9259c6484": {
     "lat": 33.81207964,
     "lng": -117.9203231,
@@ -529,6 +569,11 @@
     "lng": -117.9190407415,
     "name": "Carnation Café"
   },
+  "95a9cde3-ff1f-40a3-8276-2477ded688f8": {
+    "lat": 33.814668,
+    "lng": -117.918938,
+    "name": "Bluey's Best Day Ever!"
+  },
   "c60e9de0-df2b-4484-9b05-299939dc247a": {
     "lat": 33.81097757,
     "lng": -117.9189609,
@@ -539,399 +584,1729 @@
     "lng": -117.9189732,
     "name": "Wondrous Journeys with Fireworks"
   },
-  "b1d285a7-2444-4a7c-b7bb-d2d4d6428a85": {
-    "lat": 33.806497,
-    "lng": -117.921383,
-    "name": "Grizzly River Run"
-  },
-  "d2aa0987-49a2-45dc-a635-3a8bf7401230": {
-    "lat": 33.805523,
-    "lng": -117.918849,
-    "name": "Animation Academy"
-  },
-  "388ad3f1-5cf5-4a9d-8d0e-6dfb817d7822": {
-    "lat": 33.804861,
-    "lng": -117.918326,
-    "name": "Jessie's Critter Carousel"
-  },
-  "b7678dab-5544-48d5-8fdc-c1a0127cfbcd": {
-    "lat": 33.806251,
-    "lng": -117.917231,
-    "name": "Guardians of the Galaxy - Mission: BREAKOUT!"
-  },
-  "7561bcd8-18ea-4e3f-89d5-c905b7ba3d42": {
-    "lat": 33.805358,
-    "lng": -117.918617,
-    "name": "Turtle Talk with Crush"
-  },
-  "8f586a2f-cef5-46d3-b822-fd622c4e9e33": {
-    "lat": 33.805523,
-    "lng": -117.918582,
-    "name": "Mickey's PhilharMagic"
-  },
-  "f44a5072-3cda-4c7c-8574-33ad09d16cca": {
-    "lat": 33.805115,
-    "lng": -117.920581,
-    "name": "Goofy's Sky School"
-  },
-  "2295351d-ce6b-4c04-92d5-5b416372c5b5": {
-    "lat": 33.806707,
-    "lng": -117.917905,
-    "name": "WEB SLINGERS: A Spider-Man Adventure"
-  },
-  "40524fba-5d84-49e7-9204-f493dbe2d5a4": {
-    "lat": 33.806019,
-    "lng": -117.917658,
-    "name": "Monsters, Inc. Mike & Sulley to the Rescue!"
-  },
-  "e1fbc7a1-2cd1-4282-b373-ac11d9d9d38a": {
-    "lat": 33.805274,
-    "lng": -117.920033,
-    "name": "The Little Mermaid - Ariel's Undersea Adventure"
-  },
-  "c60c768b-3461-465c-8f4f-b44b087506fc": {
-    "lat": 33.805932,
-    "lng": -117.919751,
-    "name": "Radiator Springs Racers"
-  },
-  "86ab3069-110d-49c5-a7e7-29ddf28695a6": {
-    "lat": 33.804588,
-    "lng": -117.918851,
-    "name": "Toy Story Midway Mania!"
-  },
-  "77f205a4-d482-4d91-a5ff-71e54a086ad2": {
-    "lat": 33.807011,
-    "lng": -117.920513,
-    "name": "Soarin' Over California"
-  },
-  "5d07a2b1-49ca-4de7-9d32-6d08edf69b08": {
-    "lat": 33.804366,
-    "lng": -117.919499,
-    "name": "Incredicoaster"
-  },
   "46097afe-a1ea-4807-93d3-14d14f36e55f": {
-    "lat": 33.805495,
-    "lng": -117.919854,
+    "lat": 33.8062447301,
+    "lng": -117.9192481607,
     "name": "Mater's Junkyard Jamboree"
   },
   "7a09a2f0-e226-4f3e-86f8-2598ab67ec44": {
-    "lat": 33.805766,
-    "lng": -117.919616,
+    "lat": 33.805534,
+    "lng": -117.918544,
     "name": "Luigi's Rollickin' Roadsters"
   },
+  "dca741a6-3472-4d4f-a9aa-7774aae81754": {
+    "lat": 33.8060787798,
+    "lng": -117.9232652884,
+    "name": "Paradise Garden Bandstand"
+  },
+  "2459a357-2b20-4445-8476-6a9a7e5eab54": {
+    "lat": 33.8053994053,
+    "lng": -117.9209410699,
+    "name": "Lamplight Lounge - Boardwalk Dining"
+  },
+  "12180467-471a-4f93-a7b1-7115aab487f2": {
+    "lat": 33.808194,
+    "lng": -117.917943,
+    "name": "Disney® Visa® Cardmember Heroic Encounter"
+  },
+  "2fdd02e8-3835-4ef8-bd07-4c3332fb84fa": {
+    "lat": 33.807887,
+    "lng": -117.917374,
+    "name": "Confection Purrfection with the SuperKitties"
+  },
+  "a4374b75-7fa4-4205-9571-02099e08944f": {
+    "lat": 33.807889,
+    "lng": -117.917,
+    "name": "Meet Chef Goofy"
+  },
+  "7025ea53-9d7f-4e7f-a0ad-0ea9523c3c01": {
+    "lat": 33.805873,
+    "lng": -117.918645,
+    "name": "Cozy Cone Motel 1 - Churros"
+  },
+  "77f205a4-d482-4d91-a5ff-71e54a086ad2": {
+    "lat": 33.8082495017,
+    "lng": -117.9200000105,
+    "name": "Soarin' Over California"
+  },
+  "4c570f5a-c5da-4388-9804-dd56123d18ce": {
+    "lat": 33.80785,
+    "lng": -117.918943,
+    "name": "Meet Disney Pals on Buena Vista Street"
+  },
+  "ca4b4068-02a7-4d98-92a6-f781ad5711d3": {
+    "lat": 33.806723,
+    "lng": -117.917516,
+    "name": "Pym Tasting Lab"
+  },
+  "884a2e75-ef8a-4676-b65c-67320e732bb1": {
+    "lat": 33.805683,
+    "lng": -117.920311,
+    "name": "Port of San Fransokyo Cervecería"
+  },
+  "baab0186-4b1e-4b38-af57-237ca65f8ece": {
+    "lat": 33.805873,
+    "lng": -117.918645,
+    "name": "Cozy Cone Motel 4 - Frozen Cone-coctions"
+  },
+  "778f814e-7113-4599-adce-b598a39d6cd9": {
+    "lat": 33.8058566014,
+    "lng": -117.9200660233,
+    "name": "Aunt Cass Café"
+  },
   "4f5b28d0-b78e-482b-8e2e-1f90756d6220": {
-    "lat": 33.805271,
-    "lng": -117.920715,
+    "lat": 33.8056182721,
+    "lng": -117.9228962027,
     "name": "Silly Symphony Swings"
   },
-  "c9803366-6f37-4406-82af-7692357e3ca9": {
-    "lat": 33.806665,
-    "lng": -117.921192,
-    "name": "Redwood Creek Challenge Trail"
+  "f44a5072-3cda-4c7c-8574-33ad09d16cca": {
+    "lat": 33.8063159054,
+    "lng": -117.922805411,
+    "name": "Goofy's Sky School"
   },
-  "c8a4b7b1-c1b2-4dfe-b73c-4e834b4a73db": {
-    "lat": 33.805072,
-    "lng": -117.920867,
-    "name": "Jumpin' Jellyfish"
+  "c60c768b-3461-465c-8f4f-b44b087506fc": {
+    "lat": 33.8051689198,
+    "lng": -117.9186152283,
+    "name": "Radiator Springs Racers"
   },
-  "528016ef-db24-47fa-a0f2-b6d26d61e29f": {
-    "lat": 33.804678,
-    "lng": -117.919794,
-    "name": "Pixar Pal-A-Round - Swinging"
-  },
-  "6d876f4c-c3ff-4ae3-a2d8-d4b831e1039b": {
-    "lat": 33.804455,
-    "lng": -117.919042,
-    "name": "Inside Out Emotional Whirlwind"
+  "e1fbc7a1-2cd1-4282-b373-ac11d9d9d38a": {
+    "lat": 33.80626,
+    "lng": -117.92108,
+    "name": "The Little Mermaid - Ariel's Undersea Adventure"
   },
   "4ca6cdbf-4c5f-45bf-b0dc-db83393ec208": {
-    "lat": 33.804678,
-    "lng": -117.919794,
+    "lat": 33.8050267246,
+    "lng": -117.922378889,
     "name": "Pixar Pal-A-Round – Non-Swinging"
   },
+  "6d876f4c-c3ff-4ae3-a2d8-d4b831e1039b": {
+    "lat": 33.805154,
+    "lng": -117.922737,
+    "name": "Inside Out Emotional Whirlwind"
+  },
+  "8f586a2f-cef5-46d3-b822-fd622c4e9e33": {
+    "lat": 33.80773,
+    "lng": -117.918041,
+    "name": "Mickey's PhilharMagic"
+  },
+  "d2aa0987-49a2-45dc-a635-3a8bf7401230": {
+    "lat": 33.8075587653,
+    "lng": -117.9175029695,
+    "name": "Animation Academy"
+  },
+  "5d07a2b1-49ca-4de7-9d32-6d08edf69b08": {
+    "lat": 33.8046241652,
+    "lng": -117.9207961819,
+    "name": "Incredicoaster"
+  },
+  "1d24dd7a-372b-4195-8ad0-ba9679d72b08": {
+    "lat": 33.8048925714,
+    "lng": -117.9224220894,
+    "name": "Games of Pixar Pier"
+  },
   "10a5fc6f-5ad3-414b-9bdd-e6bae097b6ad": {
-    "lat": 33.805129,
-    "lng": -117.920956,
+    "lat": 33.8060334617,
+    "lng": -117.9222742945,
     "name": "Golden Zephyr"
   },
-  "75ea578a-adc8-4116-a54d-dccb60765ef9": {
-    "lat": 28.4177,
-    "lng": -81.5812,
-    "name": "Magic Kingdom"
+  "b1d285a7-2444-4a7c-b7bb-d2d4d6428a85": {
+    "lat": 33.807491905,
+    "lng": -117.9208812632,
+    "name": "Grizzly River Run"
   },
-  "352feb94-e52e-45eb-9c92-e4b44c6b1a9d": {
-    "lat": 28.4192,
-    "lng": -81.5839,
-    "name": "Pirates of the Caribbean"
+  "c8a4b7b1-c1b2-4dfe-b73c-4e834b4a73db": {
+    "lat": 33.8061414361,
+    "lng": -117.92253033,
+    "name": "Jumpin' Jellyfish"
   },
-  "73cb9445-0695-47a3-87ce-d08ae36b5f3c": {
-    "lat": 28.4212,
-    "lng": -81.5827,
-    "name": "Tiana's Bayou Adventure"
+  "388ad3f1-5cf5-4a9d-8d0e-6dfb817d7822": {
+    "lat": 33.804635558,
+    "lng": -117.9211482245,
+    "name": "Jessie's Critter Carousel"
   },
-  "d9d12438-d999-4482-894b-8955fdb20ccf": {
-    "lat": 28.4181,
-    "lng": -81.5797,
-    "name": "Astro Orbiter"
+  "528016ef-db24-47fa-a0f2-b6d26d61e29f": {
+    "lat": 33.8050267246,
+    "lng": -117.922378889,
+    "name": "Pixar Pal-A-Round - Swinging"
   },
-  "5a43d1a7-ad53-4d25-abfe-25625f0da304": {
-    "lat": 28.4185,
-    "lng": -81.5794,
-    "name": "TRON Lightcycle / Run"
+  "40524fba-5d84-49e7-9204-f493dbe2d5a4": {
+    "lat": 33.8081215045,
+    "lng": -117.9173246541,
+    "name": "Monsters, Inc. Mike & Sulley to the Rescue!"
   },
-  "2551a77d-023f-4ab1-9a19-8afec0190f39": {
-    "lat": 28.4201,
-    "lng": -81.5825,
-    "name": "Haunted Mansion"
+  "c9803366-6f37-4406-82af-7692357e3ca9": {
+    "lat": 33.8069726212,
+    "lng": -117.9213787615,
+    "name": "Redwood Creek Challenge Trail"
+  },
+  "44c1f655-25d3-440c-b1a8-db736a12b105": {
+    "lat": 33.8075587653,
+    "lng": -117.9175029695,
+    "name": "Sorcerer's Workshop"
+  },
+  "eb77ee1f-3207-44fd-acfc-d7bc18602007": {
+    "lat": 33.8060995504,
+    "lng": -117.9196897202,
+    "name": "The Bakery Tour"
+  },
+  "b7678dab-5544-48d5-8fdc-c1a0127cfbcd": {
+    "lat": 33.8068702058,
+    "lng": -117.9171870344,
+    "name": "Guardians of the Galaxy - Mission: BREAKOUT!"
+  },
+  "86ab3069-110d-49c5-a7e7-29ddf28695a6": {
+    "lat": 33.804645,
+    "lng": -117.921839,
+    "name": "Toy Story Midway Mania!"
+  },
+  "7561bcd8-18ea-4e3f-89d5-c905b7ba3d42": {
+    "lat": 33.8075587653,
+    "lng": -117.9175029695,
+    "name": "Turtle Talk with Crush"
+  },
+  "8d4b6d5f-558f-4210-82b5-02b0570232ea": {
+    "lat": 33.807619,
+    "lng": -117.919152,
+    "name": "Citizens of Buena Vista Street"
+  },
+  "f71bfc6e-2f10-40a1-bf29-a4b98c5350f4": {
+    "lat": 33.805908,
+    "lng": -117.918787,
+    "name": "Meet the Residents of Radiator Springs in Cars Land"
+  },
+  "449e351b-a05a-4a52-8893-0ed5c1f6fc48": {
+    "lat": 33.807657,
+    "lng": -117.919083,
+    "name": "Five & Dime"
+  },
+  "0c6c7664-94f0-48b0-91ce-7cc2108a72c9": {
+    "lat": 33.806978,
+    "lng": -117.917055,
+    "name": "Guardians of the Galaxy: Awesome Dance Off!"
+  },
+  "f7ff4406-5bd6-4067-9ed1-92ea1efdcc63": {
+    "lat": 33.8061043985,
+    "lng": -117.9233857988,
+    "name": "Paradise Garden Grill"
+  },
+  "4ff553fa-008a-4d99-b6b0-30dd69d3453f": {
+    "lat": 33.806546,
+    "lng": -117.919842,
+    "name": "Mendocino Terrace"
+  },
+  "85201274-b743-41ca-95a1-d575a07811d0": {
+    "lat": 33.8055498861,
+    "lng": -117.9189880233,
+    "name": "Flo's V8 Cafe"
+  },
+  "753b558a-ff18-4ed9-a3c2-70e76b421618": {
+    "lat": 33.807494,
+    "lng": -117.919021,
+    "name": "Carthay Circle Restaurant"
+  },
+  "1214912c-de6d-4493-9344-c245357f7af6": {
+    "lat": 33.8053994053,
+    "lng": -117.9209410699,
+    "name": "Lamplight Lounge"
+  },
+  "d5aabd66-6227-4956-a6da-df71d968abb7": {
+    "lat": 33.805873,
+    "lng": -117.918645,
+    "name": "Cozy Cone Motel 3 - Chili Cone Queso"
+  },
+  "0eefcad3-0b3f-4cb9-b91a-9d493af7222a": {
+    "lat": 33.806019,
+    "lng": -117.920722,
+    "name": "Cappuccino Cart"
+  },
+  "a33c95f7-45f7-4d1b-b058-0045192d8a92": {
+    "lat": 33.805873,
+    "lng": -117.918645,
+    "name": "Cozy Cone Motel 2 - Ice Cream Cones"
+  },
+  "0e795417-d8c0-4ce4-b0f7-3f10c76217ba": {
+    "lat": 33.808192,
+    "lng": -117.920446,
+    "name": "Popcorn at Grizzly Peak Airfield"
+  },
+  "167199e4-933e-4647-9154-75b13975eea3": {
+    "lat": 33.807759,
+    "lng": -117.917651,
+    "name": "Schmoozies!"
+  },
+  "5cd413b8-09da-4860-bdea-a88df9fe6c0d": {
+    "lat": 33.8079285397,
+    "lng": -117.9196943785,
+    "name": "Smokejumpers Grill"
+  },
+  "048f854a-97d8-4295-8b7f-2575605259c6": {
+    "lat": 33.806478,
+    "lng": -117.919877,
+    "name": "Wine Country Trattoria"
+  },
+  "13bc1b70-3a42-41eb-9cb5-7fa8615af2ca": {
+    "lat": 33.8063931592,
+    "lng": -117.9203394055,
+    "name": "Sonoma Terrace"
+  },
+  "38df151c-f563-406f-8dbc-7e824c7afc75": {
+    "lat": 33.8057921835,
+    "lng": -117.9198476908,
+    "name": "Lucky Fortune Cookery"
+  },
+  "2295351d-ce6b-4c04-92d5-5b416372c5b5": {
+    "lat": 33.806651,
+    "lng": -117.918264,
+    "name": "WEB SLINGERS: A Spider-Man Adventure"
+  },
+  "3ee735b5-68dc-470a-a4a2-6ddd415b9cbd": {
+    "lat": 33.806589,
+    "lng": -117.917404,
+    "name": "Avengers Headquarters"
+  },
+  "531f6200-393e-4e4d-b95e-aedd30102e49": {
+    "lat": 33.80649,
+    "lng": -117.918172,
+    "name": "Ancient Sanctum"
+  },
+  "a098bd7c-f1a9-4ffb-97db-e85925509f19": {
+    "lat": 33.806621,
+    "lng": -117.919866,
+    "name": "Magic Key Terrace - Magic Key Holder Dining"
+  },
+  "1b6a816a-337c-431c-8df6-72f993e15e64": {
+    "lat": 33.806476,
+    "lng": -117.917839,
+    "name": "Warriors of Wakanda: The Disciplines of the Dora Milaje"
+  },
+  "bdb0a3ec-eb7a-41c9-918f-ccee7194743e": {
+    "lat": 33.806802,
+    "lng": -117.918828,
+    "name": "The Amazing Spider-Man!"
+  },
+  "2f9b48bb-ad41-44e6-be57-82e62d154b0e": {
+    "lat": 33.8058437811,
+    "lng": -117.9228553176,
+    "name": "Bayside Brews"
+  },
+  "13dbf6c5-2118-4e2a-8609-a3600bf17d1f": {
+    "lat": 33.807735,
+    "lng": -117.918127,
+    "name": "Award Wieners"
+  },
+  "33be9d07-5da1-42b4-a8bb-2486209693bc": {
+    "lat": 33.805545,
+    "lng": -117.920195,
+    "name": "Cocina Cucamonga Mexican Grill"
+  },
+  "431e008b-505c-42fd-9db1-a2e4d5feae78": {
+    "lat": 33.805794,
+    "lng": -117.919981,
+    "name": "Rita's Turbine Blenders"
+  },
+  "ceb71f40-b730-4209-80be-ef89c114dfdf": {
+    "lat": 33.807889,
+    "lng": -117.916958,
+    "name": "Studio Catering Co."
+  },
+  "40217671-2e04-467b-b462-10d97fbca69d": {
+    "lat": 33.807958,
+    "lng": -117.9191776264,
+    "name": "Clarabelle's Hand-Scooped Ice Cream"
+  },
+  "8c153230-8203-4351-bc5a-485a67527b55": {
+    "lat": 33.808119,
+    "lng": -117.917074,
+    "name": "Hollywood Lounge"
+  },
+  "e8d7db35-0bc1-42e4-9e6b-a0bc7edbafb1": {
+    "lat": 33.8051566775,
+    "lng": -117.9204788804,
+    "name": "Adorable Snowman Frosted Treats"
+  },
+  "bbfe672e-075a-477a-b066-1117cf80030c": {
+    "lat": 33.806726,
+    "lng": -117.917696,
+    "name": "Pym Test Kitchen"
+  },
+  "c4034870-5e87-4514-832f-9da5506f9cf9": {
+    "lat": 33.8063363272,
+    "lng": -117.9224435985,
+    "name": "Corn Dog Castle"
+  },
+  "19dad87e-2df8-4fe2-9562-c711d464e4b7": {
+    "lat": 33.80564575,
+    "lng": -117.9214083,
+    "name": "Palisades Stage"
+  },
+  "0ccdca1c-2e60-4f7c-8395-2adce67e34ba": {
+    "lat": 33.8057925204,
+    "lng": -117.9232147336,
+    "name": "Boardwalk Pizza & Pasta"
+  },
+  "1bef32e2-73b4-4de3-bb07-f71c3f301f22": {
+    "lat": 33.807494,
+    "lng": -117.919021,
+    "name": "Carthay Circle Lounge"
+  },
+  "dc2e7388-5618-4fe3-8287-096270978829": {
+    "lat": 33.805873,
+    "lng": -117.918645,
+    "name": "Cozy Cone Motel 5 - Popcone "
+  },
+  "457e2029-852f-4de7-9ca0-e4cc6f0cfcad": {
+    "lat": 33.80564575,
+    "lng": -117.9214083,
+    "name": "World of Color Happiness!"
+  },
+  "8c0a4fdb-69e0-4e4e-ab80-d8247edabe3a": {
+    "lat": 33.8075887,
+    "lng": -117.9183444,
+    "name": "Disney Jr. Mickey Mouse Clubhouse Live!"
+  },
+  "61f87846-5771-4f57-bb30-1103dd5b6ecc": {
+    "lat": 33.808068,
+    "lng": -117.917007,
+    "name": "Hollywood Land’s Seasonal Novelty Release"
+  },
+  "abf8d3b2-fd72-4b10-8619-8c2e3df260e1": {
+    "lat": 33.805866,
+    "lng": -117.923254,
+    "name": "Boardwalk Pizza & Pasta's Seasonal Novelty Release"
+  },
+  "4b7f57a0-c841-43d1-8abb-d13a3b7f2597": {
+    "lat": 33.806115,
+    "lng": -117.920878,
+    "name": "Cookin' with the Jammin’ Chefs"
+  },
+  "464ba110-9573-457b-abad-54a740e0ec33": {
+    "lat": 33.807887,
+    "lng": -117.917374,
+    "name": "Culinary Demonstrations at the Disney California Adventure Food & Wine Festival"
+  },
+  "af195dcb-a69e-499a-b659-6751ee871f79": {
+    "lat": 33.804866,
+    "lng": -117.922465,
+    "name": "Operation: Playtime! - featuring the Green Army Patrol"
+  },
+  "51392ca4-f824-42d8-8808-8110ec8e0e22": {
+    "lat": 28.4185407873192,
+    "lng": -81.5813068741155,
+    "name": "Main Street Philharmonic at Main Street, U.S.A."
+  },
+  "d69261dc-62b8-434c-83bd-93649b43c408": {
+    "lat": 28.4168649,
+    "lng": -81.581193,
+    "name": "Disney Starlight: Dream the Night Away"
+  },
+  "72c7343a-f7fb-4f66-95df-c91016de7338": {
+    "lat": 28.4182868839,
+    "lng": -81.5794086456,
+    "name": "Buzz Lightyear’s Space Ranger Spin"
+  },
+  "86c198b0-7c02-4354-814a-27ad70067d45": {
+    "lat": 28.419507,
+    "lng": -81.581177,
+    "name": "Disney Enchantment at Disney After Hours at Magic Kingdom"
+  },
+  "6fd1e225-53a0-4a80-a577-4bbc9a471075": {
+    "lat": 28.4182264646,
+    "lng": -81.583738382,
+    "name": "Walt Disney's Enchanted Tiki Room"
   },
   "924a3b2c-6b4b-49e5-99d3-e9dc3f2e8a48": {
-    "lat": 28.4197,
-    "lng": -81.5815,
+    "lat": 28.4207661576,
+    "lng": -81.5783907473,
     "name": "The Barnstormer"
   },
+  "e40ac396-cbac-43f4-8752-764ed60ccceb": {
+    "lat": 28.420934,
+    "lng": -81.578368,
+    "name": "Walt Disney World Railroad - Fantasyland"
+  },
+  "f010bc01-b450-4476-a5f3-a5f2813104b2": {
+    "lat": 28.4209221723,
+    "lng": -81.5786757124,
+    "name": "Casey Jr. Splash 'N' Soak Station"
+  },
+  "9d4d5229-7142-44b6-b4fb-528920969a2c": {
+    "lat": 28.42037,
+    "lng": -81.58031,
+    "name": "Seven Dwarfs Mine Train"
+  },
+  "de737ffc-306b-4f32-8bbb-34e5d370ec8f": {
+    "lat": 28.4183725,
+    "lng": -81.584669,
+    "name": "A Pirate's Adventure ~ Treasures of the Seven Seas"
+  },
+  "e76c93df-31af-49a5-8e2f-752c76c937c9": {
+    "lat": 28.4209906,
+    "lng": -81.58093,
+    "name": "Enchanted Tales with Belle"
+  },
+  "273ddb8d-e7b5-4e34-8657-1113f49262a5": {
+    "lat": 28.420169,
+    "lng": -81.581255,
+    "name": "Prince Charming Regal Carrousel"
+  },
   "de3309ca-97d5-4211-bffe-739fed47e92f": {
-    "lat": 28.4217,
-    "lng": -81.5844,
+    "lat": 28.4199638504,
+    "lng": -81.5846422864,
     "name": "Big Thunder Mountain Railroad"
   },
-  "3cba0cb4-e2a6-402c-93ee-c11ffcb127ef": {
-    "lat": 28.4197,
-    "lng": -81.5814,
-    "name": "Under the Sea - Journey of The Little Mermaid"
+  "f5aad2d4-a419-4384-bd9a-42f86385c750": {
+    "lat": 28.4204816402,
+    "lng": -81.5820392026,
+    "name": "\"it's a small world\""
+  },
+  "0aae716c-af13-4439-b638-d75fb1649df3": {
+    "lat": 28.4200230397,
+    "lng": -81.5798248916,
+    "name": "Mad Tea Party"
+  },
+  "890fa430-89c0-4a3f-96c9-11597888005e": {
+    "lat": 28.420509033,
+    "lng": -81.5789473057,
+    "name": "Dumbo the Flying Elephant"
+  },
+  "30fe3c64-af71-4c66-a54b-aa61fd7af177": {
+    "lat": 28.4184325517,
+    "lng": -81.5827982677,
+    "name": "Swiss Family Treehouse"
+  },
+  "b2260923-9315-40fd-9c6b-44dd811dbe64": {
+    "lat": 28.4188341691,
+    "lng": -81.5781962872,
+    "name": "Space Mountain"
+  },
+  "86a41273-5f15-4b54-93b6-829f140e5161": {
+    "lat": 28.4202640272,
+    "lng": -81.5818916811,
+    "name": "Peter Pan's Flight"
+  },
+  "f163ddcd-43e1-488d-8276-2381c1db0a39": {
+    "lat": 28.419368,
+    "lng": -81.579302,
+    "name": "Tomorrowland Speedway"
+  },
+  "96455de6-f4f1-403c-9391-bf8396979149": {
+    "lat": 28.41843,
+    "lng": -81.583472,
+    "name": "The Magic Carpets of Aladdin"
+  },
+  "e39b831b-7731-49bb-815b-289b4f49a9fd": {
+    "lat": 28.416543,
+    "lng": -81.581204,
+    "name": "Walt Disney World Railroad - Main Street, U.S.A."
+  },
+  "0f57cecf-5502-4503-8bc3-ba84d3708ace": {
+    "lat": 28.4187861348,
+    "lng": -81.5837222887,
+    "name": "Country Bear Musical Jamboree"
+  },
+  "e847a8bd-7d21-432b-a7a1-f483517a22b5": {
+    "lat": 28.4212491492,
+    "lng": -81.5807074858,
+    "name": "Be Our Guest Restaurant"
+  },
+  "6ea670b8-3097-4d60-b69c-94e16071da17": {
+    "lat": 28.418491,
+    "lng": -81.582592,
+    "name": "Jungle Navigation Co. LTD Skipper Canteen"
+  },
+  "4c1ccb9e-ff1d-40b6-9454-72c261dd8b00": {
+    "lat": 28.42016512,
+    "lng": -81.5807196587,
+    "name": "The Friar's Nook"
+  },
+  "697473c5-ae17-4c3f-80c7-09a813248013": {
+    "lat": 28.4189329813,
+    "lng": -81.5829262845,
+    "name": "The Diamond Horseshoe"
+  },
+  "ae9a4a79-ccf1-4561-9a95-cf83d3007b98": {
+    "lat": 28.4191196055,
+    "lng": -81.5826159743,
+    "name": "Liberty Tree Tavern"
+  },
+  "55bdcccc-217b-416c-b8b0-4b6a87d16179": {
+    "lat": 28.4195,
+    "lng": -81.581101,
+    "name": "Cinderella's Royal Table"
+  },
+  "5f42b43a-e745-487b-9545-dd601f6984ce": {
+    "lat": 28.4192798,
+    "lng": -81.5820112,
+    "name": "Sleepy Hollow"
+  },
+  "be2c6511-750b-4fa6-8332-606d4342f814": {
+    "lat": 28.4186023132,
+    "lng": -81.584727253,
+    "name": "Golden Oak Outpost"
+  },
+  "c4b64a31-e855-46a9-9d1a-aa13c99e88af": {
+    "lat": 28.4181214892,
+    "lng": -81.5818970259,
+    "name": "The Crystal Palace"
+  },
+  "a5098eb1-a673-47c2-b782-5c48bb83da17": {
+    "lat": 28.418434,
+    "lng": -81.582512,
+    "name": "Sunshine Tree Terrace"
+  },
+  "1b9a6231-b658-470f-92cc-808925280214": {
+    "lat": 28.4184189875,
+    "lng": -81.5792530775,
+    "name": "The Lunching Pad"
+  },
+  "4bbaa21d-4203-494a-a120-b780dc7570ec": {
+    "lat": 28.42041,
+    "lng": -81.58143,
+    "name": "Pinocchio Village Haus"
+  },
+  "75d43698-162c-47af-a607-e879637dc8e7": {
+    "lat": 28.4180247703,
+    "lng": -81.5809394969,
+    "name": "The Plaza Restaurant"
+  },
+  "83201c33-ce99-45ae-a595-f47e61d73739": {
+    "lat": 28.4169323426,
+    "lng": -81.5807276023,
+    "name": "Tony's Town Square Restaurant"
+  },
+  "166f2985-7b27-4eff-a8b3-29c3448ba198": {
+    "lat": 28.421282,
+    "lng": -81.578932,
+    "name": "Meet Daring Disney Pals as Circus Stars at Pete's Silly Sideshow"
+  },
+  "012a211b-4c91-451c-8a0e-5e3ab398eda8": {
+    "lat": 28.4208933,
+    "lng": -81.579613,
+    "name": "Meet Ariel at Her Grotto"
+  },
+  "40737d3d-0ff6-4a9e-a050-beb87bf90120": {
+    "lat": 28.420071,
+    "lng": -81.580893,
+    "name": "Meet Cinderella and a Visiting Princess at Princess Fairytale Hall"
+  },
+  "22b78ed9-a692-47cb-b6a4-6d1224ff67e3": {
+    "lat": 28.419169,
+    "lng": -81.581204,
+    "name": "Happily Ever After"
+  },
+  "a0613b70-293f-4a5b-8169-357be1777c62": {
+    "lat": 28.418112,
+    "lng": -81.581421,
+    "name": "Casey's Corner Pianist"
+  },
+  "1eee22e8-1d0a-4809-a42b-df3ae55c69d5": {
+    "lat": 28.4174102,
+    "lng": -81.581217,
+    "name": "The Dapper Dans"
+  },
+  "819fd147-3f17-420a-9188-2ba4c544d761": {
+    "lat": 28.417116,
+    "lng": -81.581023,
+    "name": "Main Street Confectionery"
   },
   "7c5e1e02-3a44-4151-9005-44066d5ba1da": {
-    "lat": 28.4199,
-    "lng": -81.5812,
+    "lat": 28.4200304909,
+    "lng": -81.5814839853,
     "name": "Mickey's PhilharMagic"
   },
   "8183f3f2-1b59-4b9c-b634-6a863bdf8d84": {
-    "lat": 28.4183,
-    "lng": -81.5795,
+    "lat": 28.4180310951,
+    "lng": -81.5790083064,
     "name": "Walt Disney's Carousel of Progress"
   },
-  "96455de6-f4f1-403c-9391-bf8396979149": {
-    "lat": 28.4193,
-    "lng": -81.5837,
-    "name": "The Magic Carpets of Aladdin"
-  },
   "ffcfeaa2-1416-4920-a1ed-543c1a1695c4": {
-    "lat": 28.4182,
-    "lng": -81.58,
+    "lat": 28.418155,
+    "lng": -81.579033,
     "name": "Tomorrowland Transit Authority PeopleMover"
   },
-  "b2260923-9315-40fd-9c6b-44dd811dbe64": {
-    "lat": 28.4183,
-    "lng": -81.5796,
-    "name": "Space Mountain"
-  },
-  "f5aad2d4-a419-4384-bd9a-42f86385c750": {
-    "lat": 28.4203,
-    "lng": -81.5813,
-    "name": "it's a small world"
-  },
-  "72c7343a-f7fb-4f66-95df-c91016de7338": {
-    "lat": 28.4185,
-    "lng": -81.5799,
-    "name": "Buzz Lightyear's Space Ranger Spin"
-  },
-  "9d4d5229-7142-44b6-b4fb-528920969a2c": {
-    "lat": 28.4203,
-    "lng": -81.5815,
-    "name": "Seven Dwarfs Mine Train"
-  },
-  "0aae716c-af13-4439-b638-d75fb1649df3": {
-    "lat": 28.4207,
-    "lng": -81.581,
-    "name": "Mad Tea Party"
-  },
   "e8f0b426-7645-4ea3-8b41-b94ae7091a41": {
-    "lat": 28.4186,
-    "lng": -81.5802,
+    "lat": 28.4183977566,
+    "lng": -81.5797358751,
     "name": "Monsters Inc. Laugh Floor"
   },
-  "f163ddcd-43e1-488d-8276-2381c1db0a39": {
-    "lat": 28.4186,
-    "lng": -81.58,
-    "name": "Tomorrowland Speedway"
+  "2ebfb38c-5cb5-4de1-86c0-f7af14188022": {
+    "lat": 28.4194484171,
+    "lng": -81.5823248578,
+    "name": "The Hall of Presidents"
   },
-  "273ddb8d-e7b5-4e34-8657-1113f49262a5": {
-    "lat": 28.42,
-    "lng": -81.5809,
-    "name": "Prince Charming Regal Carrousel"
+  "888fb4a4-7adf-47a1-8ba2-c258cc64fd75": {
+    "lat": 28.4168698711,
+    "lng": -81.5815081252,
+    "name": "Main Street Vehicles"
   },
-  "796b0a25-c51e-456e-9bb8-50a324e301b3": {
-    "lat": 28.4192,
-    "lng": -81.5838,
-    "name": "Jungle Cruise"
+  "90d79335-c907-4069-a021-d0fe1ec73ae2": {
+    "lat": 28.4194549043,
+    "lng": -81.5811809,
+    "name": "Cinderella Castle"
   },
-  "890fa430-89c0-4a3f-96c9-11597888005e": {
-    "lat": 28.42,
-    "lng": -81.5815,
-    "name": "Dumbo the Flying Elephant"
+  "d9d12438-d999-4482-894b-8955fdb20ccf": {
+    "lat": 28.4184926179,
+    "lng": -81.5789887902,
+    "name": "Astro Orbiter"
   },
-  "86a41273-5f15-4b54-93b6-829f140e5161": {
-    "lat": 28.42,
-    "lng": -81.5812,
-    "name": "Peter Pan's Flight"
+  "2551a77d-023f-4ab1-9a19-8afec0190f39": {
+    "lat": 28.4202,
+    "lng": -81.58288,
+    "name": "Haunted Mansion"
+  },
+  "5a43d1a7-ad53-4d25-abfe-25625f0da304": {
+    "lat": 28.419625,
+    "lng": -81.577985,
+    "name": "TRON Lightcycle / Run"
   },
   "0d94ad60-72f0-4551-83a6-ebaecdd89737": {
-    "lat": 28.4202,
-    "lng": -81.5818,
+    "lat": 28.420212,
+    "lng": -81.580266,
     "name": "The Many Adventures of Winnie the Pooh"
   },
-  "47f90d2c-e191-4239-a466-5892ef59a88b": {
-    "lat": 28.3747,
-    "lng": -81.5494,
-    "name": "EPCOT"
+  "73cb9445-0695-47a3-87ce-d08ae36b5f3c": {
+    "lat": 28.419418,
+    "lng": -81.58498,
+    "name": "Tiana's Bayou Adventure"
   },
-  "e3549451-b284-453d-9c31-e3b1207abd79": {
-    "lat": 28.3754,
-    "lng": -81.547,
-    "name": "Guardians of the Galaxy: Cosmic Rewind"
+  "b5d6d1d1-e960-4c8f-a8a4-b9748b386b64": {
+    "lat": 28.421282,
+    "lng": -81.578932,
+    "name": "Meet Dashing Disney Pals as Circus Stars at Pete's Silly Sideshow"
   },
-  "1f542745-cda1-4786-a536-5fff373e5964": {
-    "lat": 28.37,
-    "lng": -81.5487,
-    "name": "The American Adventure"
+  "3dc6e90f-de6e-4bf0-bae9-b04bc930351a": {
+    "lat": 28.419169,
+    "lng": -81.581204,
+    "name": "Let the Magic Begin"
   },
-  "8d7ccdb1-a22b-4e26-8dc8-65b1938ed5f0": {
-    "lat": 28.3729,
-    "lng": -81.5519,
-    "name": "Frozen Ever After"
+  "4c31b3ad-5dc9-437f-ac1a-0fdff36a2818": {
+    "lat": 28.419169,
+    "lng": -81.581204,
+    "name": "Mickey's Magical Friendship Faire"
   },
-  "dae68dee-dfba-4128-b594-6aa12add1070": {
-    "lat": 28.3745,
-    "lng": -81.5484,
-    "name": "Journey of Water, Inspired by Moana"
+  "cf4b2ba4-3626-4de7-9d07-abe8a65b1665": {
+    "lat": 28.4200458,
+    "lng": -81.580917,
+    "name": "Meet Princess Tiana and a Visiting Princess at Princess Fairytale Hall"
+  },
+  "5af2c3a9-7697-414f-9642-6cb17a329613": {
+    "lat": 28.4200310807,
+    "lng": -81.5825126124,
+    "name": "Columbia Harbour House"
+  },
+  "48d0c81e-3f47-4ff9-aa3c-331cb83a0af9": {
+    "lat": 28.418112,
+    "lng": -81.581281,
+    "name": "Casey's Corner"
+  },
+  "8073763e-19ee-4506-a823-a902e8e7f3b9": {
+    "lat": 28.418324,
+    "lng": -81.584282,
+    "name": "Tortuga Tavern"
+  },
+  "5135ff2e-2f42-4138-bc30-706eb25963e4": {
+    "lat": 28.419477,
+    "lng": -81.579873,
+    "name": "Cosmic Ray's Starlight Café"
+  },
+  "ab1b9ce7-aada-4b47-9fa0-1b178203d02b": {
+    "lat": 28.4188897676,
+    "lng": -81.5844008876,
+    "name": "Pecos Bill Tall Tale Inn and Cafe"
+  },
+  "796b0a25-c51e-456e-9bb8-50a324e301b3": {
+    "lat": 28.41797818,
+    "lng": -81.5834393157,
+    "name": "Jungle Cruise"
+  },
+  "1c708beb-41e1-43ae-8dd8-1e85075aeb38": {
+    "lat": 28.416856,
+    "lng": -81.581195,
+    "name": "Flag Retreat"
+  },
+  "f819079e-644e-4fce-bda3-26b899ac7027": {
+    "lat": 28.4168649,
+    "lng": -81.581193,
+    "name": "Disney Adventure Friends Cavalcade"
+  },
+  "ee56b2f3-fd49-4a29-ae1a-2d321549a633": {
+    "lat": 28.4189533,
+    "lng": -81.583787,
+    "name": "Disney Festival of Fantasy Parade"
+  },
+  "a2d92647-634d-4eb4-886b-9da858e871f1": {
+    "lat": 28.416727,
+    "lng": -81.580746,
+    "name": "Meet Mickey at Town Square Theater"
+  },
+  "3cba0cb4-e2a6-402c-93ee-c11ffcb127ef": {
+    "lat": 28.4211203226,
+    "lng": -81.5799752427,
+    "name": "Under the Sea - Journey of The Little Mermaid"
+  },
+  "352feb94-e52e-45eb-9c92-e4b44c6b1a9d": {
+    "lat": 28.4179699235,
+    "lng": -81.5842252029,
+    "name": "Pirates of the Caribbean"
+  },
+  "646a3063-dc41-4671-bc0a-0958b95fb553": {
+    "lat": 28.4181,
+    "lng": -81.58435,
+    "name": "The Beak and Barrel"
+  },
+  "3dbf1ff2-eee0-44a9-8cd9-22bf920e81e9": {
+    "lat": 28.3697559273453,
+    "lng": -81.5471178955173,
+    "name": "Luminous The Symphony of Us"
+  },
+  "d3461b18-2d07-4c21-97a3-6c28fca94678": {
+    "lat": 28.367506,
+    "lng": -81.548144,
+    "name": "Pizza al Taglio"
+  },
+  "eb6a60d7-b354-47a1-a091-0beb11b24188": {
+    "lat": 28.370588,
+    "lng": -81.546728,
+    "name": "Akershus Royal Banquet Hall"
+  },
+  "15107c34-65a3-473c-aaeb-655b508f529d": {
+    "lat": 28.373777,
+    "lng": -81.547056,
+    "name": "Space 220 Lounge"
+  },
+  "0e673d4b-eee4-4735-ab65-be39bcd28d11": {
+    "lat": 28.367929,
+    "lng": -81.549122,
+    "name": "Fife & Drum Tavern"
+  },
+  "0e35a7a2-c2cd-451b-88e2-afc9d370e69e": {
+    "lat": 28.36831,
+    "lng": -81.549428,
+    "name": "Garden Rocks Concert Series at EPCOT International Flower & Garden Festival"
+  },
+  "a70b81bf-2934-433c-9723-afb2f24112bf": {
+    "lat": 28.372769,
+    "lng": -81.55128,
+    "name": "Meet Figment Inside ImageWorks"
+  },
+  "e48629ab-939f-4fe0-9e6a-6ad29b8added": {
+    "lat": 28.370535,
+    "lng": -81.55249,
+    "name": "Command Performance"
+  },
+  "41aba635-48e4-43bf-9bb1-3b811b5705d0": {
+    "lat": 28.370467,
+    "lng": -81.551677,
+    "name": "Rose & Crown Pub Musician"
+  },
+  "5d3bdec3-8484-4aca-b192-e9735a41a316": {
+    "lat": 28.371185,
+    "lng": -81.547297,
+    "name": "Meet Donald Duck in Mexico"
+  },
+  "fd8afd63-0cb5-4f77-b47b-fb277f12d9f8": {
+    "lat": 28.373539,
+    "lng": -81.549749,
+    "name": "¡Celebración Encanto!"
+  },
+  "ea730d0c-7723-429d-89a4-9e76f053f5ac": {
+    "lat": 28.371007,
+    "lng": -81.547466,
+    "name": "Mariachi Cobre"
+  },
+  "76eadac1-cdfa-45e5-a25c-54ed4c3a604f": {
+    "lat": 28.371007,
+    "lng": -81.547466,
+    "name": "Marimba de las Américas"
+  },
+  "83fed9d1-c25f-497c-ab8e-21e4dd7ce655": {
+    "lat": 28.36787,
+    "lng": -81.548184,
+    "name": "Sergio"
+  },
+  "fc64aa10-290f-472e-9fab-4d649f53ab2d": {
+    "lat": 28.368536,
+    "lng": -81.553597,
+    "name": "La Crêperie de Paris"
+  },
+  "7b79e739-c540-4ea5-a4c8-f8d8bac5719b": {
+    "lat": 28.3698563364835,
+    "lng": -81.5461904203374,
+    "name": "Meet Mulan in China"
+  },
+  "8410885a-115d-4a5f-9cd5-08d0e659a603": {
+    "lat": 28.367848,
+    "lng": -81.550833,
+    "name": "Takumi-Tei"
+  },
+  "b772df79-1fca-4c0a-a2f3-88b22e63e7c3": {
+    "lat": 28.373777,
+    "lng": -81.547056,
+    "name": "Space 220 Restaurant"
+  },
+  "35ed719b-f7f0-488f-8346-4fbf8055d373": {
+    "lat": 28.37263,
+    "lng": -81.55115,
+    "name": "Disney and Pixar Short Film Festival"
   },
   "fb076275-0570-4d62-b2a9-4d6515130fa3": {
-    "lat": 28.3738,
-    "lng": -81.5467,
+    "lat": 28.374904,
+    "lng": -81.550852,
     "name": "The Seas with Nemo & Friends"
   },
-  "480fde8f-fe58-4bfb-b3ab-052a39d4db7c": {
-    "lat": 28.3745,
-    "lng": -81.5494,
-    "name": "Spaceship Earth"
+  "8d7ccdb1-a22b-4e26-8dc8-65b1938ed5f0": {
+    "lat": 28.370745,
+    "lng": -81.54653,
+    "name": "Frozen Ever After"
   },
-  "57acb522-a6fc-4aa4-a80e-21f21f317250": {
-    "lat": 28.3738,
-    "lng": -81.5469,
-    "name": "Turtle Talk With Crush"
+  "482169b9-2889-4747-8aef-f9d13a37d940": {
+    "lat": 28.374301,
+    "lng": -81.552138,
+    "name": "Awesome Planet"
   },
-  "8f353879-d6ac-4211-9352-4029efb47c18": {
-    "lat": 28.374,
-    "lng": -81.5464,
-    "name": "Living with the Land"
-  },
-  "5b6475ad-4e9a-4793-b841-501aa382c9c0": {
-    "lat": 28.3754,
-    "lng": -81.5484,
-    "name": "Mission: SPACE"
-  },
-  "37ae57c5-feaf-4e47-8f27-4b385be200f0": {
-    "lat": 28.3754,
-    "lng": -81.5482,
-    "name": "Test Track"
-  },
-  "81b15dfd-cf6a-466f-be59-3dd65d2a2807": {
-    "lat": 28.374,
-    "lng": -81.5466,
-    "name": "Soarin' Around the World"
-  },
-  "22f48b73-01df-460e-8969-9eb2b4ae836c": {
-    "lat": 28.3722,
-    "lng": -81.5525,
-    "name": "Gran Fiesta Tour Starring The Three Caballeros"
+  "4f0df9e7-d4c1-45b5-93e2-4a7bc92547b0": {
+    "lat": 28.367517,
+    "lng": -81.549469,
+    "name": "American Heritage Gallery"
   },
   "1e735ffb-4868-47f1-b2cd-2ac1156cd5f0": {
-    "lat": 28.373,
-    "lng": -81.5508,
+    "lat": 28.36825,
+    "lng": -81.553097,
     "name": "Remy's Ratatouille Adventure"
   },
+  "3d8f8f8f-f984-4d2e-8dea-5a79432bdf05": {
+    "lat": 28.374185,
+    "lng": -81.547072,
+    "name": "Advanced Training Lab"
+  },
+  "66ff36de-9cb3-4d9a-b891-1665d19ffb3e": {
+    "lat": 28.370621,
+    "lng": -81.546971,
+    "name": "Stave Church Gallery"
+  },
+  "57acb522-a6fc-4aa4-a80e-21f21f317250": {
+    "lat": 28.375255,
+    "lng": -81.551047,
+    "name": "Turtle Talk With Crush"
+  },
+  "2ecc4fff-2994-476f-9926-24a4af173838": {
+    "lat": 28.375099,
+    "lng": -81.551245451,
+    "name": "Bruce's Shark World"
+  },
+  "00666fe9-7774-4b53-9fb7-3d333f8aa503": {
+    "lat": 28.368864,
+    "lng": -81.552978,
+    "name": "Impressions de France"
+  },
   "75449e85-c410-4cef-a368-9d2ea5d52b58": {
-    "lat": 28.3745,
-    "lng": -81.5479,
+    "lat": 28.372994,
+    "lng": -81.551401,
     "name": "Journey Into Imagination With Figment"
   },
-  "288747d1-8b4f-4a64-867e-ea7c9b27bad8": {
-    "lat": 28.3575,
-    "lng": -81.5583,
-    "name": "Disney's Hollywood Studios"
+  "ee070d46-6a64-41c0-9f12-69dcfcca10a0": {
+    "lat": 28.369791,
+    "lng": -81.546381,
+    "name": "Reflections of China"
   },
-  "1a2e70d9-50d5-4140-b69e-799e950f7d18": {
-    "lat": 28.3545,
-    "lng": -81.5618,
-    "name": "Star Wars: Rise of the Resistance"
+  "1f542745-cda1-4786-a536-5fff373e5964": {
+    "lat": 28.367517,
+    "lng": -81.549446,
+    "name": "The American Adventure"
   },
-  "e516f303-e82d-4fd3-8fbf-8e6ab624cf89": {
-    "lat": 28.3578,
-    "lng": -81.5598,
-    "name": "Rock 'n' Roller Coaster Starring Aerosmith"
+  "8f8746cb-c714-4c60-848d-e2dc4e6f586b": {
+    "lat": 28.371511,
+    "lng": -81.54746,
+    "name": "Mexico Folk Art Gallery"
   },
-  "6f6998e8-a629-412c-b964-2cb06af8e26b": {
-    "lat": 28.3572,
-    "lng": -81.5596,
-    "name": "The Twilight Zone™ Tower of Terror"
+  "480fde8f-fe58-4bfb-b3ab-052a39d4db7c": {
+    "lat": 28.375583,
+    "lng": -81.549401,
+    "name": "Spaceship Earth"
   },
-  "3b290419-8ca2-44bc-a710-a6c83fca76ec": {
-    "lat": 28.3579,
-    "lng": -81.5613,
-    "name": "Star Tours – The Adventures Continue"
+  "37ae57c5-feaf-4e47-8f27-4b385be200f0": {
+    "lat": 28.373228,
+    "lng": -81.547489,
+    "name": "Test Track"
+  },
+  "5b7cf10a-763b-45ba-9049-87140270826f": {
+    "lat": 28.371221,
+    "lng": -81.547532,
+    "name": "La Hacienda de San Angel"
+  },
+  "3ace01d1-15fc-4fbb-99e4-81a696cb2d05": {
+    "lat": 28.3718643,
+    "lng": -81.551537,
+    "name": "Kidcot Fun Stops"
+  },
+  "b83b6dc9-9573-4e15-ab00-9ed8a2334770": {
+    "lat": 28.367354,
+    "lng": -81.548192,
+    "name": "Via Napoli Ristorante e Pizzeria"
+  },
+  "dbf4a977-a7b5-41db-a9b7-ecad65f9aa0f": {
+    "lat": 28.368468,
+    "lng": -81.551645,
+    "name": "Spice Road Table"
+  },
+  "e14e439d-d1aa-4f3a-90e9-60c524bd0b5a": {
+    "lat": 28.367627,
+    "lng": -81.548052,
+    "name": "Tutto Italia Ristorante"
+  },
+  "17d51899-7d6d-4cd7-93bb-4064a47d501b": {
+    "lat": 28.367674,
+    "lng": -81.550701,
+    "name": "Teppan Edo"
+  },
+  "48e7f9f2-ddc3-4ced-8d11-a5cd968085c2": {
+    "lat": 28.367709,
+    "lng": -81.550701,
+    "name": "Shiki-Sai: Sushi Izakaya"
+  },
+  "736b2e6c-daaf-45c4-ba9e-fb60d7cf92d6": {
+    "lat": 28.37158,
+    "lng": -81.547299,
+    "name": "La Cava del Tequila"
+  },
+  "c9e1d1f6-021f-43f2-a14b-3e67f65adbc4": {
+    "lat": 28.368153,
+    "lng": -81.546819,
+    "name": "Biergarten Restaurant"
+  },
+  "93843fb0-ee5a-49c6-91a8-40a042e93865": {
+    "lat": 28.368868,
+    "lng": -81.55273,
+    "name": "Monsieur Paul"
+  },
+  "4807262a-ad16-4d43-a0d7-64b24603ef36": {
+    "lat": 28.368954,
+    "lng": -81.552639,
+    "name": "Chefs de France"
+  },
+  "38892221-f69c-4913-97c9-7473c88854fa": {
+    "lat": 28.375096,
+    "lng": -81.550458,
+    "name": "Coral Reef Restaurant"
+  },
+  "3206e3a6-cbc3-4960-9700-163764bc47d6": {
+    "lat": 28.371657,
+    "lng": -81.551512,
+    "name": "Le Cellier Steakhouse"
+  },
+  "e8dccc86-cfb4-44c3-9a90-e95b88edbd21": {
+    "lat": 28.370056,
+    "lng": -81.546688,
+    "name": "Nine Dragons Restaurant"
+  },
+  "6ecdbfc8-85c2-436d-893b-6db0f437b74a": {
+    "lat": 28.370508,
+    "lng": -81.551684,
+    "name": "Rose & Crown Dining Room"
+  },
+  "07263f57-0431-4da2-a8b6-77d2965a6f83": {
+    "lat": 28.371612,
+    "lng": -81.547258,
+    "name": "San Angel Inn Restaurante"
+  },
+  "3f3ef6db-69de-418a-8861-f541309cdb01": {
+    "lat": 28.368123,
+    "lng": -81.546902,
+    "name": "Sommerfest"
+  },
+  "91e9cda9-b39f-4a24-b63e-57bc1ba612f5": {
+    "lat": 28.370508,
+    "lng": -81.551742,
+    "name": "Rose & Crown Pub"
+  },
+  "d4179c4c-eb08-4559-aa7c-f9802fda641b": {
+    "lat": 28.374039,
+    "lng": -81.552324,
+    "name": "Garden Grill Restaurant"
+  },
+  "c63e29ac-f57f-4cd0-b998-799a2849dfa1": {
+    "lat": 28.370601,
+    "lng": -81.551648,
+    "name": "UK Beer Cart"
+  },
+  "1cf38b60-d075-495b-a92f-5a6a59d9e3db": {
+    "lat": 28.369018,
+    "lng": -81.552363,
+    "name": "Les Vins des Chefs de France"
+  },
+  "6e70f3fb-faab-41b1-8d26-b85d1c5cfa26": {
+    "lat": 28.371202,
+    "lng": -81.551509,
+    "name": "Entertainment at Canada Mill Stage"
+  },
+  "001b099f-4db8-4843-8c1e-852e0e8fc2df": {
+    "lat": 28.370993,
+    "lng": -81.547454,
+    "name": "Viva Mexico"
+  },
+  "8f353879-d6ac-4211-9352-4029efb47c18": {
+    "lat": 28.374245,
+    "lng": -81.552301,
+    "name": "Living with the Land"
+  },
+  "7969166f-feef-4350-b26e-6a6c745528f4": {
+    "lat": 28.375098,
+    "lng": -81.551211,
+    "name": "SeaBase Aquarium"
+  },
+  "85352291-58dd-4dd9-86d3-cba21cebb684": {
+    "lat": 28.368364,
+    "lng": -81.546953,
+    "name": "Karamell-Küche"
+  },
+  "0b543ab9-d6f2-4614-bc2c-c7c088d9a582": {
+    "lat": 28.368536,
+    "lng": -81.553597,
+    "name": "Crêpes À Emporter by La Crêperie de Paris"
+  },
+  "c7444c22-4b35-4a9e-9cca-56ecc05376cc": {
+    "lat": 28.3743400792775,
+    "lng": -81.5484700507225,
+    "name": "Connections Eatery"
+  },
+  "db1bb4b3-36ff-40d7-bc65-45667eeb8aed": {
+    "lat": 28.368468,
+    "lng": -81.551645,
+    "name": "Spice Road Table Bar"
+  },
+  "3e5f26ee-c02d-47fd-891e-5e4479073444": {
+    "lat": 28.372774,
+    "lng": -81.551121,
+    "name": "ImageWorks - The \"What If\" Labs"
+  },
+  "07dbeaea-85fa-45f2-872f-02f9e7510419": {
+    "lat": 28.368236,
+    "lng": -81.551612,
+    "name": "Gallery of Arts and History"
+  },
+  "0f40274d-420a-425a-9377-29fd6e49484f": {
+    "lat": 28.36999,
+    "lng": -81.546334,
+    "name": "House of the Whispering Willows"
+  },
+  "9053240b-7f7f-44fe-970b-bd7956cd5d4f": {
+    "lat": 28.37476,
+    "lng": -81.549401,
+    "name": "Project Tomorrow: Inventing the Wonders of the Future"
+  },
+  "dae68dee-dfba-4128-b594-6aa12add1070": {
+    "lat": 28.374691,
+    "lng": -81.550378,
+    "name": "Journey of Water, Inspired by Moana"
+  },
+  "8c8cd77d-97f6-4309-b285-42aad90e9f15": {
+    "lat": 28.368864,
+    "lng": -81.552978,
+    "name": "Beauty and the Beast Sing-Along"
+  },
+  "18c533d6-a395-4ae4-9488-80fce9c497fe": {
+    "lat": 28.368864,
+    "lng": -81.552978,
+    "name": "Palais du Cinéma"
+  },
+  "6f1d3b25-42c9-4e99-9dce-6c20d7a5deea": {
+    "lat": 28.367309,
+    "lng": -81.550525,
+    "name": "Bijutsu-kan Gallery"
+  },
+  "61fb49f8-e62f-4e1c-ae0e-8ab9929037bc": {
+    "lat": 28.371694,
+    "lng": -81.55196,
+    "name": "Canada Far and Wide in Circle-Vision 360"
+  },
+  "81b15dfd-cf6a-466f-be59-3dd65d2a2807": {
+    "lat": 28.373592,
+    "lng": -81.552248,
+    "name": "Soarin' Around the World"
+  },
+  "5b6475ad-4e9a-4793-b841-501aa382c9c0": {
+    "lat": 28.373927,
+    "lng": -81.547156,
+    "name": "Mission: SPACE"
+  },
+  "e3549451-b284-453d-9c31-e3b1207abd79": {
+    "lat": 28.3749021961781,
+    "lng": -81.5478397673417,
+    "name": "Guardians of the Galaxy: Cosmic Rewind"
+  },
+  "22f48b73-01df-460e-8969-9eb2b4ae836c": {
+    "lat": 28.371649,
+    "lng": -81.547368,
+    "name": "Gran Fiesta Tour Starring The Three Caballeros"
+  },
+  "33bd3bad-6803-4c5e-97ac-f7e31261a604": {
+    "lat": 28.37097,
+    "lng": -81.547134,
+    "name": "Meet Anna and Elsa at Royal Sommerhus"
+  },
+  "c5f6c7e4-d5cd-4d71-8e02-57d8bb43b3ba": {
+    "lat": 28.367595,
+    "lng": -81.549387,
+    "name": "Voices of Liberty"
+  },
+  "8e1a9a60-9311-4f79-b6a8-1b5172e4f7c9": {
+    "lat": 28.368651,
+    "lng": -81.546584,
+    "name": "Entertainment at Germany Gazebo"
+  },
+  "99087d9a-4380-4ab6-b088-20816e233c6f": {
+    "lat": 28.3718773852161,
+    "lng": -81.5488533162313,
+    "name": "Meet Asha Near World Showcase Plaza"
+  },
+  "296d164a-8b9a-49d3-a285-637b86731260": {
+    "lat": 28.36786,
+    "lng": -81.550389,
+    "name": "Matsuriza"
+  },
+  "2ebce841-be26-42e3-a552-393dc995cfe8": {
+    "lat": 28.375567,
+    "lng": -81.549695,
+    "name": "Meet Pluto Near EPCOT Main Entrance"
+  },
+  "67612787-fbd3-44b7-869f-123f55d78584": {
+    "lat": 28.373898,
+    "lng": -81.549914,
+    "name": "Meet Beloved Disney Pals at Mickey & Friends"
+  },
+  "ce284609-9d86-444e-af5a-6c0adb68b0aa": {
+    "lat": 28.367579,
+    "lng": -81.549003,
+    "name": "Regal Eagle Smokehouse: Craft Drafts & Barbecue"
+  },
+  "419df435-6213-4d65-b0fc-8c0ad8379e11": {
+    "lat": 28.371548,
+    "lng": -81.547713,
+    "name": "Choza de Margarita"
+  },
+  "25ec84ef-112f-424d-9fe0-5fc1fa9620a9": {
+    "lat": 28.367977,
+    "lng": -81.549929,
+    "name": "Block & Hans"
+  },
+  "802b79b0-6491-434d-b4b5-145387d62172": {
+    "lat": 28.367506,
+    "lng": -81.548144,
+    "name": "Tutto Gusto Wine Cellar"
+  },
+  "67186665-6756-4c29-9010-6efc222b2d9b": {
+    "lat": 28.370281,
+    "lng": -81.551772,
+    "name": "Yorkshire County Fish Shop"
+  },
+  "3beaa9a5-6404-4446-bfd1-e0d0eea65e85": {
+    "lat": 28.374134,
+    "lng": -81.550431,
+    "name": "JAMMitors"
+  },
+  "74f13ee5-8e10-41a7-a19d-38e9c9582652": {
+    "lat": 28.368301,
+    "lng": -81.551841,
+    "name": "Tangierine Café: Flavors of the Medina"
+  },
+  "95ab66f4-4e47-4f76-875f-45ae70831e2f": {
+    "lat": 28.37466514737089,
+    "lng": -81.5496073600167,
+    "name": "GEO-82"
+  },
+  "58404f45-7e74-4c0c-b037-b903fa1066d2": {
+    "lat": 28.369237,
+    "lng": -81.546334,
+    "name": "Refreshment Outpost"
+  },
+  "e9c1bff6-c9c1-4275-8f3d-44226f0fdfbb": {
+    "lat": 28.36922,
+    "lng": -81.55286,
+    "name": "Meet Princess Aurora in France"
+  },
+  "9cc8afdb-8e45-436f-96e5-72323d933423": {
+    "lat": 28.371784,
+    "lng": -81.550404,
+    "name": "Swirled Showcase"
+  },
+  "eea07a8d-30e0-42d8-9c47-58cc038801e8": {
+    "lat": 28.356184,
+    "lng": -81.56207,
+    "name": "Meet the Toys in Toy Story Land"
+  },
+  "a7763ca6-bca3-4e78-b75c-22886aa06bec": {
+    "lat": 28.3574862,
+    "lng": -81.560848,
+    "name": "The Little Mermaid – A Musical Adventure – New!"
   },
   "34c4916b-989b-4ff1-a7e3-a6a846a3484f": {
-    "lat": 28.3549,
-    "lng": -81.5615,
+    "lat": 28.353889,
+    "lng": -81.561689,
     "name": "Millennium Falcon: Smugglers Run"
   },
-  "20b5daa8-e1ea-436f-830c-2d7d18d929b5": {
-    "lat": 28.3562,
-    "lng": -81.5568,
-    "name": "Toy Story Mania!"
+  "90ab2c64-e05c-4783-bde5-fddf41f78402": {
+    "lat": 28.356965,
+    "lng": -81.560425,
+    "name": "Disney Movie Magic"
   },
-  "6e118e37-5002-408d-9d88-0b5d9cdb5d14": {
-    "lat": 28.3588,
-    "lng": -81.5582,
-    "name": "Mickey & Minnie's Runaway Railway"
+  "69cb35f2-c58e-4b44-88c9-ea0cc720e075": {
+    "lat": 28.359869,
+    "lng": -81.560947,
+    "name": "Disney Villains: Unfairly Ever After"
   },
-  "399aa0a1-98e2-4d2b-b297-2b451e9665e1": {
-    "lat": 28.3556,
-    "lng": -81.556,
-    "name": "Slinky Dog Dash"
+  "0e7426d1-7406-4e7c-9da6-ac6c126211c6": {
+    "lat": 28.356374,
+    "lng": -81.560839,
+    "name": "Meet Joy at Pixar Plaza"
+  },
+  "e516f303-e82d-4fd3-8fbf-8e6ab624cf89": {
+    "lat": 28.359712,
+    "lng": -81.56059,
+    "name": "Rock ’n’ Roller Coaster Starring The Muppets — Opening May 26"
+  },
+  "847ab726-3672-42fd-a232-df7a3fb2baf7": {
+    "lat": 28.35713,
+    "lng": -81.55991,
+    "name": "The Record Setters"
+  },
+  "d07a17c2-7720-4db7-b12a-a68ecdb51108": {
+    "lat": 28.35713,
+    "lng": -81.55991,
+    "name": "Hollygroove Swingin’"
+  },
+  "7a73a6df-4d33-4648-b3e3-57985f84f0ae": {
+    "lat": 28.356832,
+    "lng": -81.56201,
+    "name": "Roundup Rodeo BBQ"
+  },
+  "79860074-658f-49bc-8c1b-624af8b4718e": {
+    "lat": 28.356086,
+    "lng": -81.560742,
+    "name": "Meet Edna Mode at the Edna Mode Experience"
+  },
+  "c113b1cf-7b6d-416a-8e21-bf8f387ecd77": {
+    "lat": 28.356945,
+    "lng": -81.560998,
+    "name": "Meet Ariel at Walt Disney Presents"
+  },
+  "eb325677-d32a-41ec-b2c9-e1ab91bade02": {
+    "lat": 28.3563769305406,
+    "lng": -81.5609562845992,
+    "name": "Meet Pixar Pals at Pixar Plaza"
+  },
+  "343de9f4-e100-4a52-9285-0fcc3a486603": {
+    "lat": 28.354335,
+    "lng": -81.562562,
+    "name": "First Order Searches for the Resistance"
+  },
+  "6f6998e8-a629-412c-b964-2cb06af8e26b": {
+    "lat": 28.359553,
+    "lng": -81.559772,
+    "name": "The Twilight Zone™ Tower of Terror"
+  },
+  "f020b5e3-d26d-4339-83f9-0f1f858a0e40": {
+    "lat": 28.354095,
+    "lng": -81.562075,
+    "name": "Oga's Cantina"
+  },
+  "d7669edc-eaa1-4af2-bbb5-6e98df564166": {
+    "lat": 28.35686,
+    "lng": -81.560982,
+    "name": "Walt Disney Presents"
   },
   "d56506e2-6ad3-443a-8065-fea37987248d": {
-    "lat": 28.3555,
-    "lng": -81.5563,
+    "lat": 28.355385,
+    "lng": -81.562379,
     "name": "Alien Swirling Saucers"
   },
-  "1c84a229-8862-4648-9c71-378ddd2c7693": {
-    "lat": 28.3589,
-    "lng": -81.59,
-    "name": "Disney's Animal Kingdom"
+  "399aa0a1-98e2-4d2b-b297-2b451e9665e1": {
+    "lat": 28.356245,
+    "lng": -81.562786,
+    "name": "Slinky Dog Dash"
   },
-  "d58d9262-ec95-4161-80a0-07ca43b2f5f3": {
-    "lat": 28.3607,
-    "lng": -81.5921,
-    "name": "Kali River Rapids"
+  "9211adc9-b296-4667-8e97-b40cf76108e4": {
+    "lat": 28.356316,
+    "lng": -81.559031,
+    "name": "Vacation Fun - An Original Animated Short with Mickey & Minnie"
+  },
+  "6e118e37-5002-408d-9d88-0b5d9cdb5d14": {
+    "lat": 28.3566783801,
+    "lng": -81.5605667783,
+    "name": "Mickey & Minnie's Runaway Railway"
+  },
+  "1a2e70d9-50d5-4140-b69e-799e950f7d18": {
+    "lat": 28.354884,
+    "lng": -81.560457,
+    "name": "Star Wars: Rise of the Resistance"
+  },
+  "20b5daa8-e1ea-436f-830c-2d7d18d929b5": {
+    "lat": 28.356404,
+    "lng": -81.561894,
+    "name": "Toy Story Mania!"
+  },
+  "3b290419-8ca2-44bc-a710-a6c83fca76ec": {
+    "lat": 28.355695,
+    "lng": -81.558891,
+    "name": "Star Tours – The Adventures Continue"
+  },
+  "07fc0229-4e50-419a-ba10-0ce07cc54a53": {
+    "lat": 28.355696,
+    "lng": -81.559565,
+    "name": "BaseLine Tap House"
+  },
+  "d2af9650-9f91-45ef-98be-de44b4b44c32": {
+    "lat": 28.3576436192,
+    "lng": -81.5601785481,
+    "name": "The Hollywood Brown Derby Lounge"
+  },
+  "451855cc-d19e-40c3-838a-33c8fefe4af8": {
+    "lat": 28.354088,
+    "lng": -81.561643,
+    "name": "Docking Bay 7 Food and Cargo"
+  },
+  "c600282c-227b-4ffc-b1ee-b5987609ee4f": {
+    "lat": 28.357444,
+    "lng": -81.558881,
+    "name": "50's Prime Time Café"
+  },
+  "1ae86482-6627-4229-814d-0f1ccebb20d4": {
+    "lat": 28.356062,
+    "lng": -81.559872,
+    "name": "ABC Commissary"
+  },
+  "43891eb1-27bb-429e-b6b9-430b54f57858": {
+    "lat": 28.35432,
+    "lng": -81.561467,
+    "name": "Kat Saka's Kettle"
+  },
+  "4ea1129c-749c-4be8-a0f9-9700740213fc": {
+    "lat": 28.354341,
+    "lng": -81.561652,
+    "name": "Ronto Roasters"
+  },
+  "7bf05bdc-8279-427b-8a6d-50fc62ef31cb": {
+    "lat": 28.357611,
+    "lng": -81.558975,
+    "name": "Hollywood & Vine"
+  },
+  "a595b641-4472-4d2b-92b5-5a0e31785193": {
+    "lat": 28.358915,
+    "lng": -81.560278,
+    "name": "Catalina Eddie's"
+  },
+  "904887b2-82b5-426c-b2b0-0b5d6977ff94": {
+    "lat": 28.3590392579,
+    "lng": -81.5600222899,
+    "name": "Fairfax Fare"
+  },
+  "d9dbd260-9e34-406d-abb7-19f9d733e577": {
+    "lat": 28.3559,
+    "lng": -81.559495,
+    "name": "Sci-Fi Dine-In Theater Restaurant"
+  },
+  "917783a5-da9c-4c55-ac51-0ac1f8253131": {
+    "lat": 28.357648,
+    "lng": -81.560297,
+    "name": "The Hollywood Brown Derby"
+  },
+  "0beccd84-7a6d-454a-94d3-c8a3265e7e8d": {
+    "lat": 28.357482,
+    "lng": -81.558808,
+    "name": "Tune-In Lounge"
+  },
+  "a8804f66-ed5c-4daa-99a1-bcddd2f1fca6": {
+    "lat": 28.358821,
+    "lng": -81.560268,
+    "name": "Rosie's All-American Café"
+  },
+  "27f9fc86-2341-4bf4-8cbf-67fc16a841f1": {
+    "lat": 28.356072,
+    "lng": -81.559158,
+    "name": "Meet Olaf at Celebrity Spotlight"
+  },
+  "02861a9b-584d-47d5-a8d0-98e05c3b5dce": {
+    "lat": 28.356068,
+    "lng": -81.559479,
+    "name": "Meet Disney Stars at Red Carpet Dreams"
+  },
+  "d91a0e9a-8652-4036-822f-e7b12b381273": {
+    "lat": 28.3568243,
+    "lng": -81.559694,
+    "name": "For the First Time in Forever: A Frozen Sing-Along Celebration"
+  },
+  "b1ed574f-40f2-4132-a1ee-893a276633c8": {
+    "lat": 28.356965,
+    "lng": -81.560425,
+    "name": "Wonderful World of Animation"
+  },
+  "375197ac-27ac-41f7-bd93-f4e9b9fc4d5d": {
+    "lat": 28.3589163,
+    "lng": -81.559599,
+    "name": "Beauty and the Beast – Live on Stage"
+  },
+  "42328c39-76ab-4f03-b862-4206c8d9f7bb": {
+    "lat": 28.3612252,
+    "lng": -81.558233,
+    "name": "Fantasmic!"
+  },
+  "bc2c2ffe-3cf0-4e75-a408-bf5e86515c4c": {
+    "lat": 28.355815,
+    "lng": -81.562344,
+    "name": "Green Army Drum Corps"
+  },
+  "7357772c-6b11-4a8d-af97-05a1bb45f001": {
+    "lat": 28.3566701,
+    "lng": -81.558611,
+    "name": "Indiana Jones™ Epic Stunt Spectacular!"
+  },
+  "83edcec8-7ff2-495e-9f61-fe596aa92447": {
+    "lat": 28.35589,
+    "lng": -81.558388,
+    "name": "Backlot Express"
+  },
+  "e2e6cccf-acf4-48f4-bbfb-47b712714583": {
+    "lat": 28.3570985,
+    "lng": -81.559552,
+    "name": "Dockside Diner"
+  },
+  "6a696644-26ba-496e-8e2b-efbaad615785": {
+    "lat": 28.354311,
+    "lng": -81.562296,
+    "name": "Milk Stand"
+  },
+  "07b8c193-a185-4559-a403-4d950c3b386d": {
+    "lat": 28.355747,
+    "lng": -81.562185,
+    "name": "Woody's Lunch Box"
+  },
+  "a08d9f84-fbdf-45f3-9b68-645d296de307": {
+    "lat": 28.355795,
+    "lng": -81.589863,
+    "name": "DiVine"
+  },
+  "b81bf8f4-3d43-47eb-8e27-9e6156112167": {
+    "lat": 28.3571656342402,
+    "lng": -81.5895951895341,
+    "name": "Adventures with Kevin on Discovery Island"
+  },
+  "52be1d78-e0b4-433f-b1ce-0be4f7053813": {
+    "lat": 28.358553,
+    "lng": -81.590054,
+    "name": "Beats and Strings"
+  },
+  "6ef1b126-5b0b-46a1-8608-4fcf98ab92c8": {
+    "lat": 28.356682,
+    "lng": -81.590292,
+    "name": "Wilderness Explorers"
+  },
+  "6fbe6d02-4057-43bb-80a3-047b1e8a50ca": {
+    "lat": 28.36533,
+    "lng": -81.58872,
+    "name": "Animal Care at Conservation Station"
+  },
+  "f7830bfd-3d25-4ba2-8021-b0d429ef0193": {
+    "lat": 28.357002,
+    "lng": -81.587678,
+    "name": "Eco-Rhythmics"
   },
   "7a5af3b7-9bc1-4962-92d0-3ea9c9ce35f0": {
-    "lat": 28.3643,
-    "lng": -81.5896,
+    "lat": 28.355257,
+    "lng": -81.591641,
     "name": "Na'vi River Journey"
   },
-  "24cf863c-b6ba-4826-a056-0b698989cbf7": {
-    "lat": 28.364,
+  "4d27b0d7-2b0a-4569-90fa-e79f117ec7ef": {
+    "lat": 28.3581032852655,
+    "lng": -81.5911151562868,
+    "name": "Discovery Island Trails"
+  },
+  "a15ce7cf-342a-4c7a-9372-7a1fa1054747": {
+    "lat": 28.3653458262,
+    "lng": -81.5888520134,
+    "name": "Affection Section"
+  },
+  "1a8ea967-229a-42a0-8290-59b036c84e14": {
+    "lat": 28.359379,
+    "lng": -81.589019,
+    "name": "Maharajah Jungle Trek"
+  },
+  "d58d9262-ec95-4161-80a0-07ca43b2f5f3": {
+    "lat": 28.3587834288,
+    "lng": -81.5889412165,
+    "name": "Kali River Rapids"
+  },
+  "bc997600-fcc0-4f6f-b908-a1419b26cfd8": {
+    "lat": 28.355965,
+    "lng": -81.59014,
+    "name": "The Oasis Exhibits"
+  },
+  "4f391f0e-52be-4f9d-99d6-b3ae0373b43c": {
+    "lat": 28.3598097347,
+    "lng": -81.5914175464,
+    "name": "Wildlife Express Train"
+  },
+  "f609fcf6-0aef-44ef-b838-f10ff3b8543b": {
+    "lat": 28.35874,
+    "lng": -81.590306,
+    "name": "Warung Outpost"
+  },
+  "e12fb6d6-0985-44e5-bdd3-65ff74433063": {
+    "lat": 28.356846,
+    "lng": -81.591487,
+    "name": "Tiffins Restaurant"
+  },
+  "f210842b-8c9b-4088-9f48-6284e9ce389a": {
+    "lat": 28.356719,
+    "lng": -81.591487,
+    "name": "Nomad Lounge"
+  },
+  "cea213d9-bf4f-408a-ac61-768e7709ab7d": {
+    "lat": 28.35859,
+    "lng": -81.58958,
+    "name": "Yak & Yeti™ Restaurant"
+  },
+  "84f51faa-72a3-4491-9449-20a999e5885c": {
+    "lat": 28.358803,
     "lng": -81.5893,
+    "name": "Yak & Yeti™ Quality Beverages"
+  },
+  "224d803c-cd7a-45d8-bfab-d843f2030983": {
+    "lat": 28.35478,
+    "lng": -81.59039,
+    "name": "Rainforest Cafe® at Disney's Animal Kingdom"
+  },
+  "625821c3-5bd2-4c08-b449-257f3c81cbde": {
+    "lat": 28.3572167558,
+    "lng": -81.5912854671,
+    "name": "Pizzafari"
+  },
+  "d58db4d0-3bad-4655-937b-1cbc9ed0e880": {
+    "lat": 28.3585843066,
+    "lng": -81.5921041919,
+    "name": "Tusker House Restaurant"
+  },
+  "9a64300c-4861-4bed-9713-b4f49e55e566": {
+    "lat": 28.3577,
+    "lng": -81.589802,
+    "name": "The Smiling Crocodile"
+  },
+  "d8497541-53a2-4206-b95f-39cb238ae511": {
+    "lat": 28.35873,
+    "lng": -81.591928,
+    "name": "Tam Tam Drummers of Harambe"
+  },
+  "13d7c9d1-a785-403d-9ba8-71fee2f02d55": {
+    "lat": 28.357972,
+    "lng": -81.589796,
+    "name": "Meet Favorite Disney Pals at Adventurers Outpost"
+  },
+  "dd142c0b-622a-4b44-8e22-c0facb2b20a8": {
+    "lat": 28.35899,
+    "lng": -81.591471,
+    "name": "Kora Tinga Tinga"
+  },
+  "a8781403-1344-4c06-89ef-b7a39b99ae59": {
+    "lat": 28.35873,
+    "lng": -81.591951,
+    "name": "Harambe Village Street Band – Burudika"
+  },
+  "859a02c9-5d54-49fa-a85c-0a6318d4986b": {
+    "lat": 28.359071,
+    "lng": -81.591605,
+    "name": "Zuri's Sweet Shop"
+  },
+  "bc1ffa86-9b1a-4ce9-84a5-b479dfa3cb53": {
+    "lat": 28.357994,
+    "lng": -81.590597,
+    "name": "Tree of Life"
+  },
+  "e7976e25-4322-4587-8ded-fb1d9dcbb83c": {
+    "lat": 28.359954,
+    "lng": -81.592149,
+    "name": "Gorilla Falls Exploration Trail"
+  },
+  "24cf863c-b6ba-4826-a056-0b698989cbf7": {
+    "lat": 28.355554,
+    "lng": -81.592147,
     "name": "Avatar Flight of Passage"
   },
+  "32e01181-9a5f-4936-8a77-0dace1de836c": {
+    "lat": 28.359331,
+    "lng": -81.59228,
+    "name": "Kilimanjaro Safaris"
+  },
   "64a6915f-a835-4226-ba5c-8389fc4cade3": {
-    "lat": 28.3603,
-    "lng": -81.5927,
+    "lat": 28.3584769119,
+    "lng": -81.5873781396,
     "name": "Expedition Everest - Legend of the Forbidden Mountain"
   },
-  "32e01181-9a5f-4936-8a77-0dace1de836c": {
-    "lat": 28.3561,
-    "lng": -81.5884,
-    "name": "Kilimanjaro Safaris"
+  "f526f3ab-190b-4576-8c79-e2968d171b4e": {
+    "lat": 28.357086,
+    "lng": -81.589374,
+    "name": "Meet Moana at Character Landing"
+  },
+  "a349429a-5ef8-41c4-9a28-84ed4f7a0465": {
+    "lat": 28.357122,
+    "lng": -81.589667,
+    "name": "Viva Gaia Street Band!"
+  },
+  "93d3c183-737f-4e26-98f9-b18a3e190393": {
+    "lat": 28.357339,
+    "lng": -81.590462,
+    "name": "Animal Encounters: Winged Encounters – The Kingdom Takes Flight"
+  },
+  "95712b31-ceed-4f7d-be3e-3d5e6badac5c": {
+    "lat": 28.357401,
+    "lng": -81.587455,
+    "name": "Finding Nemo: The Big Blue... and Beyond!"
+  },
+  "d8214ba6-22a7-4a92-8977-bae3779d5c4c": {
+    "lat": 28.358791,
+    "lng": -81.590061,
+    "name": "Feathered Friends in Flight!"
+  },
+  "3a4e0f49-f9ff-4481-a95b-d4952cdf6097": {
+    "lat": 28.35811,
+    "lng": -81.592643,
+    "name": "Festival of the Lion King"
+  },
+  "665cc4c1-1bcd-4e5e-a44d-adb6a6889abc": {
+    "lat": 28.359161,
+    "lng": -81.591369,
+    "name": "Harambe Market"
+  },
+  "6730b8bb-f592-40cd-8e6f-e7788f3f175b": {
+    "lat": 28.35734,
+    "lng": -81.58954,
+    "name": "Flame Tree Barbecue"
+  },
+  "88d5c6ad-fd4a-4c8b-8ed3-656e3ee3a4eb": {
+    "lat": 28.358551,
+    "lng": -81.587646,
+    "name": "Thirsty River Bar"
+  },
+  "1286aad3-bdbe-401b-99ef-4097477c556d": {
+    "lat": 28.35854,
+    "lng": -81.59198,
+    "name": "Dawa Bar"
+  },
+  "7aa4f221-7b52-445e-bc27-f7baac4530ad": {
+    "lat": 28.3560347386574,
+    "lng": -81.5924408283262,
+    "name": "Satu'li Canteen"
+  },
+  "2a55aee6-c87a-4bda-a3d4-b022693a62a3": {
+    "lat": 28.357994,
+    "lng": -81.590597,
+    "name": "Tree of Life Awakenings"
+  },
+  "fdf62904-8125-4735-81ae-8648dd607399": {
+    "lat": 28.357425,
+    "lng": -81.590153,
+    "name": "Zoogether Day Gathering Spot"
+  },
+  "1b15c77b-0311-4171-8e59-7f38e6d60754": {
+    "lat": 28.357488,
+    "lng": -81.590118,
+    "name": "Zootopia: Better Zoogether! - NEW!"
   }
 }
