@@ -260,6 +260,23 @@ export default function MapOverlay({ rides, selectedParkId, resort, activeLand }
                 'line-dasharray': [2, 2]
               }}
             />
+            <Layer
+              id="route-arrows"
+              type="symbol"
+              layout={{
+                'symbol-placement': 'line',
+                'text-field': '▶',
+                'text-size': 16,
+                'symbol-spacing': 50,
+                'text-keep-upright': false,
+                'text-offset': [0, -0.05]
+              }}
+              paint={{
+                'text-color': '#2563eb',
+                'text-halo-color': '#ffffff',
+                'text-halo-width': 2
+              }}
+            />
           </Source>
         )}
       </Map>
