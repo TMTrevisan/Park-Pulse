@@ -41,7 +41,15 @@ function SortableItineraryRow({
     onRemove,
     isFirstIncomplete
 }: { 
-    item: ItineraryItem & { walkTimeMins?: number; arrivalTimeMs?: number; expectedWaitMins?: number; departureTimeMs?: number; isForecast?: boolean; liveWaitMins?: number };
+    item: ItineraryItem & { 
+        walkTimeMins?: number; 
+        arrivalTimeMs?: number; 
+        expectedWaitMins?: number; 
+        departureTimeMs?: number; 
+        isForecast?: boolean; 
+        liveWaitMins?: number;
+        status?: string;
+    };
     ride?: Ride;
     onToggle: (id: string) => void;
     onRemove: (id: string) => void;
