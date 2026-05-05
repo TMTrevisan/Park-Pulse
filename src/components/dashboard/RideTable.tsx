@@ -20,7 +20,7 @@ import {
     horizontalListSortingStrategy,
     useSortable,
 } from "@dnd-kit/sortable";
-import { cn } from "@/lib/utils";
+import { cn, getWaitTimeDelta } from "@/lib/utils";
 import { GripVertical, ChevronUp, ChevronDown, Star, Bell, TrendingUp, ChevronRight } from "lucide-react";
 import Link from "next/link";
 
@@ -151,6 +151,7 @@ export function RideTable({
     const baseColumns: ColumnDef[] = [
         { id: 'name', label: 'Ride Name', field: 'name', isSortable: true, className: "w-64" },
         { id: 'waitTime', label: 'Wait Time', field: 'waitTime', isSortable: true, className: "w-24 text-right" },
+        { id: 'delta', label: 'vs Avg', isSortable: false, className: "w-24 text-center" },
         { id: 'actions', label: 'Actions', isSortable: false, className: "w-20 text-center" },
         { id: 'ticket', label: 'Ticket', field: 'ticket', isSortable: true, className: "w-20 text-center" },
         { id: 'status', label: 'Status', field: 'status', isSortable: true, className: "w-24 text-center" },
@@ -343,6 +344,24 @@ export function RideTable({
                     {ride.queue?.STANDBY?.waitTime ?? 0}
                 </span>
             ) : <span className="text-gray-400">-</span>;
+        }
+        if (colId === 'delta') {
+            const delta = getWaitTimeDelta(ride);
+            if (delta === null) return <span className="text-gray-400">-</span>;
+            
+            const isBetter = delta < -5;
+            const isWorse = delta > 5;
+            
+            return (
+                <span className={cn(
+                    "px-2 py-0.5 rounded text-[11px] font-black border whitespace-nowrap tracking-tight",
+                    isBetter ? "bg-green-100 text-green-700 border-green-200 dark:bg-green-900/30 dark:border-green-800/50" :
+                    isWorse ? "bg-red-100 text-red-700 border-red-200 dark:bg-red-900/30 dark:border-red-800/50" :
+                    "bg-gray-100 text-gray-500 border-gray-200 dark:bg-zinc-800 dark:text-zinc-400 dark:border-zinc-700"
+                )}>
+                    {delta > 0 ? '+' : ''}{delta}m
+                </span>
+            );
         }
         if (colId === 'peak') {
             return <span className="text-gray-600 dark:text-gray-400">{getHighOfDay(ride)}</span>;
