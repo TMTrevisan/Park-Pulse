@@ -3,6 +3,10 @@
     {
       "path": "/api/cron/trim",
       "schedule": "0 0 * * *"
+    },
+    {
+      "path": "/api/cron/save",
+      "schedule": "* * * * *"
     }
   ]
 }

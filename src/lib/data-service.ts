@@ -151,7 +151,34 @@ async function saveSnapshot(snapshot: WaitTimeSnapshot, currentHistory: WaitTime
     }
 }
 
-export async function getWaitTimes(includeHistory: boolean = true, resort: ResortId = 'DLR') {
+export async function getWaitTimes(includeHistory: boolean = false, resort: ResortId = 'DLR') {
+    const timestamp = new Date().toISOString();
+    const parkIds = RESORT_PARKS[resort];
+
+    const parkDataResults = await Promise.all(
+        parkIds.map(id => fetchParkData(id).catch(() => ({ id, name: 'Unknown', liveData: [] })))
+    );
+
+    const currentSnapshot: WaitTimeSnapshot = {
+        timestamp,
+        parks: parkDataResults as ParkLiveData[],
+    };
+
+    if (includeHistory) {
+        const history = await getHistory(resort);
+        return {
+            current: currentSnapshot,
+            history: [...history, currentSnapshot]
+        };
+    }
+
+    return {
+        current: currentSnapshot,
+        history: []
+    };
+}
+
+export async function fetchAndSaveSnapshot(resort: ResortId = 'DLR') {
     const timestamp = new Date().toISOString();
     const parkIds = RESORT_PARKS[resort];
 
@@ -166,11 +193,7 @@ export async function getWaitTimes(includeHistory: boolean = true, resort: Resor
 
     const history = await getHistory(resort);
     await saveSnapshot(currentSnapshot, history, resort);
-
-    return {
-        current: currentSnapshot,
-        history: includeHistory ? [...history, currentSnapshot] : []
-    };
+    return { success: true, timestamp };
 }
 
 export async function trimHistory(resort: ResortId = 'DLR') {

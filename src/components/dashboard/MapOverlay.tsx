@@ -47,8 +47,13 @@ export default function MapOverlay({ rides, selectedParkId, resort, activeLand }
 
   const { itinerary } = useItinerary(resort);
 
-  const itineraryPathData = useMemo(() => {
-    if (itinerary.length < 2) return null;
+  const [routeGeoJSON, setRouteGeoJSON] = useState<any>(null);
+
+  useEffect(() => {
+    if (itinerary.length < 2) {
+      setRouteGeoJSON(null);
+      return;
+    }
     
     const coordinates = itinerary.map(item => {
       const coords = RIDE_COORDS[item.rideId];
@@ -56,9 +61,13 @@ export default function MapOverlay({ rides, selectedParkId, resort, activeLand }
       return [coords.lng, coords.lat];
     }).filter(Boolean);
     
-    if (coordinates.length < 2) return null;
+    if (coordinates.length < 2) {
+      setRouteGeoJSON(null);
+      return;
+    }
     
-    return {
+    // Fallback straight lines
+    const fallbackGeoJSON = {
       type: 'FeatureCollection',
       features: [
         {
@@ -70,6 +79,27 @@ export default function MapOverlay({ rides, selectedParkId, resort, activeLand }
         }
       ]
     };
+    setRouteGeoJSON(fallbackGeoJSON);
+
+    if (MAPBOX_TOKEN && coordinates.length <= 25) {
+      const coordsString = coordinates.map((c: any) => `${c[0]},${c[1]}`).join(';');
+      fetch(`https://api.mapbox.com/directions/v5/mapbox/walking/${coordsString}?geometries=geojson&access_token=${MAPBOX_TOKEN}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.routes && data.routes.length > 0) {
+            setRouteGeoJSON({
+              type: 'FeatureCollection',
+              features: [
+                {
+                  type: 'Feature',
+                  geometry: data.routes[0].geometry
+                }
+              ]
+            });
+          }
+        })
+        .catch(err => console.error("Mapbox Directions API error:", err));
+    }
   }, [itinerary]);
 
   // 1. Zoom to Park when selectedParkId changes
@@ -218,8 +248,8 @@ export default function MapOverlay({ rides, selectedParkId, resort, activeLand }
           </Popup>
         )}
 
-        {itineraryPathData && showRoute && (
-          <Source id="itinerary-route" type="geojson" data={itineraryPathData as any}>
+        {routeGeoJSON && showRoute && (
+          <Source id="itinerary-route" type="geojson" data={routeGeoJSON as any}>
             <Layer
               id="route-line"
               type="line"
