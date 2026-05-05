@@ -88,6 +88,7 @@ function SortableItineraryRow({
         }
 
         if (changed) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setFlashColor(isWorseChange ? 'bg-red-100/50 dark:bg-red-900/30' : 'bg-green-100/50 dark:bg-green-900/30');
             const t = setTimeout(() => setFlashColor(null), 1000);
             prevWait.current = item.expectedWaitMins;
@@ -241,6 +242,15 @@ export function RopeDropItinerary({ rides, resort }: { rides: Ride[], resort: Re
         setItineraryItems
     } = useItinerary(resort);
 
+    const [currentTime, setCurrentTime] = useState(() => Date.now());
+
+    // Update current time every minute for live timelines
+    useEffect(() => {
+        if (simulationStartTime) return;
+        const timer = setInterval(() => setCurrentTime(Date.now()), 60000);
+        return () => clearInterval(timer);
+    }, [simulationStartTime]);
+
     const loadPreset = (presetType: string) => {
         let presetNames: string[] = [];
         if (presetType === 'DL_Fantasyland') {
@@ -348,7 +358,7 @@ export function RopeDropItinerary({ rides, resort }: { rides: Ride[], resort: Re
 
     // Timeline Math Engine
     const firstIncompleteIndex = itinerary.findIndex(i => !i.completed);
-    let runningTimeMs = simulationStartTime || Date.now();
+    let runningTimeMs = simulationStartTime || currentTime;
     let previousRideId: string | null = null;
     
     const augmentedItems = itinerary.map((item, index) => {
@@ -378,7 +388,7 @@ export function RopeDropItinerary({ rides, resort }: { rides: Ride[], resort: Re
 
         // Reset running time to NOW if we hit the first incomplete item in Live Mode
         if (!simulationStartTime && index === firstIncompleteIndex) {
-            runningTimeMs = Date.now();
+            runningTimeMs = currentTime;
         }
 
         let walkTimeMins = 0;

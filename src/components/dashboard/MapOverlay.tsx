@@ -51,6 +51,7 @@ export default function MapOverlay({ rides, selectedParkId, resort, activeLand }
 
   useEffect(() => {
     if (itinerary.length < 2) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setRouteGeoJSON(null);
       return;
     }
