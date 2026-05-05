@@ -174,6 +174,12 @@ export function useItinerary(resort: string) {
         clearItinerary,
         saveCurrentStrategy,
         loadStrategy,
-        deleteStrategy
+        deleteStrategy,
+        setItineraryItems: (items: ItineraryItem[]) => {
+            saveState({
+                ...state,
+                items
+            });
+        }
     };
 }
