@@ -8,6 +8,7 @@ import { HeaderToolbar } from "./dashboard/HeaderToolbar";
 import { RideGrid } from "./dashboard/RideGrid";
 import { RideTable, SortField, SortDirection } from "./dashboard/RideTable";
 import MapOverlay from "./dashboard/MapOverlay";
+import { RopeDropItinerary } from "./dashboard/RopeDropItinerary";
 import { useFavorites } from "@/hooks/useFavorites";
 import { useAlerts } from "@/hooks/useAlerts";
 import { Skeleton } from "@/components/ui/Skeleton";
@@ -22,7 +23,7 @@ export function Dashboard() {
     const [loading, setLoading] = useState(true);
     const [selectedParkId, setSelectedParkId] = useState(PARKS.DISNEYLAND_PARK);
     const [searchQuery, setSearchQuery] = useState("");
-    const [viewMode, setViewMode] = useState<'grid' | 'list' | 'map'>('list');
+    const [viewMode, setViewMode] = useState<'grid' | 'list' | 'map' | 'rope-drop'>('list');
     const [expandedRideId, setExpandedRideId] = useState<string | null>(null);
     const [sortField, setSortField] = useState<SortField>('waitTime');
     const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
@@ -309,6 +310,14 @@ export function Dashboard() {
                         resort={resort}
                         activeLand={landFilter}
                     />
+                );
+            }
+            case 'rope-drop': {
+                const allMapRides = data?.current.parks.flatMap(p => p.liveData) || [];
+                return (
+                    <div className="h-[70vh] min-h-[500px]">
+                        <RopeDropItinerary rides={allMapRides} resort={resort} />
+                    </div>
                 );
             }
             case 'list':

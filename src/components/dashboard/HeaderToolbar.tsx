@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ParkLiveData } from "@/lib/types";
-import { Search, LayoutGrid, List as ListIcon, RefreshCw, Map as MapIcon, Filter, TrendingUp } from "lucide-react";
+import { Search, LayoutGrid, List as ListIcon, RefreshCw, Map as MapIcon, Filter, TrendingUp, Route } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
@@ -9,8 +9,8 @@ interface HeaderToolbarProps {
     setSelectedParkId: (id: string) => void;
     searchQuery: string;
     setSearchQuery: (query: string) => void;
-    viewMode: 'grid' | 'list' | 'map';
-    setViewMode: (mode: 'grid' | 'list' | 'map') => void;
+    viewMode: 'grid' | 'list' | 'map' | 'rope-drop';
+    setViewMode: (mode: 'grid' | 'list' | 'map' | 'rope-drop') => void;
     showHours: boolean;
     setShowHours: (show: boolean) => void;
     loading: boolean;
@@ -202,6 +202,18 @@ export function HeaderToolbar({
                             aria-label="Map View"
                         >
                             <MapIcon className="w-4 h-4" />
+                        </button>
+                        <button
+                            id="view-toggle-rope-drop"
+                            onClick={() => setViewMode('rope-drop')}
+                            className={cn(
+                                "p-2 rounded-md transition-colors",
+                                viewMode === 'rope-drop' ? "bg-white shadow-sm dark:bg-zinc-700 dark:text-white" : "hover:bg-zinc-200 dark:hover:bg-zinc-600 text-zinc-500 dark:text-zinc-400"
+                            )}
+                            title="Rope Drop Mode"
+                            aria-label="Rope Drop Mode"
+                        >
+                            <Route className="w-4 h-4" />
                         </button>
                     </div>
 
