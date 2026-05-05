@@ -173,7 +173,7 @@ function SortableItineraryRow({
                                             {item.expectedWaitMins}m {item.isForecast ? 'forecast' : 'live'}
                                         </span>
                                         {item.isForecast && item.liveWaitMins !== undefined && (
-                                            <span className="text-zinc-400 font-normal text-[10px] hidden sm:inline">
+                                            <span className={cn("font-normal text-[10px] hidden sm:inline", getWaitColorText(item.liveWaitMins))}>
                                                 (Live: {item.liveWaitMins}m)
                                             </span>
                                         )}

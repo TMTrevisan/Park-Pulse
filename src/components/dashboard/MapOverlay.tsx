@@ -111,6 +111,7 @@ export default function MapOverlay({ rides, selectedParkId, resort, activeLand }
   const [mapStyle, setMapStyle] = useState<'streets-v12' | 'satellite-streets-v12'>('streets-v12');
   const [hoveredRide, setHoveredRide] = useState<Ride | null>(null);
   const [showRoute, setShowRoute] = useState(true);
+  const [showLegend, setShowLegend] = useState(true);
   const [debugMode, setDebugMode] = useState(false);
 
   const mappedRides = useMemo(() => {
@@ -172,10 +173,10 @@ export default function MapOverlay({ rides, selectedParkId, resort, activeLand }
               >
                 <div className={clsx(
                   "flex items-center justify-center px-1.5 py-1.5 rounded-full text-[11px] font-black shadow-2xl border-2 transition-all duration-300",
-                  isCompleted ? "bg-zinc-100 text-zinc-400 border-zinc-200 dark:bg-zinc-800 dark:text-zinc-600 dark:border-zinc-700/50" : getWaitColor(waitTime, ride.status),
+                  (showRoute && isCompleted) ? "bg-zinc-100 text-zinc-400 border-zinc-200 dark:bg-zinc-800 dark:text-zinc-600 dark:border-zinc-700/50" : getWaitColor(waitTime, ride.status),
                   isSelected ? "scale-150 z-50 ring-4 ring-white/30" : "scale-100 hover:scale-110",
-                  inItinerary && !isCompleted && "ring-4 ring-blue-500 shadow-[0_0_20px_rgba(59,130,246,0.8)]",
-                  isCompleted && "opacity-60 grayscale"
+                  (showRoute && inItinerary && !isCompleted) && "ring-4 ring-blue-500 shadow-[0_0_20px_rgba(59,130,246,0.8)]",
+                  (showRoute && isCompleted) && "opacity-60 grayscale"
                 )}>
                    <span className="min-w-[20px] text-center">
                     {ride.status === "DOWN" ? "!" : waitTime}
@@ -249,12 +250,24 @@ export default function MapOverlay({ rides, selectedParkId, resort, activeLand }
           )}
         >
           <RouteIcon className={clsx("w-4 h-4", showRoute ? "text-blue-400" : "text-zinc-600")} />
-          {showRoute ? 'Hide Route' : 'Show Route'}
+          {showRoute ? 'Pure View' : 'Pure View'}
+        </button>
+        <button
+          onClick={() => setShowLegend(!showLegend)}
+          className={clsx(
+            "flex items-center justify-center gap-3 px-5 py-3 bg-black/70 backdrop-blur-2xl border border-white/10 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-black/90 transition-all shadow-2xl ring-1 ring-white/5 active:scale-95",
+            showLegend ? "text-white" : "text-zinc-500"
+          )}
+        >
+          {showLegend ? 'Hide Legend' : 'Show Legend'}
         </button>
       </div>
 
       {/* High-Fi Legend */}
-      <div className="absolute bottom-8 right-8 bg-black/70 backdrop-blur-2xl border border-white/10 p-5 rounded-[2rem] shadow-2xl ring-1 ring-white/5">
+      <div className={clsx(
+        "absolute bottom-8 right-8 bg-black/70 backdrop-blur-2xl border border-white/10 p-5 rounded-[2rem] shadow-2xl ring-1 ring-white/5 transition-all duration-500",
+        !showLegend && "opacity-0 translate-y-8 pointer-events-none"
+      )}>
         <div className="text-[10px] text-zinc-400 uppercase tracking-[0.2em] font-black mb-4 ml-1">Live Status</div>
         <div className="flex flex-col gap-3">
           <LegendItem color="bg-emerald-500" label="Walk-on" />
