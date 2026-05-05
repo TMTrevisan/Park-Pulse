@@ -61,3 +61,4 @@ MIT
 
 ## 🙏 Acknowledgements
 Wait time data provided by the [ThemeParks.wiki API](https://themeparks.wiki).
+
