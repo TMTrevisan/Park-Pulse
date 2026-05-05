@@ -199,6 +199,7 @@ function SortableItineraryRow({
                         </div>
                     )}
                 </div>
+                </div>
             </div>
         </div>
     );
