@@ -169,13 +169,21 @@ function SortableItineraryRow({
                                 <div className="flex items-center gap-1">
                                     <Clock className={cn("w-3.5 h-3.5", getWaitColorText(item.expectedWaitMins))} />
                                     <div className="flex items-center gap-1.5">
-                                        <span className={cn("font-bold", getWaitColorText(item.expectedWaitMins))}>
-                                            {item.expectedWaitMins}m {item.isForecast ? 'forecast' : 'live'}
-                                        </span>
-                                        {item.isForecast && item.liveWaitMins !== undefined && (
-                                            <span className={cn("font-normal text-[10px] hidden sm:inline", getWaitColorText(item.liveWaitMins))}>
-                                                (Live: {item.liveWaitMins}m)
+                                        {(item.status === 'DOWN' || item.status === 'CLOSED') ? (
+                                            <span className="font-bold text-rose-500 uppercase tracking-wider text-[11px]">
+                                                {item.status}
                                             </span>
+                                        ) : (
+                                            <>
+                                                <span className={cn("font-bold", getWaitColorText(item.expectedWaitMins))}>
+                                                    {item.expectedWaitMins}m {item.isForecast ? 'forecast' : 'live'}
+                                                </span>
+                                                {item.isForecast && item.liveWaitMins !== undefined && (
+                                                    <span className={cn("font-normal text-[10px] hidden sm:inline", getWaitColorText(item.liveWaitMins))}>
+                                                        (Live: {item.liveWaitMins}m)
+                                                    </span>
+                                                )}
+                                            </>
                                         )}
                                     </div>
                                 </div>
@@ -221,8 +229,36 @@ export function RopeDropItinerary({ rides, resort }: { rides: Ride[], resort: Re
         saveCurrentStrategy,
         loadStrategy,
         deleteStrategy,
-        clearItinerary
+        clearItinerary,
+        setItineraryItems
     } = useItinerary(resort);
+
+    const loadPreset = (presetType: string) => {
+        let presetNames: string[] = [];
+        if (presetType === 'DL_Fantasyland') {
+            presetNames = ["Peter Pan's Flight", "Alice in Wonderland", "Mr. Toad's Wild Ride", "Matterhorn Bobsleds", "Space Mountain"];
+        } else if (presetType === 'DL_Thrill') {
+            presetNames = ["Space Mountain", "Matterhorn Bobsleds", "Indiana Jones™ Adventure", "Big Thunder Mountain Railroad"];
+        } else if (presetType === 'DCA_Radiator') {
+            presetNames = ["Radiator Springs Racers", "Toy Story Midway Mania!", "Incredicoaster"];
+        } else if (presetType === 'DCA_Guardians') {
+            presetNames = ["Guardians of the Galaxy – Mission: BREAKOUT!", "WEB SLINGERS: A Spider-Man Adventure", "Incredicoaster"];
+        }
+        
+        const newItems: any[] = [];
+        presetNames.forEach(name => {
+            const ride = rides.find(r => r.name === name);
+            if (ride) {
+                newItems.push({
+                    id: crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 9),
+                    rideId: ride.id,
+                    completed: false
+                });
+            }
+        });
+        if (newItems.length > 0) setItineraryItems(newItems);
+        setShowSavesMenu(false);
+    };
     
     const [searchQuery, setSearchQuery] = useState("");
     const [isSearching, setIsSearching] = useState(false);
@@ -384,7 +420,8 @@ export function RopeDropItinerary({ rides, resort }: { rides: Ride[], resort: Re
             expectedWaitMins,
             departureTimeMs,
             isForecast,
-            liveWaitMins
+            liveWaitMins,
+            status: ride?.status
         };
     });
 
@@ -431,17 +468,37 @@ export function RopeDropItinerary({ rides, resort }: { rides: Ride[], resort: Re
                             >
                                 Live Mode
                             </button>
-                            <button 
-                                onClick={() => {
-                                    const d = new Date();
-                                    d.setDate(d.getDate() + 1);
-                                    d.setHours(8, 0, 0, 0);
-                                    setSimulationTime(d.getTime());
-                                }}
-                                className={cn("px-3 py-1.5 text-xs font-bold rounded-md transition-all shadow-sm", simulationStartTime ? "bg-white dark:bg-zinc-700 text-purple-600 dark:text-purple-400 ring-1 ring-zinc-200 dark:ring-zinc-600" : "text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300")}
-                            >
-                                Plan (8 AM)
-                            </button>
+                            <div className={cn("flex items-center px-1 rounded-md transition-all shadow-sm", simulationStartTime ? "bg-white dark:bg-zinc-700 ring-1 ring-zinc-200 dark:ring-zinc-600" : "text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300")}>
+                                <button 
+                                    onClick={() => {
+                                        if (!simulationStartTime) {
+                                            const d = new Date();
+                                            d.setDate(d.getDate() + 1);
+                                            d.setHours(8, 0, 0, 0);
+                                            setSimulationTime(d.getTime());
+                                        }
+                                    }}
+                                    className={cn("px-2 py-1.5 text-xs font-bold transition-colors", simulationStartTime ? "text-purple-600 dark:text-purple-400" : "text-zinc-500")}
+                                >
+                                    Plan
+                                </button>
+                                {simulationStartTime && (
+                                    <input 
+                                        type="time" 
+                                        title="Security Arrival Time"
+                                        className="text-[10px] bg-transparent outline-none text-zinc-500 font-medium px-1 cursor-pointer w-[65px]"
+                                        value={new Date(simulationStartTime).toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' })}
+                                        onChange={(e) => {
+                                            if (e.target.value) {
+                                                const [h, m] = e.target.value.split(':');
+                                                const d = new Date(simulationStartTime);
+                                                d.setHours(parseInt(h, 10), parseInt(m, 10), 0, 0);
+                                                setSimulationTime(d.getTime());
+                                            }
+                                        }}
+                                    />
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -478,8 +535,29 @@ export function RopeDropItinerary({ rides, resort }: { rides: Ride[], resort: Re
                 {/* Saves Menu */}
                 {showSavesMenu && (
                     <div className="p-3 bg-white dark:bg-zinc-800 rounded-lg border dark:border-zinc-700 shadow-sm mt-1">
+                        
+                        {/* Expert Presets */}
+                        <div className="mb-4">
+                            <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-2 block">Expert Presets</span>
+                            <div className="grid grid-cols-2 gap-2">
+                                {resort === 'disneyland' ? (
+                                    <>
+                                        <button onClick={() => loadPreset('DL_Fantasyland')} className="text-xs p-2 bg-zinc-50 dark:bg-zinc-700/50 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded border border-zinc-200 dark:border-zinc-600 font-medium text-left">Fantasyland Dash</button>
+                                        <button onClick={() => loadPreset('DL_Thrill')} className="text-xs p-2 bg-zinc-50 dark:bg-zinc-700/50 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded border border-zinc-200 dark:border-zinc-600 font-medium text-left">E-Ticket Thrills</button>
+                                    </>
+                                ) : (
+                                    <>
+                                        <button onClick={() => loadPreset('DCA_Radiator')} className="text-xs p-2 bg-zinc-50 dark:bg-zinc-700/50 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded border border-zinc-200 dark:border-zinc-600 font-medium text-left">Radiator Springs</button>
+                                        <button onClick={() => loadPreset('DCA_Guardians')} className="text-xs p-2 bg-zinc-50 dark:bg-zinc-700/50 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded border border-zinc-200 dark:border-zinc-600 font-medium text-left">Avengers Campus</button>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+
+                        <div className="w-full h-px bg-zinc-200 dark:bg-zinc-700 mb-3" />
+
                         <div className="flex justify-between items-center mb-2">
-                            <span className="text-xs font-bold uppercase text-zinc-500">Saved Strategies</span>
+                            <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Your Saves</span>
                             <button 
                                 onClick={() => {
                                     const name = prompt("Name this strategy:");
