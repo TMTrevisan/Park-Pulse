@@ -5,7 +5,7 @@ import Map, { Marker, Popup, NavigationControl, FullscreenControl, MapRef, Sourc
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { useItinerary } from '@/hooks/useItinerary';
 import { Ride } from '@/lib/types';
-import { Layers, Bug } from 'lucide-react';
+import { Layers, Bug, Route as RouteIcon } from 'lucide-react';
 import { clsx } from 'clsx';
 import RIDE_COORDS_DATA from '@/lib/ride-coords.json';
 import { ResortId, LAND_CENTROIDS, PARKS } from '@/lib/parks';
@@ -110,6 +110,7 @@ export default function MapOverlay({ rides, selectedParkId, resort, activeLand }
 
   const [mapStyle, setMapStyle] = useState<'streets-v12' | 'satellite-streets-v12'>('streets-v12');
   const [hoveredRide, setHoveredRide] = useState<Ride | null>(null);
+  const [showRoute, setShowRoute] = useState(true);
   const [debugMode, setDebugMode] = useState(false);
 
   const mappedRides = useMemo(() => {
@@ -180,7 +181,7 @@ export default function MapOverlay({ rides, selectedParkId, resort, activeLand }
                     {ride.status === "DOWN" ? "!" : waitTime}
                    </span>
                 </div>
-                {inItinerary && (
+                {inItinerary && showRoute && (
                   <div className={clsx(
                     "absolute -top-2 -right-2 text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-black border shadow-xl z-50",
                     isCompleted ? "bg-green-500 border-green-600" : "bg-blue-600 border-white"
@@ -216,7 +217,7 @@ export default function MapOverlay({ rides, selectedParkId, resort, activeLand }
           </Popup>
         )}
 
-        {itineraryPathData && (
+        {itineraryPathData && showRoute && (
           <Source id="itinerary-route" type="geojson" data={itineraryPathData as any}>
             <Layer
               id="route-line"
@@ -235,10 +236,20 @@ export default function MapOverlay({ rides, selectedParkId, resort, activeLand }
       <div className="absolute top-8 left-8 flex flex-col gap-3">
         <button
           onClick={() => setMapStyle(mapStyle === 'streets-v12' ? 'satellite-streets-v12' : 'streets-v12')}
-          className="flex items-center gap-3 px-5 py-3 bg-black/70 backdrop-blur-2xl border border-white/10 rounded-2xl text-white text-[11px] font-black uppercase tracking-widest hover:bg-black/90 transition-all shadow-2xl ring-1 ring-white/5 active:scale-95"
+          className="flex items-center justify-center gap-3 px-5 py-3 bg-black/70 backdrop-blur-2xl border border-white/10 rounded-2xl text-white text-[11px] font-black uppercase tracking-widest hover:bg-black/90 transition-all shadow-2xl ring-1 ring-white/5 active:scale-95"
         >
           <Layers className="w-4 h-4 text-blue-400" />
           {mapStyle === 'streets-v12' ? 'Satellite' : 'Standard'}
+        </button>
+        <button
+          onClick={() => setShowRoute(!showRoute)}
+          className={clsx(
+            "flex items-center justify-center gap-3 px-5 py-3 bg-black/70 backdrop-blur-2xl border border-white/10 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-black/90 transition-all shadow-2xl ring-1 ring-white/5 active:scale-95",
+            showRoute ? "text-white" : "text-zinc-500"
+          )}
+        >
+          <RouteIcon className={clsx("w-4 h-4", showRoute ? "text-blue-400" : "text-zinc-600")} />
+          {showRoute ? 'Hide Route' : 'Show Route'}
         </button>
       </div>
 

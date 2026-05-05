@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 export interface ItineraryItem {
     id: string; // unique ID for this instance in the list
     rideId: string;
+    customName?: string;
+    customDuration?: number;
     completed: boolean;
     completedAt?: number;
 }
@@ -56,6 +58,20 @@ export function useItinerary(resort: string) {
         const newItem: ItineraryItem = {
             id: crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 9),
             rideId,
+            completed: false
+        };
+        saveState({
+            ...state,
+            items: [...state.items, newItem]
+        });
+    };
+
+    const addCustomBreak = (name: string, duration: number) => {
+        const newItem: ItineraryItem = {
+            id: crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 9),
+            rideId: 'custom-break',
+            customName: name,
+            customDuration: duration,
             completed: false
         };
         saveState({
@@ -150,6 +166,7 @@ export function useItinerary(resort: string) {
         savedStrategies: state.savedStrategies,
         isLoaded,
         addItem,
+        addCustomBreak,
         removeItem,
         toggleComplete,
         reorderItems,
