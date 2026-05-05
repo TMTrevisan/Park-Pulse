@@ -126,14 +126,14 @@ export default function MapOverlay({ rides, selectedParkId, resort, activeLand }
               key={ride.id}
               latitude={coords.lat}
               longitude={coords.lng}
-              anchor="bottom"
+              anchor="center"
               onClick={e => {
                 e.originalEvent.stopPropagation();
                 setHoveredRide(ride);
               }}
             >
               <div
-                className="group relative cursor-pointer translate-y-[-50%]"
+                className="group relative cursor-pointer"
                 onMouseEnter={() => setHoveredRide(ride)}
                 onMouseLeave={() => setHoveredRide(null)}
               >
@@ -145,17 +145,6 @@ export default function MapOverlay({ rides, selectedParkId, resort, activeLand }
                    <span className="min-w-[20px] text-center">
                     {ride.status === "DOWN" ? "!" : waitTime}
                    </span>
-                </div>
-                
-                {/* Floating Tooltip */}
-                <div className={clsx(
-                    "absolute bottom-full left-1/2 -translate-x-1/2 mb-4 pointer-events-none transition-all duration-300",
-                    isSelected ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-2 scale-90"
-                )}>
-                  <div className="bg-black/95 text-[10px] font-black uppercase tracking-tighter px-4 py-2 rounded-2xl whitespace-nowrap backdrop-blur-xl border border-white/10 shadow-[0_20px_40px_rgba(0,0,0,0.4)]">
-                    {ride.name}
-                  </div>
-                  <div className="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-black/95 mx-auto -mt-0.5" />
                 </div>
               </div>
             </Marker>
