@@ -261,6 +261,14 @@ export function RopeDropItinerary({ rides, resort }: { rides: Ride[], resort: Re
             presetNames = ["Radiator Springs Racers", "Toy Story Midway Mania!", "Incredicoaster"];
         } else if (presetType === 'DCA_Guardians') {
             presetNames = ["Guardians of the Galaxy – Mission: BREAKOUT!", "WEB SLINGERS: A Spider-Man Adventure", "Incredicoaster"];
+        } else if (presetType === 'WDW_MK_Fantasyland') {
+            presetNames = ["Seven Dwarfs Mine Train", "Peter Pan's Flight", "Space Mountain", "Big Thunder Mountain Railroad"];
+        } else if (presetType === 'WDW_HS_StarWars') {
+            presetNames = ["Star Wars: Rise of the Resistance", "Slinky Dog Dash", "The Twilight Zone™ Tower of Terror"];
+        } else if (presetType === 'WDW_EPCOT_WorldDiscovery') {
+            presetNames = ["Remy's Ratatouille Adventure", "Frozen Ever After", "Test Track"];
+        } else if (presetType === 'WDW_AK_Pandora') {
+            presetNames = ["Avatar Flight of Passage", "Expedition Everest - Legend of the Forbidden Mountain", "Kilimanjaro Safaris"];
         }
         
         const newItems: any[] = [];
@@ -566,7 +574,12 @@ export function RopeDropItinerary({ rides, resort }: { rides: Ride[], resort: Re
                                         <button onClick={() => loadPreset('DCA_Guardians')} className="text-xs p-2 bg-zinc-50 dark:bg-zinc-700/50 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded border border-zinc-200 dark:border-zinc-600 font-medium text-left">DCA: Avengers Campus</button>
                                     </>
                                 ) : (
-                                    <div className="text-xs text-zinc-500 col-span-2">Presets not available yet.</div>
+                                    <>
+                                        <button onClick={() => loadPreset('WDW_MK_Fantasyland')} className="text-xs p-2 bg-zinc-50 dark:bg-zinc-700/50 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded border border-zinc-200 dark:border-zinc-600 font-medium text-left">MK: Fantasyland Dash</button>
+                                        <button onClick={() => loadPreset('WDW_HS_StarWars')} className="text-xs p-2 bg-zinc-50 dark:bg-zinc-700/50 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded border border-zinc-200 dark:border-zinc-600 font-medium text-left">HS: Galaxy & Thrills</button>
+                                        <button onClick={() => loadPreset('WDW_EPCOT_WorldDiscovery')} className="text-xs p-2 bg-zinc-50 dark:bg-zinc-700/50 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded border border-zinc-200 dark:border-zinc-600 font-medium text-left">EPCOT: Global Dash</button>
+                                        <button onClick={() => loadPreset('WDW_AK_Pandora')} className="text-xs p-2 bg-zinc-50 dark:bg-zinc-700/50 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded border border-zinc-200 dark:border-zinc-600 font-medium text-left">AK: Pandora Rope Drop</button>
+                                    </>
                                 )}
                             </div>
                         </div>
