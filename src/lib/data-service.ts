@@ -94,10 +94,53 @@ const redis = (url && token)
 export async function getHistory(resort: ResortId = 'DLR'): Promise<WaitTimeSnapshot[]> {
     if (redis) {
         try {
-            const result = await redis.lrange(HISTORY_KEY(resort), 0, -1);
-            return (result as unknown[]).map(expandSnapshot) || [];
+            // Upstash REST API has a 10MB response limit. 7 days of 1-minute data is ~15MB.
+            // We must fetch in chunks to avoid ERR max request size exceeded.
+            const totalItems = await redis.llen(HISTORY_KEY(resort));
+            let rawResult: unknown[] = [];
+            
+            const chunkSize = 2000;
+            for (let i = 0; i < totalItems; i += chunkSize) {
+                const chunk = await redis.lrange(HISTORY_KEY(resort), i, i + chunkSize - 1);
+                rawResult = rawResult.concat(chunk);
+            }
+
+            // Downsample to reduce payload size to the client (Vercel 4.5MB limit)
+            const now = Date.now();
+            const ONE_DAY = 24 * 60 * 60 * 1000;
+            
+            const downsampled: unknown[] = [];
+            let lastTime = 0;
+            
+            for (const item of rawResult) {
+                if (isCompactSnapshot(item)) {
+                    const time = new Date(item.t).getTime();
+                    const age = now - time;
+                    
+                    // 15 min resolution for the last 24 hours
+                    // 60 min resolution for data older than 24 hours
+                    const requiredGap = age < ONE_DAY ? 15 * 60 * 1000 : 60 * 60 * 1000;
+                    
+                    if (time - lastTime >= requiredGap) {
+                        downsampled.push(item);
+                        lastTime = time;
+                    }
+                }
+            }
+
+            return downsampled.map(expandSnapshot) || [];
         } catch (error) {
             console.error("KV Read Error:", error);
+            // Fallback to local files in dev
+            if (process.env.NODE_ENV === 'development') {
+                try {
+                    const filePath = DATA_FILE_PATH(resort);
+                    await ensureDirectoryExistence(filePath);
+                    const fileContent = await fs.readFile(filePath, "utf-8");
+                    const parsed = JSON.parse(fileContent);
+                    return parsed.map(expandSnapshot);
+                } catch { }
+            }
             return [];
         }
     } else {
