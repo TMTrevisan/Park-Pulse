@@ -1,41 +1,55 @@
-# Park Pulse: Disney Wait Time Tracker
+# Park Pulse: Next-Gen Theme Park Dashboard
 
-Park Pulse is a modern, real-time dashboard for tracking wait times at **Disneyland Park** and **Disney California Adventure**. Built with Next.js and Tailwind CSS, it offers a premium user experience for analyzing ride availability and trends.
+Park Pulse is an ultra-premium, real-time analytics dashboard for tracking wait times and optimizing your day at **Disneyland Resort** (California) and **Walt Disney World** (Florida). Built with Next.js, Tailwind CSS, and Upstash Redis, it offers a stunning glassmorphic interface and deep historical insights that far exceed official park apps.
 
-## 🚀 Key Features
+## 🚀 Functional Features
 
-### 🔍 Advanced Filtering (**New**)
-*   **Smart Filters**: Drill down by **Land**, **Ticket Class** (E-Ticket, D-Ticket, etc.), **Ride Status**, or max **Wait Time**.
-*   **Dynamic**: Filter options update automatically based on the selected park.
+### 🌍 Cross-Coastal Tracking
+*   Seamlessly toggle between **Disneyland Resort** (Disneyland & California Adventure) and **Walt Disney World** (Magic Kingdom, EPCOT, Hollywood Studios, Animal Kingdom).
+*   Data is pulled in real-time from the [ThemeParks.wiki API](https://themeparks.wiki).
 
-### ⭐️ Favorites System
-*   **Personalized List**: Star your favorite rides to keep them at the top of your view.
-*   **Persistent**: Your favorites are saved automatically to your device, so they're there when you come back.
+### 📈 Historical Analytics & Heatmaps
+*   **7-Day Heatmaps**: Uncover the best times to ride. Heatmaps analyze the last 7 days of historical data, processed and time-zone corrected, to show you the exact hour a ride's line dips.
+*   **Live Trend Charts**: Expand any ride to see its wait time trajectory throughout the current day compared to its historical averages.
 
-### 📊 Real-Time Dashboard
-*   **Live Data**: Connects to the [ThemeParks.wiki API](https://themeparks.wiki) for up-to-the-minute wait times.
-*   **Park Status**: Instant "Busyness" indicator (Quiet, Moderate, Busy, Very Busy) based on park-wide averages.
-*   **Search**: Instantly filter rides by name.
-*   **Skeleton Loading**: Polished shimmer effects while data fetch is in progress.
+### 🗺️ Interactive Map View
+*   A fully integrated 3D **Mapbox** view of the parks. 
+*   **Live Markers**: See wait times rendered directly on top of the physical ride locations.
+*   **Wayfinding**: Visual dotted paths connect your location (or the park entrance) to your selected ride for easy navigation.
 
-### 📱 Advanced List View
-The table view is optimized for power users and mobile devices:
-*   **Drag-and-Drop Columns**: Customize your view by dragging column headers. Reorder them however you like (e.g., move "Wait Time" next to "Ride Name").
-    *   *Mobile Friendly*: Touch-optimized drag handles are always visible.
-*   **Sticky Columns**: The first column in your custom order stays frozen while you scroll horizontally to view hourly forecasts.
-*   **Smart Sorting**: Sort by **Favorites**, Ride Name, Wait Time, Status, Land, or **Ticket Tier**.
-*   **Ticket Value**: Rides are categorized by tier for easy filtering:
-    *   **E-Ticket**: Headliners (e.g., *Rise of the Resistance*, *Space Mountain*).
-    *   **D-Ticket**: Major attractions.
-    *   **C/B/A-Ticket**: Smaller experiences.
-*   **Hourly Forecasts**: Color-coded columns (Green/Yellow/Red) show predicted wait times for 9AM, 11AM, 1PM, etc.
-*   **Trend Sparklines**: Visual line charts showing the wait time trend for the day.
+### 🏃‍♂️ Rope Drop Itinerary Planner
+*   The system uses historical data to generate an optimized, hour-by-hour itinerary.
+*   It automatically sequences E-Ticket headliners early in the day when wait times are lowest, grouping nearby rides to minimize cross-park walking.
 
-### 🖼️ Grid View
-*   **Visual Cards**: Browse rides with a clean, card-based layout.
-*   **History Charts**: Click any ride card to expand a detailed interactive chart of wait time history.
+### 🔔 Smart Alerts & Favorites
+*   **Alerts**: Set custom wait-time thresholds for rides (e.g., "Alert me when Space Mountain drops below 30 mins").
+*   **Favorites**: Star rides to pin them to the top of the dashboard. Both alerts and favorites persist locally on your device.
+
+### 🎨 Premium Glassmorphic UI
+*   A sleek, modern dark-mode interface featuring blurred glass elements, dynamic color coding for wait severities (Walk-on to Very Busy), and skeleton loading states.
+*   **Drag-and-Drop Columns**: Reorder metrics in the data table to suit your planning style.
+
+---
+
+## 🏗️ Architecture & Infrastructure
+
+Park Pulse is engineered to handle massive amounts of real-time data efficiently within strict serverless constraints.
+
+*   **Frontend**: Next.js App Router, React 19, Recharts for data visualization, and Mapbox GL JS for spatial mapping.
+*   **Backend Telemetry**: Upstash Redis is used as a persistent ring buffer. 
+*   **Data Ingestion**: A cron job triggers the `/api/cron/save` endpoint every minute. The backend compresses the API payload, chunks the data, and intelligently downsamples historical records (15-min resolution for the current day, 60-min for older days) to keep Vercel API payloads under 2MB.
+
+---
 
 ## 🏃‍♂️ Getting Started
+
+### Prerequisites
+You will need accounts/keys for the following free-tier services:
+1.  **Upstash Redis**: Used for storing historical wait time data and system telemetry.
+2.  **Mapbox**: Used for rendering the interactive park maps.
+3.  **Cron-job.org** (or similar): To ping the data ingestion endpoint every minute.
+
+### Setup Instructions
 
 1.  **Clone the repository:**
     ```bash
@@ -48,17 +62,22 @@ The table view is optimized for power users and mobile devices:
     npm install
     ```
 
-3.  **Run the development server:**
+3.  **Environment Variables:**
+    Copy `.env.example` to `.env.local` and fill in your keys:
+    ```bash
+    cp .env.example .env.local
+    ```
+
+4.  **Run the development server:**
     ```bash
     npm run dev
     ```
 
-4.  **Open the app:**
-    Navigate to [http://localhost:3000](http://localhost:3000)
+5.  **Configure Cron Job:**
+    Set up an external cron service to issue a `GET` request to `https://<your-domain>/api/cron/save` every minute, passing your `CRON_SECRET` as a Bearer token in the Authorization header.
 
 ## 📄 License
 MIT
 
 ## 🙏 Acknowledgements
 Wait time data provided by the [ThemeParks.wiki API](https://themeparks.wiki).
-
