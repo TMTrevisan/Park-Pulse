@@ -40,14 +40,14 @@ export function WaitTimeChart({ rideId, ride, history }: WaitTimeChartProps) {
     }).filter(d => d.historyWait !== null && isSameDay(new Date(d.time), now))
         .sort((a, b) => a.time - b.time);
 
-    // Insert null points for gaps > 5 minutes (300,000 ms) so the chart line breaks instead of drawing straight across hours
+    // Insert null points for gaps > 60 minutes (3,600,000 ms) so the chart line breaks instead of drawing straight across hours
     const historyData: typeof processedHistory = [];
     for (let i = 0; i < processedHistory.length; i++) {
         historyData.push(processedHistory[i]);
         if (i < processedHistory.length - 1) {
             const current = processedHistory[i];
             const next = processedHistory[i + 1];
-            if (next.time - current.time > 5 * 60 * 1000) {
+            if (next.time - current.time > 60 * 60 * 1000) {
                 // Insert a null point exactly 1ms after the current point to break the line
                 historyData.push({ time: current.time + 1, historyWait: null });
             }
@@ -87,7 +87,8 @@ export function WaitTimeChart({ rideId, ride, history }: WaitTimeChartProps) {
                     <YAxis stroke="#888" fontSize={12} label={{ value: 'Min', angle: -90, position: 'insideLeft' }} />
                     <Tooltip
                         labelFormatter={(time) => format(new Date(time), "h:mm a")}
-                        contentStyle={{ borderRadius: "8px" }}
+                        contentStyle={{ backgroundColor: "#1f2937", borderColor: "#374151", borderRadius: "8px", color: "#f3f4f6" }}
+                        itemStyle={{ color: "#60a5fa" }}
                     />
                     <Legend />
                     <Line

@@ -110,9 +110,9 @@ export function WaitTimeTimeline({ data, currentWait, isOperating }: WaitTimeTim
                                 <ReferenceLine y={stats.avg} stroke="#f59e0b" strokeDasharray="3 3" label={{ position: 'insideTopLeft', value: 'AVG', fill: '#f59e0b', fontSize: 10, fontWeight: 'bold' }} />
                             )}
                             <Tooltip 
-                                contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)', fontWeight: 'bold' }}
-                                itemStyle={{ color: '#3b82f6', fontWeight: 900 }}
-                                labelStyle={{ color: '#71717a', fontSize: '12px', fontWeight: 'bold', marginBottom: '4px' }}
+                                contentStyle={{ backgroundColor: '#1f2937', borderRadius: '12px', border: '1px solid #374151', boxShadow: '0 4px 20px rgba(0,0,0,0.5)', fontWeight: 'bold' }}
+                                itemStyle={{ color: '#60a5fa', fontWeight: 900 }}
+                                labelStyle={{ color: '#a1a1aa', fontSize: '12px', fontWeight: 'bold', marginBottom: '4px' }}
                             />
                             <Area 
                                 type="monotone" 
