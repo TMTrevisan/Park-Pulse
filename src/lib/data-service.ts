@@ -6,6 +6,7 @@ import { PARKS, RESORT_PARKS, RIDE_METADATA_REGISTRY } from "@/lib/parks";
 import type { ResortId } from "@/lib/parks";
 import { WaitTimeSnapshot, ParkLiveData } from "@/lib/types";
 import { Redis } from "@upstash/redis";
+import { logger } from "@/lib/logger";
 
 const DATA_FILE_PATH = (resort: ResortId) =>
     path.join(
@@ -79,7 +80,9 @@ async function fetchParkData(parkId: string): Promise<ParkLiveData> {
         }
     );
     if (!response.ok) {
-        throw new Error(`Failed to fetch data for park ${parkId} - ${response.statusText}`);
+        const msg = `Failed to fetch data for park ${parkId} - ${response.status} ${response.statusText}`;
+        logger.error('data-service:fetchParkData', msg);
+        throw new Error(msg);
     }
     return response.json();
 }
@@ -130,7 +133,7 @@ export async function getHistory(resort: ResortId = 'DLR'): Promise<WaitTimeSnap
 
             return downsampled.map(expandSnapshot) || [];
         } catch (error) {
-            console.error("KV Read Error:", error);
+            logger.error("data-service:getHistory", "KV Read Error", error);
             // Fallback to local files in dev
             if (process.env.NODE_ENV === 'development') {
                 try {
@@ -180,7 +183,7 @@ async function saveSnapshot(snapshot: WaitTimeSnapshot, currentHistory: WaitTime
             await redis.rpush(HISTORY_KEY(resort), compact);
             await redis.ltrim(HISTORY_KEY(resort), -MAX_HISTORY_ITEMS, -1);
         } catch (error) {
-            console.error("KV Write Error:", error);
+            logger.error("data-service:saveSnapshot", "KV Write Error", error);
         }
     } else {
         try {
@@ -189,7 +192,7 @@ async function saveSnapshot(snapshot: WaitTimeSnapshot, currentHistory: WaitTime
             if (newHistory.length > MAX_HISTORY_ITEMS) newHistory.shift();
             await fs.writeFile(filePath, JSON.stringify(newHistory, null, 2));
         } catch (error) {
-            console.warn("FS Write Error:", error);
+            logger.warn("data-service:saveSnapshot", "FS Write Error", error);
         }
     }
 }
@@ -250,7 +253,7 @@ export async function trimHistory(resort: ResortId = 'DLR') {
             }
             return { trimmed: false, length: len };
         } catch (error) {
-            console.error("Cron Trim Error:", error);
+            logger.error("data-service:trimHistory", "Cron Trim Error", error);
             throw error;
         }
     }
