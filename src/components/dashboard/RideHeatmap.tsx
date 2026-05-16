@@ -1,16 +1,23 @@
 "use client";
 
-import { useMemo } from 'react';
-import { Ride, WaitTimeSnapshot } from '@/lib/types';
-import { format, startOfDay, eachDayOfInterval, subDays, isSameDay } from 'date-fns';
+import { useMemo, useState, useEffect } from 'react';
+import { WaitTimeSnapshot } from '@/lib/types';
+import { format, eachDayOfInterval, subDays } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { ResortId } from '@/lib/parks';
 
 interface RideHeatmapProps {
     rideId: string;
     history: WaitTimeSnapshot[];
+    resort?: ResortId;
 }
 
-export function RideHeatmap({ rideId, history }: RideHeatmapProps) {
+export function RideHeatmap({ rideId, history, resort = 'DLR' }: RideHeatmapProps) {
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => setMounted(true), []);
+
+    const tz = resort === 'WDW' ? 'America/New_York' : 'America/Los_Angeles';
+
     const days = useMemo(() => {
         const end = new Date();
         const start = subDays(end, 6);
@@ -22,7 +29,11 @@ export function RideHeatmap({ rideId, history }: RideHeatmapProps) {
     const data = useMemo(() => {
         const grid: Record<string, Record<number, number[]>> = {};
 
+        const dateFormatter = new Intl.DateTimeFormat('en-CA', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit' });
+        const hourFormatter = new Intl.DateTimeFormat('en-US', { timeZone: tz, hour: 'numeric', hourCycle: 'h23' });
+
         days.forEach(day => {
+            // Using local format for initialization since `days` is generated based on current time
             const dateStr = format(day, 'yyyy-MM-dd');
             grid[dateStr] = {};
             hours.forEach(hour => {
@@ -32,8 +43,8 @@ export function RideHeatmap({ rideId, history }: RideHeatmapProps) {
 
         history.forEach(snapshot => {
             const date = new Date(snapshot.timestamp);
-            const dateStr = format(date, 'yyyy-MM-dd');
-            const hour = date.getHours();
+            const dateStr = dateFormatter.format(date);
+            const hour = parseInt(hourFormatter.format(date), 10);
 
             if (grid[dateStr] && grid[dateStr][hour] !== undefined) {
                 const park = snapshot.parks.find(p => p.liveData.some(r => r.id === rideId));
@@ -69,6 +80,10 @@ export function RideHeatmap({ rideId, history }: RideHeatmapProps) {
         if (wait <= 60) return "bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300";
         return "bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300";
     };
+
+    if (!mounted) {
+        return <div className="mt-6 h-64 w-full animate-pulse bg-zinc-100 dark:bg-zinc-800/50 rounded-xl"></div>;
+    }
 
     return (
         <div className="mt-6">
