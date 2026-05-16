@@ -37,7 +37,7 @@ export function WaitTimeChart({ rideId, ride, history }: WaitTimeChartProps) {
             time: new Date(snapshot.timestamp).getTime(),
             historyWait: waitTime,
         };
-    }).filter(d => d.historyWait !== null && isSameDay(new Date(d.time), now))
+    }).filter(d => d.historyWait !== null && d.time >= now.getTime() - 24 * 60 * 60 * 1000)
         .sort((a, b) => a.time - b.time);
 
     // Insert null points for gaps > 60 minutes (3,600,000 ms) so the chart line breaks instead of drawing straight across hours
@@ -56,7 +56,7 @@ export function WaitTimeChart({ rideId, ride, history }: WaitTimeChartProps) {
 
     // 2. Process Forecast Data
     const forecastData = (ride?.forecast || [])
-        .filter((f: Forecast) => isSameDay(new Date(f.time), now))
+        .filter((f: Forecast) => new Date(f.time).getTime() >= now.getTime() - 24 * 60 * 60 * 1000)
         .map((f: Forecast) => ({
             time: new Date(f.time).getTime(),
             forecastWait: f.waitTime
