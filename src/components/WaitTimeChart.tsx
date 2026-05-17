@@ -48,19 +48,7 @@ export function WaitTimeChart({ rideId, ride, history, resort = 'DLR' }: WaitTim
     }).filter(d => d.historyWait !== null && getOperatingDay(new Date(d.time), tz) === currentOperatingDay)
         .sort((a, b) => a.time - b.time);
 
-    // Insert null points for gaps > 60 minutes (3,600,000 ms) so the chart line breaks instead of drawing straight across hours
-    const historyData: typeof processedHistory = [];
-    for (let i = 0; i < processedHistory.length; i++) {
-        historyData.push(processedHistory[i]);
-        if (i < processedHistory.length - 1) {
-            const current = processedHistory[i];
-            const next = processedHistory[i + 1];
-            if (next.time - current.time > 60 * 60 * 1000) {
-                // Insert a null point exactly 1ms after the current point to break the line
-                historyData.push({ time: current.time + 1, historyWait: null });
-            }
-        }
-    }
+    const historyData = processedHistory;
 
     // 2. Process Forecast Data
     const forecastData = (ride?.forecast || [])
