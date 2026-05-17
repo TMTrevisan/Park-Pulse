@@ -451,7 +451,7 @@ export function RideTable({
                                                         </div>
                                                     </div>
                                                     <div className="w-full h-64">
-                                                        <WaitTimeChart rideId={ride.id} ride={ride} history={history} />
+                                                        <WaitTimeChart rideId={ride.id} ride={ride} history={history} resort={resort} />
                                                     </div>
                                                     <RideHeatmap rideId={ride.id} history={history} />
                                                 </div>

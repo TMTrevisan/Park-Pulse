@@ -11,17 +11,25 @@ import {
     Legend
 } from "recharts";
 import { WaitTimeSnapshot, Ride, Forecast } from "@/lib/types";
-import { format, parseISO, isSameDay } from "date-fns";
+import { format } from "date-fns";
+import { ResortId } from "@/lib/parks";
 
 interface WaitTimeChartProps {
     rideId: string;
     ride?: Ride;
     history: WaitTimeSnapshot[];
+    resort?: ResortId;
 }
 
-export function WaitTimeChart({ rideId, ride, history }: WaitTimeChartProps) {
-    // 2. Process Forecast Data
+function getOperatingDay(date: Date, timeZone: string) {
+    const shiftedDate = new Date(date.getTime() - 4 * 60 * 60 * 1000);
+    return new Intl.DateTimeFormat('en-CA', { timeZone, year: 'numeric', month: '2-digit', day: '2-digit' }).format(shiftedDate);
+}
+
+export function WaitTimeChart({ rideId, ride, history, resort = 'DLR' }: WaitTimeChartProps) {
     const now = new Date();
+    const tz = resort === 'WDW' ? 'America/New_York' : 'America/Los_Angeles';
+    const currentOperatingDay = getOperatingDay(now, tz);
 
     // 1. Process History Data
     let processedHistory = history.map((snapshot) => {
@@ -37,7 +45,7 @@ export function WaitTimeChart({ rideId, ride, history }: WaitTimeChartProps) {
             time: new Date(snapshot.timestamp).getTime(),
             historyWait: waitTime,
         };
-    }).filter(d => d.historyWait !== null && d.time >= now.getTime() - 24 * 60 * 60 * 1000)
+    }).filter(d => d.historyWait !== null && getOperatingDay(new Date(d.time), tz) === currentOperatingDay)
         .sort((a, b) => a.time - b.time);
 
     // Insert null points for gaps > 60 minutes (3,600,000 ms) so the chart line breaks instead of drawing straight across hours
@@ -56,7 +64,7 @@ export function WaitTimeChart({ rideId, ride, history }: WaitTimeChartProps) {
 
     // 2. Process Forecast Data
     const forecastData = (ride?.forecast || [])
-        .filter((f: Forecast) => new Date(f.time).getTime() >= now.getTime() - 24 * 60 * 60 * 1000)
+        .filter((f: Forecast) => getOperatingDay(new Date(f.time), tz) === currentOperatingDay)
         .map((f: Forecast) => ({
             time: new Date(f.time).getTime(),
             forecastWait: f.waitTime

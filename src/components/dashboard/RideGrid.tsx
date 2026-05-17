@@ -73,7 +73,7 @@ export function RideGrid({
                                             High of Day: <span className="font-bold text-gray-700 dark:text-gray-300">{getHighOfDay(ride)} min</span>
                                         </div>
                                     </div>
-                                    <WaitTimeChart rideId={ride.id} ride={ride} history={history} />
+                                    <WaitTimeChart rideId={ride.id} ride={ride} history={history} resort={resort} />
                                     <RideHeatmap rideId={ride.id} history={history} />
                                 </div>
                             )}
