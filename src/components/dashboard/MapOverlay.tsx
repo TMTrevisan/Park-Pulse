@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useMemo, useRef, useEffect } from 'react';
-import Map, { Marker, Popup, NavigationControl, FullscreenControl, MapRef, Source, Layer } from 'react-map-gl/mapbox';
+import Map, { Marker, Popup, NavigationControl, FullscreenControl, GeolocateControl, MapRef, Source, Layer } from 'react-map-gl/mapbox';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { useItinerary } from '@/hooks/useItinerary';
 import { Ride } from '@/lib/types';
@@ -173,7 +173,9 @@ export default function MapOverlay({ rides, selectedParkId, resort, activeLand }
         mapboxAccessToken={MAPBOX_TOKEN}
         style={{ width: '100%', height: '100%' }}
         antialias={true}
+        attributionControl={false}
       >
+        <GeolocateControl position="top-right" trackUserLocation={true} showAccuracyCircle={true} />
         <NavigationControl position="top-right" />
         <FullscreenControl position="top-right" />
 
