@@ -3,6 +3,8 @@
 import { cn } from "@/lib/utils";
 import { PARKS, PARK_NAMES, RESORT_PARKS, RESORTS } from "@/lib/parks";
 import type { ResortId } from "@/lib/parks";
+import Link from "next/link";
+import { Calendar } from "lucide-react";
 
 export interface ParkStats {
     averageWait: number;
@@ -42,22 +44,32 @@ export function ParkPulseHeader({
                     </p>
                 </div>
 
-                {/* Resort Toggle */}
-                <div className="flex items-center gap-1 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-1 self-start md:self-auto shadow-sm">
-                    {(Object.keys(RESORTS) as ResortId[]).map((r) => (
-                        <button
-                            key={r}
-                            onClick={() => onResortChange(r)}
-                            className={cn(
-                                "px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300",
-                                resort === r
-                                    ? "bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-md ring-1 ring-zinc-200 dark:ring-zinc-700"
-                                    : "text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-300"
-                            )}
-                        >
-                            {r === 'DLR' ? '🏰 Disneyland' : '🌍 Disney World'}
-                        </button>
-                    ))}
+                {/* Resort Toggle and Calendar */}
+                <div className="flex items-center gap-3 self-start md:self-auto">
+                    <div className="flex items-center gap-1 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-1 shadow-sm">
+                        {(Object.keys(RESORTS) as ResortId[]).map((r) => (
+                            <button
+                                key={r}
+                                onClick={() => onResortChange(r)}
+                                className={cn(
+                                    "px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300",
+                                    resort === r
+                                        ? "bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-md ring-1 ring-zinc-200 dark:ring-zinc-700"
+                                        : "text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-300"
+                                )}
+                            >
+                                {r === 'DLR' ? '🏰 Disneyland' : '🌍 Disney World'}
+                            </button>
+                        ))}
+                    </div>
+
+                    <Link
+                        href="/calendar"
+                        className="px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition-all duration-300 bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20 dark:hover:bg-emerald-500/20"
+                    >
+                        <Calendar className="w-4 h-4" />
+                        <span className="hidden sm:inline">Crowd Calendar</span>
+                    </Link>
                 </div>
             </div>
 
