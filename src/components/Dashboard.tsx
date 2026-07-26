@@ -15,12 +15,26 @@ import { Skeleton } from "@/components/ui/Skeleton";
 import { ParkPulseHeader, ParkStats } from "./dashboard/ParkPulseHeader";
 
 const REFRESH_INTERVAL = 60 * 1000;
+const MAX_CLIENT_HISTORY_ITEMS = 10_080;
 const TARGET_HOURS = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21];
+
+function getParkDateKey(date: Date, resort: ResortId) {
+    const timeZone = resort === 'WDW' ? 'America/New_York' : 'America/Los_Angeles';
+    const parts = new Intl.DateTimeFormat('en-US', {
+        timeZone,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+    }).formatToParts(date);
+    const values = Object.fromEntries(parts.map(({ type, value }) => [type, value]));
+    return `${values.year}-${values.month}-${values.day}`;
+}
 
 export function Dashboard() {
     const [resort, setResort] = useState<ResortId>('DLR');
     const [data, setData] = useState<{ current: WaitTimeSnapshot; history: WaitTimeSnapshot[] } | null>(null);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const [selectedParkId, setSelectedParkId] = useState(PARKS.DISNEYLAND_PARK);
     const [searchQuery, setSearchQuery] = useState("");
     const [viewMode, setViewMode] = useState<'grid' | 'list' | 'map' | 'rope-drop'>('list');
@@ -37,25 +51,28 @@ export function Dashboard() {
     const { favorites, toggleFavorite } = useFavorites();
     const { alerts, addAlert, removeAlert, checkAlerts } = useAlerts();
 
-    const fetchData = useCallback(async (isInitial = false, currentResort: ResortId = resort) => {
+    const fetchData = useCallback(async (isInitial = false, currentResort: ResortId = resort, signal?: AbortSignal) => {
         if (isInitial) setLoading(true);
         try {
             const url = `/api/wait-times?resort=${currentResort}${isInitial ? '' : '&history=false'}`;
-            const response = await fetch(url);
+            const response = await fetch(url, { signal });
             if (!response.ok) throw new Error('Failed to fetch data');
             const result = await response.json();
 
+            setError(null);
             setData(prev => {
                 if (!prev || isInitial) return result;
                 return {
                     current: result.current,
-                    history: [...prev.history, result.current]
+                    history: [...prev.history, result.current].slice(-MAX_CLIENT_HISTORY_ITEMS)
                 };
             });
         } catch (error) {
+            if (error instanceof DOMException && error.name === 'AbortError') return;
             console.error("Failed to fetch wait times:", error);
+            setError("Live wait times could not be refreshed. Please try again.");
         } finally {
-            if (isInitial) setLoading(false);
+            if (isInitial && !signal?.aborted) setLoading(false);
         }
     }, [resort]);
 
@@ -73,10 +90,14 @@ export function Dashboard() {
     };
 
     useEffect(() => {
-        fetchData(true, resort);
-        const interval = setInterval(() => fetchData(false, resort), REFRESH_INTERVAL);
-        return () => clearInterval(interval);
-    }, [resort]);
+        const controller = new AbortController();
+        fetchData(true, resort, controller.signal);
+        const interval = setInterval(() => fetchData(false, resort, controller.signal), REFRESH_INTERVAL);
+        return () => {
+            controller.abort();
+            clearInterval(interval);
+        };
+    }, [fetchData, resort]);
 
     const currentPark = data?.current.parks.find((p) => p.id === selectedParkId);
 
@@ -85,6 +106,26 @@ export function Dashboard() {
         const lands = new Set(currentPark.liveData.map(r => getLand(r.name, resort, r.id)));
         return Array.from(lands).sort();
     }, [currentPark, resort]);
+
+    const getHighOfDay = useCallback((ride: Ride) => {
+        let max = 0;
+        const today = getParkDateKey(new Date(), resort);
+        const todayForecasts = ride.forecast?.filter(f => getParkDateKey(new Date(f.time), resort) === today) || [];
+        if (todayForecasts.length > 0) {
+            max = Math.max(...todayForecasts.map(f => f.waitTime));
+        }
+
+        for (const snapshot of data?.history || []) {
+            for (const park of snapshot.parks) {
+                const matchedRide = park.liveData.find(r => r.id === ride.id);
+                const wait = matchedRide?.queue?.STANDBY?.waitTime;
+                if (typeof wait === 'number' && wait > max) max = wait;
+            }
+        }
+
+        const currentWait = ride.queue?.STANDBY?.waitTime;
+        return typeof currentWait === 'number' ? Math.max(max, currentWait) : max;
+    }, [data, resort]);
 
     const rides = useMemo(() => {
         const sourceRides = viewMode === 'map'
@@ -156,7 +197,7 @@ export function Dashboard() {
         });
 
     }, [currentPark, data, viewMode, searchQuery, sortField, sortDirection, favorites,
-        ticketFilter, statusFilter, landFilter, waitTimeFilter]);
+        ticketFilter, statusFilter, landFilter, waitTimeFilter, getHighOfDay, resort]);
 
     useEffect(() => {
         if (rides.length > 0) checkAlerts(rides);
@@ -184,41 +225,7 @@ export function Dashboard() {
         }
     };
 
-    const getHighOfDay = useCallback((ride: Ride) => {
-        let max = 0;
-
-        // 1. Try real-time API forecast for today
-        const today = new Date().toDateString();
-        const todayForecasts = ride.forecast?.filter(f => new Date(f.time).toDateString() === today) || [];
-        if (todayForecasts.length > 0) {
-            max = Math.max(...todayForecasts.map(f => f.waitTime));
-        }
-
-        // 2. Fallback: Check historical snapshots from the data.history state
-        if (data?.history && data.history.length > 0) {
-            const snapshots = data.history;
-            for (const snapshot of snapshots) {
-                // Check all parks in the snapshot for this ride
-                for (const park of snapshot.parks) {
-                    const matchedRide = park.liveData.find(r => r.id === ride.id);
-                    const wait = matchedRide?.queue?.STANDBY?.waitTime;
-                    if (typeof wait === 'number' && wait > max) {
-                        max = wait;
-                    }
-                }
-            }
-        }
-
-        // 3. Final check against current wait time
-        const currentWait = ride.queue?.STANDBY?.waitTime;
-        if (typeof currentWait === 'number' && currentWait > max) {
-            max = currentWait;
-        }
-
-        return max;
-    }, [data]);
-
-    const getParkStats = (parkId: string): ParkStats => {
+    const getParkStats = useCallback((parkId: string): ParkStats => {
         const park = data?.current.parks.find(p => p.id === parkId);
         if (!park?.liveData) return {
             averageWait: 0,
@@ -241,7 +248,7 @@ export function Dashboard() {
         else if (averageWait >= 15) busyness = { label: "Moderate", color: "text-yellow-500", bg: "bg-yellow-500" };
 
         return { averageWait, busyness };
-    };
+    }, [data]);
 
     // Build stats for all parks in the current resort
     const parkStats = useMemo(() => {
@@ -250,7 +257,7 @@ export function Dashboard() {
             stats[parkId] = getParkStats(parkId);
         }
         return stats;
-    }, [data, resort]);
+    }, [resort, getParkStats]);
 
     if (loading && !data) {
         return (
@@ -374,7 +381,15 @@ export function Dashboard() {
                     waitTimeFilter={waitTimeFilter}
                     setWaitTimeFilter={setWaitTimeFilter}
                     uniqueLands={uniqueLands}
+                    resort={resort}
                 />
+
+                {error && (
+                    <div role="alert" className="mb-6 flex items-center justify-between gap-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 dark:border-red-900/60 dark:bg-red-950/30 dark:text-red-200">
+                        <span>{error}</span>
+                        <button onClick={() => fetchData(true)} className="font-semibold underline underline-offset-2">Retry</button>
+                    </div>
+                )}
 
                 {renderContent()}
 

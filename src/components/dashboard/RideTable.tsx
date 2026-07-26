@@ -251,7 +251,7 @@ export function RideTable({
         if (colId === 'name') {
             return (
                 <Link 
-                    href={`/ride/${ride.id}`} 
+                    href={`/ride/${ride.id}?resort=${resort}`}
                     onClick={(e) => e.stopPropagation()} 
                     className="font-bold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-1 group/link"
                 >
@@ -453,7 +453,7 @@ export function RideTable({
                                                     <div className="w-full h-64">
                                                         <WaitTimeChart rideId={ride.id} ride={ride} history={history} resort={resort} />
                                                     </div>
-                                                    <RideHeatmap rideId={ride.id} history={history} />
+                                                        <RideHeatmap rideId={ride.id} history={history} resort={resort} />
                                                 </div>
                                             </td>
                                         </tr>

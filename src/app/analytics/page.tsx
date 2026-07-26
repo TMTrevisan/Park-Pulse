@@ -1,15 +1,22 @@
-import { PARKS } from "@/lib/parks";
+import type { ResortId } from "@/lib/parks";
 import { getHistory } from "@/lib/data-service";
 import AnalyticsDashboard from "./AnalyticsDashboard";
+import type { AnalyticsTimelinePoint } from "@/components/analytics/ComparativeTimeline";
 
 export const dynamic = 'force-dynamic';
 
-export default async function AnalyticsPage() {
+function parseResort(resort: string | undefined): ResortId {
+    return resort === 'WDW' ? 'WDW' : 'DLR';
+}
+
+export default async function AnalyticsPage({ searchParams }: { searchParams: Promise<{ resort?: string }> }) {
+    const { resort: resortParam } = await searchParams;
+    const resort = parseResort(resortParam);
     // getHistory returns the raw snapshot array containing info for all parks
-    const history = await getHistory();
+    const history = await getHistory(resort);
 
     const timelineData = history.map(snap => {
-        const pointData: Record<string, any> = { time: snap.timestamp };
+        const pointData: AnalyticsTimelinePoint = { time: snap.timestamp };
 
         snap.parks.forEach(park => {
             if (park.liveData) {
@@ -40,7 +47,7 @@ export default async function AnalyticsPage() {
 
     return (
         <div className="min-h-screen bg-zinc-50 dark:bg-black text-zinc-900 dark:text-zinc-100 selection:bg-purple-500/30">
-            <AnalyticsDashboard data={timelineData} ridesMeta={ridesMeta} />
+            <AnalyticsDashboard data={timelineData} ridesMeta={ridesMeta} resort={resort} />
         </div>
     );
 }

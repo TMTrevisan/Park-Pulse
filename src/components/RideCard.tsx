@@ -2,6 +2,7 @@ import { Ride } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { Clock, AlertCircle, Star, Bell, ChevronRight } from "lucide-react";
 import Link from "next/link";
+import type { ResortId } from "@/lib/parks";
 
 interface RideCardProps {
     ride: Ride;
@@ -11,9 +12,10 @@ interface RideCardProps {
     onToggleAlert?: (id: string, name: string) => void;
     land?: string;
     ticket?: string;
+    resort: ResortId;
 }
 
-export function RideCard({ ride, isFavorite, toggleFavorite, hasAlert, onToggleAlert, land, ticket }: RideCardProps) {
+export function RideCard({ ride, isFavorite, toggleFavorite, hasAlert, onToggleAlert, land, ticket, resort }: RideCardProps) {
     const isOperating = ride.status === "OPERATING";
     const waitTime = ride.queue?.STANDBY?.waitTime ?? 0;
     const statusColor = isOperating
@@ -25,7 +27,7 @@ export function RideCard({ ride, isFavorite, toggleFavorite, hasAlert, onToggleA
         : "text-gray-400";
 
     return (
-        <Link href={`/ride/${ride.id}`} className="p-4 border rounded-lg shadow-sm bg-white dark:bg-zinc-800 dark:border-zinc-700 flex flex-col justify-between h-full relative group/card hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-md transition-all cursor-pointer block">
+        <Link href={`/ride/${ride.id}?resort=${resort}`} className="p-4 border rounded-lg shadow-sm bg-white dark:bg-zinc-800 dark:border-zinc-700 flex flex-col justify-between h-full relative group/card hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-md transition-all cursor-pointer block">
             <div className="flex justify-between items-start gap-2">
                 <div>
                     <div className="flex items-center gap-2 mb-1">

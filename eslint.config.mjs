@@ -12,6 +12,14 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Generated files and one-off maintenance utilities are not application source.
+    "public/sw.js",
+    "public/workbox-*.js",
+    "scripts/**",
+    "src/scripts/**",
+    "fetch-exact-coords.js",
+    "fix-coords.js",
+    "fix-coords.ts",
   ]),
 ]);
 

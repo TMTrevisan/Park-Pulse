@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, ReferenceLine } from 'recharts';
 import { TrendingUp, TrendingDown, Clock, Activity } from 'lucide-react';
+import type { ResortId } from '@/lib/parks';
 
 interface TimelinePoint {
     timestamp: string;
@@ -12,10 +13,10 @@ interface TimelinePoint {
 interface WaitTimeTimelineProps {
     data: TimelinePoint[];
     currentWait: number;
-    isOperating: boolean;
+    resort: ResortId;
 }
 
-export function WaitTimeTimeline({ data, currentWait, isOperating }: WaitTimeTimelineProps) {
+export function WaitTimeTimeline({ data, currentWait, resort }: WaitTimeTimelineProps) {
     const stats = useMemo(() => {
         if (!data || data.length === 0) return null;
         const waits = data.map(d => d.waitTime);
@@ -34,14 +35,20 @@ export function WaitTimeTimeline({ data, currentWait, isOperating }: WaitTimeTim
     }, [data, currentWait]);
 
     const formattedData = useMemo(() => {
+        const timeZone = resort === 'WDW' ? 'America/New_York' : 'America/Los_Angeles';
+        const formatter = new Intl.DateTimeFormat('en-US', {
+            timeZone,
+            hour: 'numeric',
+            minute: '2-digit',
+        });
         return data.map(point => {
             const date = new Date(point.timestamp);
             return {
                 ...point,
-                timeLabel: date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })
+                timeLabel: formatter.format(date)
             };
         });
-    }, [data]);
+    }, [data, resort]);
 
     if (!data || data.length === 0) {
         return (

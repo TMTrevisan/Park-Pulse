@@ -1,13 +1,36 @@
 import { describe, it, expect } from 'vitest';
 import { RIDE_METADATA_REGISTRY } from '@/lib/parks';
+import { compressSnapshot as productionCompressSnapshot, expandSnapshot as productionExpandSnapshot, isCompactSnapshot as productionIsCompactSnapshot } from '@/lib/snapshot-codec';
+import type { WaitTimeSnapshot } from '@/lib/types';
 
-// A mock of the functions we need to test
-function isCompactSnapshot(item: any): boolean {
-    return typeof item?.t === 'string' && typeof item?.w === 'object';
+interface CompactSnapshot {
+    t: string;
+    w: Record<string, number>;
 }
 
-function expandSnapshot(item: any): any {
-    if (!item) return item;
+interface ExpandedSnapshot {
+    timestamp: string;
+    parks: Array<{
+        id: string;
+        name: string;
+        liveData: Array<{
+            id: string;
+            name: string;
+            entityType: string;
+            status: string;
+            queue: { STANDBY: { waitTime: number } };
+        }>;
+    }>;
+}
+
+// A mock of the functions we need to test
+function isCompactSnapshot(item: unknown): item is CompactSnapshot {
+    if (!item || typeof item !== 'object') return false;
+    const record = item as Record<string, unknown>;
+    return typeof record.t === 'string' && typeof record.w === 'object' && record.w !== null;
+}
+
+function expandSnapshot(item: unknown): ExpandedSnapshot {
     if (isCompactSnapshot(item)) {
         return {
             timestamp: item.t,
@@ -24,12 +47,12 @@ function expandSnapshot(item: any): any {
             }]
         };
     }
-    return item;
+    return item as ExpandedSnapshot;
 }
 
-function simulateDownsampling(rawResult: any[], now: number) {
+function simulateDownsampling(rawResult: unknown[], now: number): ExpandedSnapshot[] {
     const ONE_DAY = 24 * 60 * 60 * 1000;
-    const downsampled: any[] = [];
+    const downsampled: CompactSnapshot[] = [];
     let lastTime = 0;
     
     for (const item of rawResult) {
@@ -48,6 +71,35 @@ function simulateDownsampling(rawResult: any[], now: number) {
 }
 
 describe('Data Pipeline Integrity & Regressions', () => {
+    it('round-trips valid snapshots and rejects malformed compact snapshots', () => {
+        const snapshot: WaitTimeSnapshot = {
+            timestamp: '2026-05-15T12:00:00Z',
+            parks: [{
+                id: 'park-1',
+                name: 'Test Park',
+                liveData: [{
+                    id: 'ride-1',
+                    name: 'Test Ride',
+                    entityType: 'ATTRACTION',
+                    parkId: 'park-1',
+                    externalId: 'ride-1',
+                    status: 'OPERATING',
+                    lastUpdated: '2026-05-15T12:00:00Z',
+                    queue: { STANDBY: { waitTime: 25 } },
+                }],
+            }],
+        };
+
+        const compact = productionCompressSnapshot(snapshot);
+        const expanded = productionExpandSnapshot(compact);
+
+        expect(compact).toEqual({ t: snapshot.timestamp, w: { 'ride-1': 25 } });
+        expect(expanded?.timestamp).toBe(snapshot.timestamp);
+        expect(expanded?.parks[0].liveData[0].queue?.STANDBY?.waitTime).toBe(25);
+        expect(productionIsCompactSnapshot({ t: 'not-a-date', w: {} })).toBe(false);
+        expect(productionIsCompactSnapshot({ t: snapshot.timestamp, w: { 'ride-1': '25' } })).toBe(false);
+        expect(productionExpandSnapshot({ t: snapshot.timestamp, w: { 'ride-1': -1 } })).toBeNull();
+    });
     
     it('should correctly expand a compact snapshot into a full WaitTimeSnapshot', () => {
         const compact = {
@@ -63,8 +115,9 @@ describe('Data Pipeline Integrity & Regressions', () => {
         expect(expanded.timestamp).toBe("2026-05-15T12:00:00Z");
         expect(expanded.parks[0].liveData.length).toBe(2);
         
-        const spaceMountain = expanded.parks[0].liveData.find((r: any) => r.id === "ride-space-mountain");
-        expect(spaceMountain.queue.STANDBY.waitTime).toBe(45);
+        const spaceMountain = expanded.parks[0].liveData.find((r) => r.id === "ride-space-mountain");
+        expect(spaceMountain).toBeDefined();
+        expect(spaceMountain?.queue.STANDBY.waitTime).toBe(45);
     });
 
     it('should safely downsample history payloads to prevent memory limits', () => {

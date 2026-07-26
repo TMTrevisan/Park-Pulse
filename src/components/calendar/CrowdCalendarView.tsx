@@ -1,13 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, getDay, isToday } from "date-fns";
 import { getCrowdCalendarDataForMonth, CrowdMetrics } from "@/lib/crowd-utils";
 import { cn } from "@/lib/utils";
-import { Calendar, ChevronLeft, ChevronRight, Info } from "lucide-react";
+import { Calendar, ChevronLeft, ChevronRight } from "lucide-react";
 
 export function CrowdCalendarView() {
-    const [currentDate, setCurrentDate] = useState(new Date(2026, 5, 1)); // Hardcoded to June 2026 since we only have mock data for June
+    const currentDate = useMemo(() => new Date(2026, 5, 1), []); // Mock data currently covers June 2026 only
 
     const metricsMap = useMemo(() => {
         const metricsList = getCrowdCalendarDataForMonth(currentDate.getFullYear(), currentDate.getMonth() + 1);

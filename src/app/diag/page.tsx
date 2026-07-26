@@ -2,28 +2,28 @@
 
 import { useEffect, useState } from "react";
 import { getLand, getTicketClass, ResortId } from "@/lib/parks";
+import type { Ride } from "@/lib/types";
 
 export default function DiagPage() {
-    const [data, setData] = useState<any>(null);
+    const [rides, setRides] = useState<Ride[] | null>(null);
     const [resort, setResort] = useState<ResortId>("DLR");
 
     useEffect(() => {
         const fetchRides = async () => {
             try {
-                const parkId = resort === "DLR" ? "734f007b-9c24-4bb8-8c0c-87a505a5e55e" : "803a19da-360e-4375-927b-28f099684366";
-                const res = await fetch(`/api/wait-times?parkId=${parkId}`);
+                const res = await fetch(`/api/wait-times?resort=${resort}&history=false`);
+                if (!res.ok) throw new Error("Failed to fetch live data");
                 const json = await res.json();
-                setData(json);
+                setRides(json.current.parks.flatMap((park: { liveData: Ride[] }) => park.liveData));
             } catch (err) {
                 console.error(err);
+                setRides([]);
             }
         };
         fetchRides();
     }, [resort]);
 
-    if (!data) return <div>Loading...</div>;
-
-    const rides = data.rides || [];
+    if (!rides) return <div>Loading...</div>;
 
     return (
         <div className="p-8 font-mono text-xs">
@@ -38,10 +38,10 @@ export default function DiagPage() {
                 <div>Land Calc</div>
                 <div>Ticket Calc</div>
             </div>
-            {rides.map((r: any) => {
+            {rides.map((r) => {
                 const name = r.name;
-                const land = getLand(name, resort);
-                const ticket = getTicketClass(name, resort);
+                const land = getLand(name, resort, r.id);
+                const ticket = getTicketClass(name, resort, r.id);
                 return (
                     <div key={r.id} className="grid grid-cols-4 border-b py-1">
                         <div className="truncate pr-2">{name}</div>

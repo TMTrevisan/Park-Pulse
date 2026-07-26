@@ -4,20 +4,28 @@ import Link from "next/link";
 import { ChevronLeft, Clock, AlertCircle } from "lucide-react";
 import { WaitTimeTimeline } from "@/components/charts/WaitTimeTimeline";
 import { Metadata } from "next";
+import type { ResortId } from "@/lib/parks";
 
-export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+function parseResort(resort: string | undefined): ResortId {
+    return resort === "WDW" ? "WDW" : "DLR";
+}
+
+export async function generateMetadata({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ resort?: string }> }): Promise<Metadata> {
     const { id } = await params;
-    const details = await getRideDetails(id);
+    const { resort } = await searchParams;
+    const details = await getRideDetails(id, parseResort(resort));
     return {
         title: details ? `${details.name} Wait Times | Park Pulse` : 'Ride Analytics',
     }
 }
 
-export default async function RidePage({ params }: { params: Promise<{ id: string }> }) {
+export default async function RidePage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ resort?: string }> }) {
     const { id } = await params;
+    const { resort: resortParam } = await searchParams;
+    const resort = parseResort(resortParam);
     const [details, history] = await Promise.all([
-        getRideDetails(id),
-        getRideHistory(id)
+        getRideDetails(id, resort),
+        getRideHistory(id, resort)
     ]);
 
     if (!details) {
@@ -79,7 +87,7 @@ export default async function RidePage({ params }: { params: Promise<{ id: strin
                 </header>
 
                 {/* Timeline Component connecting the rich KV History */}
-                <WaitTimeTimeline data={history} currentWait={waitTime} isOperating={isOperating} />
+                <WaitTimeTimeline data={history} currentWait={waitTime} resort={resort} />
             </div>
         </main>
     );

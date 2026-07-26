@@ -2,17 +2,20 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import { ChevronLeft, Search, X, Activity } from "lucide-react";
-import { PARKS, getLand } from "@/lib/parks";
+import { ChevronLeft, Search, Activity } from "lucide-react";
+import { PARK_NAMES, RESORT_PARKS } from "@/lib/parks";
+import type { ResortId } from "@/lib/parks";
 import { ComparativeTimeline } from "@/components/analytics/ComparativeTimeline";
+import type { AnalyticsTimelinePoint } from "@/components/analytics/ComparativeTimeline";
 import { cn } from "@/lib/utils";
 
 interface AnalyticsDashboardProps {
-    data: any[];
+    data: AnalyticsTimelinePoint[];
     ridesMeta: Record<string, { name: string, parkId: string }>;
+    resort: ResortId;
 }
 
-export default function AnalyticsDashboard({ data, ridesMeta }: AnalyticsDashboardProps) {
+export default function AnalyticsDashboard({ data, ridesMeta, resort }: AnalyticsDashboardProps) {
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedRides, setSelectedRides] = useState<string[]>([]);
     const [parkFilter, setParkFilter] = useState<string>("ALL");
@@ -50,6 +53,7 @@ export default function AnalyticsDashboard({ data, ridesMeta }: AnalyticsDashboa
         "#8b5cf6", // violet-500
         "#ef4444", // red-500
     ];
+    const parkIds = RESORT_PARKS[resort];
 
     return (
         <div className="max-w-7xl mx-auto p-4 md:p-8 flex flex-col h-[100dvh]">
@@ -79,18 +83,15 @@ export default function AnalyticsDashboard({ data, ridesMeta }: AnalyticsDashboa
                             >
                                 All Parks
                             </button>
-                            <button 
-                                onClick={() => setParkFilter(PARKS.DISNEYLAND_PARK)}
-                                className={cn("flex-1 text-xs font-bold py-1.5 rounded-md transition-all", parkFilter === PARKS.DISNEYLAND_PARK ? "bg-white shadow-sm dark:bg-zinc-700 text-zinc-900 dark:text-white" : "text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300")}
-                            >
-                                Disneyland
-                            </button>
-                            <button 
-                                onClick={() => setParkFilter(PARKS.DISNEY_CALIFORNIA_ADVENTURE)}
-                                className={cn("flex-1 text-xs font-bold py-1.5 rounded-md transition-all", parkFilter === PARKS.DISNEY_CALIFORNIA_ADVENTURE ? "bg-white shadow-sm dark:bg-zinc-700 text-zinc-900 dark:text-white" : "text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300")}
-                            >
-                                DCA
-                            </button>
+                            {parkIds.map(parkId => (
+                                <button
+                                    key={parkId}
+                                    onClick={() => setParkFilter(parkId)}
+                                    className={cn("flex-1 text-xs font-bold py-1.5 rounded-md transition-all", parkFilter === parkId ? "bg-white shadow-sm dark:bg-zinc-700 text-zinc-900 dark:text-white" : "text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300")}
+                                >
+                                    {PARK_NAMES[parkId]}
+                                </button>
+                            ))}
                         </div>
                         <div className="relative">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
@@ -161,7 +162,7 @@ export default function AnalyticsDashboard({ data, ridesMeta }: AnalyticsDashboa
 
                     <div className="flex-1 min-h-[300px]">
                         {selectedRides.length > 0 ? (
-                            <ComparativeTimeline data={data} ridesMeta={ridesMeta} selectedRides={selectedRides} colors={colors} />
+                            <ComparativeTimeline data={data} ridesMeta={ridesMeta} selectedRides={selectedRides} colors={colors} resort={resort} />
                         ) : (
                             <div className="w-full h-full flex flex-col items-center justify-center border-2 border-dashed border-zinc-200 dark:border-zinc-800 rounded-xl bg-zinc-50/50 dark:bg-zinc-900/50 p-6 text-center">
                                 <Activity className="w-12 h-12 text-zinc-300 dark:text-zinc-700 mb-4" />

@@ -11,7 +11,6 @@ import {
     Legend
 } from "recharts";
 import { WaitTimeSnapshot, Ride, Forecast } from "@/lib/types";
-import { format } from "date-fns";
 import { ResortId } from "@/lib/parks";
 
 interface WaitTimeChartProps {
@@ -30,9 +29,11 @@ export function WaitTimeChart({ rideId, ride, history, resort = 'DLR' }: WaitTim
     const now = new Date();
     const tz = resort === 'WDW' ? 'America/New_York' : 'America/Los_Angeles';
     const currentOperatingDay = getOperatingDay(now, tz);
+    const axisTimeFormatter = new Intl.DateTimeFormat('en-US', { timeZone: tz, hour: 'numeric' });
+    const tooltipTimeFormatter = new Intl.DateTimeFormat('en-US', { timeZone: tz, hour: 'numeric', minute: '2-digit' });
 
     // 1. Process History Data
-    let processedHistory = history.map((snapshot) => {
+    const processedHistory = history.map((snapshot) => {
         let waitTime = null;
         for (const park of snapshot.parks) {
             const found = park.liveData.find((r) => r.id === rideId);
@@ -75,14 +76,14 @@ export function WaitTimeChart({ rideId, ride, history, resort = 'DLR' }: WaitTim
                         dataKey="time"
                         type="number"
                         domain={['dataMin', 'dataMax']}
-                        tickFormatter={(time) => format(new Date(time), "h a")}
+                        tickFormatter={(time) => axisTimeFormatter.format(new Date(time))}
                         stroke="#888"
                         fontSize={12}
                         minTickGap={30}
                     />
                     <YAxis stroke="#888" fontSize={12} label={{ value: 'Min', angle: -90, position: 'insideLeft' }} />
                     <Tooltip
-                        labelFormatter={(time) => format(new Date(time), "h:mm a")}
+                        labelFormatter={(time) => tooltipTimeFormatter.format(new Date(time))}
                         contentStyle={{ backgroundColor: "#1f2937", borderColor: "#374151", borderRadius: "8px", color: "#f3f4f6" }}
                         itemStyle={{ color: "#60a5fa" }}
                     />

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getWaitTimes, getHistory } from '@/lib/data-service';
+import { getWaitTimes } from '@/lib/data-service';
 import type { ResortId } from '@/lib/parks';
 import { logger } from '@/lib/logger';
 
@@ -9,12 +9,17 @@ export async function GET(request: Request) {
     try {
         const { searchParams } = new URL(request.url);
         const includeHistory = searchParams.get('history') !== 'false';
-        const resort = (searchParams.get('resort') || 'DLR') as ResortId;
+        const resortParam = searchParams.get('resort') || 'DLR';
+        if (resortParam !== 'DLR' && resortParam !== 'WDW') {
+            return NextResponse.json({ error: 'Invalid resort. Expected DLR or WDW.' }, { status: 400 });
+        }
+        const resort: ResortId = resortParam;
         
         const data = await getWaitTimes(includeHistory, resort);
         return NextResponse.json(data);
-    } catch (error: any) {
+    } catch (error) {
         logger.error("api:wait-times", "Failed to fetch dashboard wait times", error);
-        return NextResponse.json({ error: 'Failed to fetch wait times', details: error.message }, { status: 500 });
+        const message = error instanceof Error ? error.message : 'Unknown error';
+        return NextResponse.json({ error: 'Failed to fetch wait times', details: message }, { status: 500 });
     }
 }

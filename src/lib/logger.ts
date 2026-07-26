@@ -15,11 +15,11 @@ export interface LogEntry {
     level: LogLevel;
     context: string;
     message: string;
-    details?: any;
+    details?: unknown;
 }
 
 export const logger = {
-    async log(level: LogLevel, context: string, message: string, details?: any) {
+    async log(level: LogLevel, context: string, message: string, details?: unknown) {
         // Always output to standard console for Vercel logs
         if (level === 'error') console.error(`[${context}] ${message}`, details || '');
         else if (level === 'warn') console.warn(`[${context}] ${message}`, details || '');
@@ -43,7 +43,7 @@ export const logger = {
             console.error('Failed to write telemetry to Redis log', e);
         }
     },
-    info: (context: string, message: string, details?: any) => logger.log('info', context, message, details),
-    warn: (context: string, message: string, details?: any) => logger.log('warn', context, message, details),
-    error: (context: string, message: string, details?: any) => logger.log('error', context, message, details),
+    info: (context: string, message: string, details?: unknown) => logger.log('info', context, message, details),
+    warn: (context: string, message: string, details?: unknown) => logger.log('warn', context, message, details),
+    error: (context: string, message: string, details?: unknown) => logger.log('error', context, message, details),
 };

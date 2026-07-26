@@ -61,6 +61,7 @@ export function RideGrid({
                                     onToggleAlert={onToggleAlert}
                                     land={land}
                                     ticket={ticket}
+                                    resort={resort}
                                 />
                             </div>
 
@@ -74,7 +75,7 @@ export function RideGrid({
                                         </div>
                                     </div>
                                     <WaitTimeChart rideId={ride.id} ride={ride} history={history} resort={resort} />
-                                    <RideHeatmap rideId={ride.id} history={history} />
+                                    <RideHeatmap rideId={ride.id} history={history} resort={resort} />
                                 </div>
                             )}
                         </div>

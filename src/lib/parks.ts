@@ -401,60 +401,105 @@ function lookupByFuzzyMap(term: string, map: Record<string, string>): string | n
     return match ? map[match] : null;
 }
 
-export function getLand(rideName: string, resort: ResortId, rideId?: string): string {
-    if (!rideName) return '—';
+export type MetadataResolutionSource = 'id_override' | 'resort_name' | 'base_name' | 'keyword' | 'default';
+export type MetadataConfidence = 'high' | 'medium' | 'low';
 
-    const resortKey = (resort || 'DLR').toUpperCase() as ResortId;
-    
-    if (rideId) {
-        const byId = RESORT_RIDE_ID_OVERRIDES[resortKey]?.[rideId];
-        if (byId?.land) return byId.land;
-    }
-
-    const term = normalizeRideName(rideName);
-
-    // 1. Check Resort Overrides (Specific names)
-    const overrides = (RESORT_LAND_OVERRIDES[resortKey] || {}) as Record<string, string>;
-    const overrideMatch = lookupByFuzzyMap(term, overrides);
-    if (overrideMatch) return overrideMatch;
-
-    // 2. Check Base Land Mapping (Registry of attraction -> land)
-    const baseMatch = lookupByFuzzyMap(term, BASE_LAND_MAPPING);
-    if (baseMatch) return baseMatch;
-
-    // 3. Keyword fallback by resort/park naming conventions
-    const keywordMatch = LAND_KEYWORD_FALLBACKS[resortKey].find(({ keyword }) => term.includes(keyword));
-    if (keywordMatch) return keywordMatch.land;
-
-    return resortKey === 'DLR' ? 'Disneyland Resort Area' : 'Walt Disney World Area';
+export interface RideMetadataResolution {
+    land: string;
+    ticketClass: string;
+    source: MetadataResolutionSource;
+    confidence: MetadataConfidence;
+    landSource: MetadataResolutionSource;
+    ticketSource: MetadataResolutionSource;
 }
 
+type ResolvedValue = { value: string; source: MetadataResolutionSource };
 
-export function getTicketClass(rideName: string, resort: ResortId, rideId?: string): string {
-    if (!rideName) return 'C';
+const SOURCE_CONFIDENCE: Record<MetadataResolutionSource, MetadataConfidence> = {
+    id_override: 'high',
+    resort_name: 'high',
+    base_name: 'medium',
+    keyword: 'medium',
+    default: 'low',
+};
 
-    const resortKey = (resort || 'DLR').toUpperCase() as ResortId;
-    
-    if (rideId) {
-        const byId = RESORT_RIDE_ID_OVERRIDES[resortKey]?.[rideId];
-        if (byId?.ticket) return byId.ticket;
-    }
+const SOURCE_PRIORITY: Record<MetadataResolutionSource, number> = {
+    id_override: 0,
+    resort_name: 1,
+    base_name: 2,
+    keyword: 3,
+    default: 4,
+};
 
-    const term = normalizeRideName(rideName);
+function resolveLandByName(term: string, resort: ResortId): ResolvedValue {
+    const overrideMatch = lookupByFuzzyMap(term, RESORT_LAND_OVERRIDES[resort]);
+    if (overrideMatch) return { value: overrideMatch, source: 'resort_name' };
 
-    const resortOverride = lookupByFuzzyMap(term, RESORT_TICKET_OVERRIDES[resortKey]);
-    if (resortOverride) return resortOverride;
+    const baseMatch = lookupByFuzzyMap(term, BASE_LAND_MAPPING);
+    if (baseMatch) return { value: baseMatch, source: 'base_name' };
+
+    const keywordMatch = LAND_KEYWORD_FALLBACKS[resort].find(({ keyword }) => term.includes(keyword));
+    if (keywordMatch) return { value: keywordMatch.land, source: 'keyword' };
+
+    return {
+        value: resort === 'DLR' ? 'Disneyland Resort Area' : 'Walt Disney World Area',
+        source: 'default',
+    };
+}
+
+function resolveTicketByName(term: string, resort: ResortId): ResolvedValue {
+    const resortMatch = lookupByFuzzyMap(term, RESORT_TICKET_OVERRIDES[resort]);
+    if (resortMatch) return { value: resortMatch, source: 'resort_name' };
 
     const baseMatch = lookupByFuzzyMap(term, BASE_TICKET_MAPPING);
-    if (baseMatch) return baseMatch;
+    if (baseMatch) return { value: baseMatch, source: 'base_name' };
 
-    // Fallback heuristic keeps every attraction classified.
-    if (term.includes('railroad') || term.includes('riverboat') || term.includes('monorail') || term.includes('main street vehicle')) return 'A';
-    if (term.includes('carousel') || term.includes('tea party') || term.includes('spinner') || term.includes('saucers')) return 'B';
-    if (term.includes('cruise') || term.includes('adventure') || term.includes('tour') || term.includes('safari')) return 'C';
-    if (term.includes('mountain') || term.includes('coaster') || term.includes('guardians') || term.includes('resistance')) return 'E';
+    if (term.includes('railroad') || term.includes('riverboat') || term.includes('monorail') || term.includes('main street vehicle')) return { value: 'A', source: 'keyword' };
+    if (term.includes('carousel') || term.includes('tea party') || term.includes('spinner') || term.includes('saucers')) return { value: 'B', source: 'keyword' };
+    if (term.includes('cruise') || term.includes('adventure') || term.includes('tour') || term.includes('safari')) return { value: 'C', source: 'keyword' };
+    if (term.includes('mountain') || term.includes('coaster') || term.includes('guardians') || term.includes('resistance')) return { value: 'E', source: 'keyword' };
 
-    return 'C';
+    return { value: 'C', source: 'default' };
+}
+
+/** Resolves UI metadata once and exposes how authoritative the result is. */
+export function resolveRideMetadata({ rideId, name, resort }: { rideId?: string; name?: string; resort: ResortId }): RideMetadataResolution {
+    const resortKey = (resort || 'DLR').toUpperCase() as ResortId;
+    const byId = rideId ? RESORT_RIDE_ID_OVERRIDES[resortKey]?.[rideId] : undefined;
+    if (byId?.land && byId.ticket) {
+        return {
+            land: byId.land,
+            ticketClass: byId.ticket,
+            source: 'id_override',
+            confidence: 'high',
+            landSource: 'id_override',
+            ticketSource: 'id_override',
+        };
+    }
+
+    const term = normalizeRideName(name || '');
+    const land = resolveLandByName(term, resortKey);
+    const ticket = resolveTicketByName(term, resortKey);
+    const source = SOURCE_PRIORITY[land.source] >= SOURCE_PRIORITY[ticket.source] ? land.source : ticket.source;
+
+    return {
+        land: land.value,
+        ticketClass: ticket.value,
+        source,
+        confidence: SOURCE_CONFIDENCE[source],
+        landSource: land.source,
+        ticketSource: ticket.source,
+    };
+}
+
+/** Compatibility wrapper for existing land consumers. */
+export function getLand(rideName: string, resort: ResortId, rideId?: string): string {
+    return resolveRideMetadata({ rideId, name: rideName, resort }).land;
+}
+
+/** Compatibility wrapper for existing ticket consumers. */
+export function getTicketClass(rideName: string, resort: ResortId, rideId?: string): string {
+    return resolveRideMetadata({ rideId, name: rideName, resort }).ticketClass;
 }
 
 export function getDefaultParkForResort(resort: ResortId): string {

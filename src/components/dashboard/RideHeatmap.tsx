@@ -1,8 +1,7 @@
 "use client";
 
-import { useMemo, useState, useEffect } from 'react';
+import { Fragment, useMemo, useState, useSyncExternalStore } from 'react';
 import { WaitTimeSnapshot } from '@/lib/types';
-import { format, eachDayOfInterval, subDays } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { ResortId } from '@/lib/parks';
 
@@ -12,38 +11,51 @@ interface RideHeatmapProps {
     resort?: ResortId;
 }
 
+function getDateKey(date: Date, timeZone: string) {
+    const parts = new Intl.DateTimeFormat('en-US', {
+        timeZone,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+    }).formatToParts(date);
+    const values = Object.fromEntries(parts.map(({ type, value }) => [type, value]));
+    return `${values.year}-${values.month}-${values.day}`;
+}
+
+function formatDayLabel(dateKey: string, options: Intl.DateTimeFormatOptions) {
+    return new Intl.DateTimeFormat('en-US', { ...options, timeZone: 'UTC' })
+        .format(new Date(`${dateKey}T12:00:00Z`));
+}
+
 export function RideHeatmap({ rideId, history, resort = 'DLR' }: RideHeatmapProps) {
-    const [mounted, setMounted] = useState(false);
-    useEffect(() => setMounted(true), []);
+    const mounted = useSyncExternalStore(() => () => {}, () => true, () => false);
+    const [renderedAt] = useState(() => Date.now());
 
     const tz = resort === 'WDW' ? 'America/New_York' : 'America/Los_Angeles';
 
     const days = useMemo(() => {
-        const end = new Date();
-        const start = subDays(end, 6);
-        return eachDayOfInterval({ start, end });
-    }, []);
+        return Array.from({ length: 7 }, (_, index) =>
+            getDateKey(new Date(renderedAt - (6 - index) * 24 * 60 * 60 * 1000), tz)
+        );
+    }, [renderedAt, tz]);
 
-    const hours = Array.from({ length: 15 }, (_, i) => i + 8); // 8 AM to 10 PM
+    const hours = useMemo(() => Array.from({ length: 15 }, (_, i) => i + 8), []); // 8 AM to 10 PM
 
     const data = useMemo(() => {
         const grid: Record<string, Record<number, number[]>> = {};
 
-        const dateFormatter = new Intl.DateTimeFormat('en-CA', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit' });
         const hourFormatter = new Intl.DateTimeFormat('en-US', { timeZone: tz, hour: 'numeric', hourCycle: 'h23' });
 
-        days.forEach(day => {
-            // Using local format for initialization since `days` is generated based on current time
-            const dateStr = format(day, 'yyyy-MM-dd');
-            grid[dateStr] = {};
+        days.forEach(dateKey => {
+            grid[dateKey] = {};
             hours.forEach(hour => {
-                grid[dateStr][hour] = [];
+                grid[dateKey][hour] = [];
             });
         });
 
         history.forEach(snapshot => {
             const date = new Date(snapshot.timestamp);
-            const dateStr = dateFormatter.format(date);
+            const dateStr = getDateKey(date, tz);
             const hour = parseInt(hourFormatter.format(date), 10);
 
             if (grid[dateStr] && grid[dateStr][hour] !== undefined) {
@@ -71,7 +83,7 @@ export function RideHeatmap({ rideId, history, resort = 'DLR' }: RideHeatmapProp
         });
 
         return processed;
-    }, [rideId, history, days, hours]);
+    }, [rideId, history, days, hours, tz]);
 
     const getColor = (wait: number | null) => {
         if (wait === null) return "bg-gray-100 dark:bg-zinc-800";
@@ -96,25 +108,24 @@ export function RideHeatmap({ rideId, history, resort = 'DLR' }: RideHeatmapProp
                     <div className="grid grid-cols-[80px_repeat(7,1fr)] gap-2">
                         {/* Header */}
                         <div></div>
-                        {days.map(day => (
-                            <div key={day.toISOString()} className="text-[10px] font-bold text-gray-400 uppercase text-center">
-                                {format(day, 'EEE')}
-                                <div className="text-gray-600 dark:text-gray-300">{format(day, 'MMM d')}</div>
+                        {days.map(dateKey => (
+                            <div key={dateKey} className="text-[10px] font-bold text-gray-400 uppercase text-center">
+                                {formatDayLabel(dateKey, { weekday: 'short' })}
+                                <div className="text-gray-600 dark:text-gray-300">{formatDayLabel(dateKey, { month: 'short', day: 'numeric' })}</div>
                             </div>
                         ))}
 
                         {/* Rows */}
                         {hours.map(hour => (
-                            <>
-                                <div key={`hour-${hour}`} className="text-[10px] font-medium text-gray-500 flex items-center justify-end pr-2">
-                                    {format(new Date().setHours(hour), 'ha')}
+                            <Fragment key={hour}>
+                                <div className="text-[10px] font-medium text-gray-500 flex items-center justify-end pr-2">
+                                    {`${hour % 12 || 12}${hour < 12 ? 'am' : 'pm'}`}
                                 </div>
-                                {days.map(day => {
-                                    const dateStr = format(day, 'yyyy-MM-dd');
-                                    const wait = data[dateStr]?.[hour];
+                                {days.map(dateKey => {
+                                    const wait = data[dateKey]?.[hour];
                                     return (
                                         <div
-                                            key={`${dateStr}-${hour}`}
+                                            key={`${dateKey}-${hour}`}
                                             className={cn(
                                                 "h-8 rounded-md flex items-center justify-center text-[10px] font-medium transition-all group relative",
                                                 getColor(wait)
@@ -131,7 +142,7 @@ export function RideHeatmap({ rideId, history, resort = 'DLR' }: RideHeatmapProp
                                         </div>
                                     );
                                 })}
-                            </>
+                            </Fragment>
                         ))}
                     </div>
                 </div>

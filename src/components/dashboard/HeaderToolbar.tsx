@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { ParkLiveData } from "@/lib/types";
 import { Search, LayoutGrid, List as ListIcon, RefreshCw, Map as MapIcon, Filter, TrendingUp, Route } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import type { ResortId } from "@/lib/parks";
 
 interface HeaderToolbarProps {
     selectedParkId: string;
@@ -26,6 +26,7 @@ interface HeaderToolbarProps {
     waitTimeFilter: string;
     setWaitTimeFilter: (v: string) => void;
     uniqueLands: string[];
+    resort: ResortId;
 }
 
 export function HeaderToolbar({
@@ -45,7 +46,8 @@ export function HeaderToolbar({
     setLandFilter,
     waitTimeFilter,
     setWaitTimeFilter,
-    uniqueLands
+    uniqueLands,
+    resort,
 }: Omit<HeaderToolbarProps, 'selectedParkId' | 'setSelectedParkId'>) {
     const [showFilters, setShowFilters] = useState(false);
 
@@ -159,7 +161,7 @@ export function HeaderToolbar({
                     )}
 
                     <Link
-                        href="/analytics"
+                        href={`/analytics?resort=${resort}`}
                         className="px-3 py-2 text-sm font-medium rounded-lg border bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200 text-purple-700 hover:from-purple-100 hover:to-pink-100 dark:from-purple-900/10 dark:to-pink-900/10 dark:border-purple-800/50 dark:text-purple-300 dark:hover:from-purple-900/20 dark:hover:to-pink-900/20 transition-all h-[42px] flex items-center gap-1.5 shadow-sm hover:shadow"
                     >
                         <TrendingUp className="w-4 h-4" />
