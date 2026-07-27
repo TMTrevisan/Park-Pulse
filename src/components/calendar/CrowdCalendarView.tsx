@@ -27,9 +27,9 @@ export function CrowdCalendarView() {
     const paddingDays = Array.from({ length: startDayOfWeek }, (_, i) => i);
 
     return (
-        <div className="w-full max-w-7xl mx-auto p-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="w-full max-w-7xl mx-auto px-3 py-4 sm:p-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
             {/* Header */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 bg-white/50 dark:bg-zinc-900/50 p-6 rounded-3xl border border-white/20 dark:border-white/5 backdrop-blur-xl">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-5 sm:mb-8 gap-4 bg-white/50 dark:bg-zinc-900/50 p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-white/20 dark:border-white/5 backdrop-blur-xl">
                 <div className="flex items-center gap-3">
                     <div className="p-3 bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-xl">
                         <Calendar className="w-6 h-6" />
@@ -44,7 +44,7 @@ export function CrowdCalendarView() {
                     </div>
                 </div>
 
-                <div className="flex gap-2 p-1 bg-gray-100 dark:bg-zinc-800 rounded-lg">
+                <div className="flex w-full sm:w-auto justify-between sm:justify-start gap-2 p-1 bg-gray-100 dark:bg-zinc-800 rounded-lg">
                     <button className="p-2 rounded-md hover:bg-white dark:hover:bg-zinc-700 transition-colors text-gray-400 cursor-not-allowed">
                         <ChevronLeft className="w-5 h-5" />
                     </button>
@@ -55,8 +55,69 @@ export function CrowdCalendarView() {
                 </div>
             </div>
 
-            {/* Calendar Grid */}
-            <div className="bg-white dark:bg-[#121418] rounded-[2rem] border border-gray-200 dark:border-white/5 shadow-xl overflow-hidden">
+            {/* Compact mobile agenda. The month grid below is intentionally desktop-only: seven detailed cells
+                cannot remain legible on a phone without hiding the information that makes this forecast useful. */}
+            <div className="md:hidden space-y-3">
+                {days.map(day => {
+                    const dateStr = format(day, 'yyyy-MM-dd');
+                    const metrics = metricsMap[dateStr];
+                    const today = isToday(day);
+
+                    return (
+                        <article
+                            key={dateStr}
+                            className={cn(
+                                "rounded-2xl border border-gray-200 dark:border-white/5 bg-white dark:bg-[#121418] p-4 shadow-sm",
+                                today && "ring-2 ring-blue-500/50"
+                            )}
+                        >
+                            <div className="flex items-start justify-between gap-3">
+                                <div className="flex items-center gap-3 min-w-0">
+                                    <span className={cn(
+                                        "flex h-11 w-11 shrink-0 flex-col items-center justify-center rounded-xl text-sm font-bold",
+                                        today ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-800 dark:bg-zinc-800 dark:text-gray-100"
+                                    )}>
+                                        <span>{format(day, 'd')}</span>
+                                        <span className="text-[9px] font-semibold uppercase opacity-75">{format(day, 'EEE')}</span>
+                                    </span>
+                                    <div>
+                                        <p className="font-semibold text-gray-900 dark:text-white">{format(day, 'EEEE, MMMM d')}</p>
+                                        <p className="text-xs text-gray-500 dark:text-gray-400">Ticket Tier {metrics?.tier ?? '—'}</p>
+                                    </div>
+                                </div>
+                                {metrics && (
+                                    <span className={cn("shrink-0 text-xs font-bold px-2 py-1 rounded-full border", metrics.colorClass)}>
+                                        {metrics.severity}
+                                    </span>
+                                )}
+                            </div>
+
+                            {metrics && (metrics.blockouts.length > 0 || metrics.events.length > 0) && (
+                                <div className="mt-3 border-t border-gray-100 pt-3 dark:border-white/5">
+                                    {metrics.blockouts.length > 0 && (
+                                        <p className="text-xs text-gray-600 dark:text-gray-400">
+                                            <span className="font-semibold text-rose-500 dark:text-rose-400">Blocked: </span>
+                                            {metrics.blockouts.join(', ')}
+                                        </p>
+                                    )}
+                                    {metrics.events.length > 0 && (
+                                        <div className="mt-2 flex flex-wrap gap-1.5">
+                                            {metrics.events.map(event => (
+                                                <span key={event} className="text-[11px] bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 px-2 py-0.5 rounded-full border border-indigo-200 dark:border-indigo-500/20">
+                                                    {event}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </article>
+                    );
+                })}
+            </div>
+
+            {/* Desktop calendar grid */}
+            <div className="hidden md:block bg-white dark:bg-[#121418] rounded-[2rem] border border-gray-200 dark:border-white/5 shadow-xl overflow-hidden">
                 {/* Days of week header */}
                 <div className="grid grid-cols-7 border-b border-gray-200 dark:border-white/5 bg-gray-50 dark:bg-zinc-900/50">
                     {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
