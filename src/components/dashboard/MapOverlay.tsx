@@ -5,13 +5,18 @@ import Map, { Marker, Popup, NavigationControl, FullscreenControl, GeolocateCont
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { useItinerary } from '@/hooks/useItinerary';
 import { Ride } from '@/lib/types';
-import { Layers, Bug, Route as RouteIcon } from 'lucide-react';
+import { Layers, Route as RouteIcon } from 'lucide-react';
 import { clsx } from 'clsx';
 import RIDE_COORDS_DATA from '@/lib/ride-coords.json';
 import { ResortId, LAND_CENTROIDS, PARKS } from '@/lib/parks';
 
-const rawCoords = (RIDE_COORDS_DATA as any).default || RIDE_COORDS_DATA;
-const RIDE_COORDS: Record<string, any> = rawCoords;
+type RideCoordinate = { lat: number; lng: number };
+type RideCoordinateRegistry = Record<string, RideCoordinate>;
+type RouteGeoJson = GeoJSON.FeatureCollection<GeoJSON.LineString>;
+type DirectionsResponse = { routes?: Array<{ geometry: GeoJSON.LineString }> };
+
+const rideCoordsImport = RIDE_COORDS_DATA as RideCoordinateRegistry & { default?: RideCoordinateRegistry };
+const RIDE_COORDS: RideCoordinateRegistry = rideCoordsImport.default ?? rideCoordsImport;
 
 interface MapOverlayProps {
   rides: Ride[];
@@ -47,7 +52,7 @@ export default function MapOverlay({ rides, selectedParkId, resort, activeLand }
 
   const { itinerary } = useItinerary(resort);
 
-  const [routeGeoJSON, setRouteGeoJSON] = useState<any>(null);
+  const [routeGeoJSON, setRouteGeoJSON] = useState<RouteGeoJson | null>(null);
 
   useEffect(() => {
     if (itinerary.length < 2) {
@@ -56,11 +61,10 @@ export default function MapOverlay({ rides, selectedParkId, resort, activeLand }
       return;
     }
     
-    const coordinates = itinerary.map(item => {
+    const coordinates: [number, number][] = itinerary.map(item => {
       const coords = RIDE_COORDS[item.rideId];
-      if (!coords) return null;
-      return [coords.lng, coords.lat];
-    }).filter(Boolean);
+      return coords ? [coords.lng, coords.lat] as [number, number] : null;
+    }).filter((coordinates): coordinates is [number, number] => coordinates !== null);
     
     if (coordinates.length < 2) {
       setRouteGeoJSON(null);
@@ -68,11 +72,12 @@ export default function MapOverlay({ rides, selectedParkId, resort, activeLand }
     }
     
     // Fallback straight lines
-    const fallbackGeoJSON = {
+    const fallbackGeoJSON: RouteGeoJson = {
       type: 'FeatureCollection',
       features: [
         {
           type: 'Feature',
+          properties: {},
           geometry: {
             type: 'LineString',
             coordinates
@@ -83,16 +88,17 @@ export default function MapOverlay({ rides, selectedParkId, resort, activeLand }
     setRouteGeoJSON(fallbackGeoJSON);
 
     if (MAPBOX_TOKEN && coordinates.length <= 25) {
-      const coordsString = coordinates.map((c: any) => `${c[0]},${c[1]}`).join(';');
+      const coordsString = coordinates.map(([longitude, latitude]) => `${longitude},${latitude}`).join(';');
       fetch(`https://api.mapbox.com/directions/v5/mapbox/walking/${coordsString}?geometries=geojson&access_token=${MAPBOX_TOKEN}`)
         .then(res => res.json())
-        .then(data => {
+        .then((data: DirectionsResponse) => {
           if (data.routes && data.routes.length > 0) {
             setRouteGeoJSON({
               type: 'FeatureCollection',
               features: [
                 {
                   type: 'Feature',
+                  properties: {},
                   geometry: data.routes[0].geometry
                 }
               ]
@@ -143,7 +149,6 @@ export default function MapOverlay({ rides, selectedParkId, resort, activeLand }
   const [hoveredRide, setHoveredRide] = useState<Ride | null>(null);
   const [showRoute, setShowRoute] = useState(true);
   const [showLegend, setShowLegend] = useState(true);
-  const [debugMode, setDebugMode] = useState(false);
 
   const mappedRides = useMemo(() => {
     return rides.filter(r => {
@@ -252,7 +257,7 @@ export default function MapOverlay({ rides, selectedParkId, resort, activeLand }
         )}
 
         {routeGeoJSON && showRoute && (
-          <Source id="itinerary-route" type="geojson" data={routeGeoJSON as any}>
+          <Source id="itinerary-route" type="geojson" data={routeGeoJSON}>
             <Layer
               id="route-line"
               type="line"

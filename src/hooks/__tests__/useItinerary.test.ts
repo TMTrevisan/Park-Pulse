@@ -1,8 +1,6 @@
 import { renderHook, act } from '@testing-library/react';
 import { useItinerary } from '../useItinerary';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import * as utils from '@/lib/utils';
-import * as hooksData from '@/lib/data-service';
 
 // Mock localStorage
 const localStorageMock = (() => {

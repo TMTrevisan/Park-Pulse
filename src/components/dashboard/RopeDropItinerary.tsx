@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { Ride } from "@/lib/types";
 import { useItinerary, ItineraryItem } from "@/hooks/useItinerary";
 import { ResortId, getLand } from "@/lib/parks";
-import { Search, Plus, GripVertical, Check, Trash2, Clock, Route as RouteIcon, MapPin, PersonStanding, Play, Trash, Save, FolderOpen } from "lucide-react";
+import { Search, Plus, GripVertical, Check, Trash2, Clock, Route as RouteIcon, MapPin, PersonStanding, Trash, Save, FolderOpen } from "lucide-react";
 import { cn, getWaitTimeDelta, calculateDistance, estimateWalkTimeMinutes } from "@/lib/utils";
 import rideCoords from "@/lib/ride-coords.json";
 
@@ -18,7 +18,6 @@ import {
     DragEndEvent,
 } from "@dnd-kit/core";
 import {
-    arrayMove,
     SortableContext,
     sortableKeyboardCoordinates,
     verticalListSortingStrategy,
@@ -32,6 +31,19 @@ const getWaitColorText = (minutes: number) => {
     if (minutes <= 60) return 'text-orange-500 dark:text-orange-400';
     return 'text-rose-600 dark:text-rose-500';
 };
+
+type RideCoordinate = { lat: number; lng: number };
+type AugmentedItineraryItem = ItineraryItem & {
+    walkTimeMins: number;
+    arrivalTimeMs?: number;
+    expectedWaitMins?: number;
+    departureTimeMs?: number;
+    isForecast?: boolean;
+    liveWaitMins?: number;
+    status?: string;
+};
+
+const RIDE_COORDS = rideCoords as Record<string, RideCoordinate>;
 
 // --- Draggable Itinerary Item Component ---
 function SortableItineraryRow({ 
@@ -271,7 +283,7 @@ export function RopeDropItinerary({ rides, resort }: { rides: Ride[], resort: Re
             presetNames = ["Avatar Flight of Passage", "Expedition Everest - Legend of the Forbidden Mountain", "Kilimanjaro Safaris"];
         }
         
-        const newItems: any[] = [];
+        const newItems: ItineraryItem[] = [];
         presetNames.forEach(name => {
             const ride = rides.find(r => r.name === name);
             if (ride) {
@@ -366,23 +378,27 @@ export function RopeDropItinerary({ rides, resort }: { rides: Ride[], resort: Re
 
     // Timeline Math Engine
     const firstIncompleteIndex = itinerary.findIndex(i => !i.completed);
-    let runningTimeMs = simulationStartTime || currentTime;
-    let previousRideId: string | null = null;
-    
-    const augmentedItems = itinerary.map((item, index) => {
+    const timeline = itinerary.reduce<{ items: AugmentedItineraryItem[]; runningTimeMs: number; previousRideId: string | null }>((state, item, index) => {
+        const runningTimeMs = !simulationStartTime && index === firstIncompleteIndex
+            ? currentTime
+            : state.runningTimeMs;
+        const previousRideId = state.previousRideId;
         if (item.rideId === 'custom-break') {
             const duration = item.customDuration || 0;
             const arrivalTimeMs = runningTimeMs;
             const departureTimeMs = arrivalTimeMs + (duration * 60000);
-            runningTimeMs = departureTimeMs;
             return {
-                ...item,
+                items: [...state.items, {
+                    ...item,
                 walkTimeMins: 0,
                 arrivalTimeMs,
                 expectedWaitMins: duration,
                 departureTimeMs,
                 isForecast: false,
                 liveWaitMins: 0
+                }],
+                runningTimeMs: departureTimeMs,
+                previousRideId,
             };
         }
 
@@ -390,19 +406,17 @@ export function RopeDropItinerary({ rides, resort }: { rides: Ride[], resort: Re
         
         // If live mode and completed, don't project future times. Just show it happened.
         if (!simulationStartTime && item.completed) {
-            previousRideId = item.rideId;
-            return { ...item, walkTimeMins: 0, arrivalTimeMs: item.completedAt, expectedWaitMins: undefined, departureTimeMs: item.completedAt };
-        }
-
-        // Reset running time to NOW if we hit the first incomplete item in Live Mode
-        if (!simulationStartTime && index === firstIncompleteIndex) {
-            runningTimeMs = currentTime;
+            return {
+                items: [...state.items, { ...item, walkTimeMins: 0, arrivalTimeMs: item.completedAt, expectedWaitMins: undefined, departureTimeMs: item.completedAt }],
+                runningTimeMs,
+                previousRideId: item.rideId,
+            };
         }
 
         let walkTimeMins = 0;
         if (previousRideId && ride) {
-            const prevCoords = (rideCoords as any)[previousRideId];
-            const currCoords = (rideCoords as any)[ride.id];
+            const prevCoords = RIDE_COORDS[previousRideId];
+            const currCoords = RIDE_COORDS[ride.id];
             if (prevCoords && currCoords) {
                 const dist = calculateDistance(prevCoords.lat, prevCoords.lng, currCoords.lat, currCoords.lng);
                 walkTimeMins = estimateWalkTimeMinutes(dist);
@@ -414,14 +428,16 @@ export function RopeDropItinerary({ rides, resort }: { rides: Ride[], resort: Re
         // Wait time calculation
         let expectedWaitMins = 15;
         let isForecast = false;
-        let liveWaitMins = ride?.queue?.STANDBY?.waitTime ?? 0;
+        const liveWaitMins = ride?.queue?.STANDBY?.waitTime ?? 0;
 
         if (ride) {
             if (!simulationStartTime && index === firstIncompleteIndex) {
                 expectedWaitMins = liveWaitMins;
             } else if (ride.forecast) {
-                const arrivalHour = new Date(arrivalTimeMs).getHours();
-                const forecastMatch = ride.forecast.find(f => new Date(f.time).getHours() === arrivalHour);
+                const timeZone = resort === 'WDW' ? 'America/New_York' : 'America/Los_Angeles';
+                const hourFormatter = new Intl.DateTimeFormat('en-US', { timeZone, hour: 'numeric', hourCycle: 'h23' });
+                const arrivalHour = hourFormatter.format(new Date(arrivalTimeMs));
+                const forecastMatch = ride.forecast.find(f => hourFormatter.format(new Date(f.time)) === arrivalHour);
                 if (forecastMatch) {
                     expectedWaitMins = forecastMatch.waitTime;
                     isForecast = true;
@@ -436,11 +452,9 @@ export function RopeDropItinerary({ rides, resort }: { rides: Ride[], resort: Re
         const rideDurationMins = 5; 
         const departureTimeMs = arrivalTimeMs + (expectedWaitMins * 60000) + (rideDurationMins * 60000);
         
-        runningTimeMs = departureTimeMs;
-        previousRideId = item.rideId;
-        
         return {
-            ...item,
+            items: [...state.items, {
+                ...item,
             walkTimeMins,
             arrivalTimeMs,
             expectedWaitMins,
@@ -448,8 +462,12 @@ export function RopeDropItinerary({ rides, resort }: { rides: Ride[], resort: Re
             isForecast,
             liveWaitMins,
             status: ride?.status
+            }],
+            runningTimeMs: departureTimeMs,
+            previousRideId: item.rideId,
         };
-    });
+    }, { items: [], runningTimeMs: simulationStartTime || currentTime, previousRideId: null });
+    const augmentedItems = timeline.items;
 
     const totalWait = augmentedItems.reduce((acc, item) => acc + (!item.completed && item.rideId !== 'custom-break' ? (item.expectedWaitMins || 0) : 0), 0);
     const totalWalk = augmentedItems.reduce((acc, item) => acc + (!item.completed ? (item.walkTimeMins || 0) : 0), 0);

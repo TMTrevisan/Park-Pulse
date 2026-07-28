@@ -2,32 +2,47 @@
 
 import { useMemo } from 'react';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from 'recharts';
-import { Clock, Activity, TrendingUp, TrendingDown } from 'lucide-react';
+import { Clock, TrendingUp, TrendingDown } from 'lucide-react';
+import type { ResortId } from '@/lib/parks';
+
+export type AnalyticsTimelinePoint = {
+    time: string;
+    [rideId: string]: string | number | null;
+};
 
 interface ComparativeTimelineProps {
-    data: any[];
+    data: AnalyticsTimelinePoint[];
     ridesMeta: Record<string, { name: string, parkId: string }>;
     selectedRides: string[];
     colors: string[];
+    resort: ResortId;
 }
 
-export function ComparativeTimeline({ data, ridesMeta, selectedRides, colors }: ComparativeTimelineProps) {
+export function ComparativeTimeline({ data, ridesMeta, selectedRides, colors, resort }: ComparativeTimelineProps) {
     const formattedData = useMemo(() => {
+        const timeZone = resort === 'WDW' ? 'America/New_York' : 'America/Los_Angeles';
+        const formatter = new Intl.DateTimeFormat('en-US', {
+            timeZone,
+            hour: 'numeric',
+            minute: '2-digit',
+        });
         return data.map(point => {
             const date = new Date(point.time);
             return {
                 ...point,
-                timeLabel: date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })
+                timeLabel: formatter.format(date)
             };
         });
-    }, [data]);
+    }, [data, resort]);
 
     const stats = useMemo(() => {
         // Calculate averages, max, min for EACH selected ride
         const results: Record<string, { avg: number, max: number, min: number }> = {};
         
         selectedRides.forEach(rideId => {
-            const validWaits = data.map(d => d[rideId]).filter(w => w !== null && w !== undefined && w > 0);
+            const validWaits = data
+                .map(d => d[rideId])
+                .filter((wait): wait is number => typeof wait === 'number' && wait > 0);
             if (validWaits.length === 0) {
                 results[rideId] = { avg: 0, max: 0, min: 0 };
                 return;

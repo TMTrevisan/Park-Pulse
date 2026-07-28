@@ -1,5 +1,4 @@
 import { CrowdCalendarView } from "@/components/calendar/CrowdCalendarView";
-import { HeaderToolbar } from "@/components/dashboard/HeaderToolbar";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 

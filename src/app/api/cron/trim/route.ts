@@ -10,9 +10,10 @@ export async function GET(request: Request) {
     }
 
     try {
-        const result = await trimHistory();
-        return NextResponse.json({ success: true, result });
-    } catch (error: any) {
-        return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+        const [DLR, WDW] = await Promise.all([trimHistory('DLR'), trimHistory('WDW')]);
+        return NextResponse.json({ success: true, DLR, WDW });
+    } catch (error) {
+        const message = error instanceof Error ? error.message : 'Unknown cron error';
+        return NextResponse.json({ success: false, error: message }, { status: 500 });
     }
 }
