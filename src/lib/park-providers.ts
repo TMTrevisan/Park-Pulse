@@ -40,10 +40,18 @@ async function fetchJson<T>(url: string, revalidate: number): Promise<T> {
 }
 
 export async function getParkCatalog(): Promise<SelectablePark[]> {
-    const [themeParks, queueTimes] = await Promise.all([
+    const [themeParksResult, queueTimesResult] = await Promise.allSettled([
         fetchJson<ThemeDestinationsResponse>(`${THEME_PARKS_BASE_URL}/destinations`, 60 * 60),
         fetchJson<QueueTimesParksResponse>(`${QUEUE_TIMES_BASE_URL}/parks.json`, 60 * 60),
     ]);
+
+    // One provider being unavailable should not hide the other provider's parks.
+    const themeParks = themeParksResult.status === 'fulfilled' ? themeParksResult.value : { destinations: [] };
+    const queueTimes = queueTimesResult.status === 'fulfilled' ? queueTimesResult.value : [];
+
+    if (themeParksResult.status === 'rejected' && queueTimesResult.status === 'rejected') {
+        throw new Error('All park catalog providers are unavailable');
+    }
 
     return [
         ...themeParks.destinations.flatMap(destination => destination.parks.map(park => ({

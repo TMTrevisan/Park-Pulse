@@ -1,18 +1,40 @@
 "use client";
 
 import { useEffect, useState, useMemo, useCallback } from "react";
+import dynamic from "next/dynamic";
+import Link from "next/link";
 import { WaitTimeSnapshot, Ride } from "@/lib/types";
 import { PARKS, RESORT_PARKS, getTicketClass, getLand, getDefaultParkForResort } from "@/lib/parks";
 import type { ResortId } from "@/lib/parks";
 import { HeaderToolbar } from "./dashboard/HeaderToolbar";
-import { RideGrid } from "./dashboard/RideGrid";
-import { RideTable, SortField, SortDirection } from "./dashboard/RideTable";
-import MapOverlay from "./dashboard/MapOverlay";
-import { RopeDropItinerary } from "./dashboard/RopeDropItinerary";
+import type { SortField, SortDirection } from "./dashboard/RideTable";
 import { useFavorites } from "@/hooks/useFavorites";
 import { useAlerts } from "@/hooks/useAlerts";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { ParkPulseHeader, ParkStats } from "./dashboard/ParkPulseHeader";
+
+function DeferredViewFallback() {
+    return <div className="rounded-2xl border border-zinc-200 bg-zinc-50 p-8 text-center text-sm text-zinc-500 dark:border-zinc-800 dark:bg-zinc-900/40">Loading this view…</div>;
+}
+
+// These modes bring in Mapbox, drag-and-drop, and charting code. Keep the default
+// wait-time screen lean and only fetch each feature when the user selects it.
+const RideGrid = dynamic(() => import("./dashboard/RideGrid").then(module => module.RideGrid), {
+    ssr: false,
+    loading: DeferredViewFallback,
+});
+const RideTable = dynamic(() => import("./dashboard/RideTable").then(module => module.RideTable), {
+    ssr: false,
+    loading: DeferredViewFallback,
+});
+const MapOverlay = dynamic(() => import("./dashboard/MapOverlay"), {
+    ssr: false,
+    loading: DeferredViewFallback,
+});
+const RopeDropItinerary = dynamic(() => import("./dashboard/RopeDropItinerary").then(module => module.RopeDropItinerary), {
+    ssr: false,
+    loading: DeferredViewFallback,
+});
 
 const REFRESH_INTERVAL = 60 * 1000;
 const MAX_CLIENT_HISTORY_ITEMS = 10_080;
@@ -54,7 +76,9 @@ export function Dashboard() {
     const fetchData = useCallback(async (isInitial = false, currentResort: ResortId = resort, signal?: AbortSignal) => {
         if (isInitial) setLoading(true);
         try {
-            const url = `/api/wait-times?resort=${currentResort}${isInitial ? '' : '&history=false'}`;
+            // Current waits are enough for the first useful screen. Loading a large
+            // history payload here delayed startup on slower connections.
+            const url = `/api/wait-times?resort=${currentResort}&history=false`;
             const response = await fetch(url, { signal });
             if (!response.ok) throw new Error('Failed to fetch data');
             const result = await response.json();
@@ -76,6 +100,22 @@ export function Dashboard() {
         }
     }, [resort]);
 
+    const fetchHistory = useCallback(async (currentResort: ResortId, signal?: AbortSignal) => {
+        try {
+            const response = await fetch(`/api/wait-times?resort=${currentResort}`, { signal });
+            if (!response.ok) return;
+            const result = await response.json() as { history: WaitTimeSnapshot[] };
+            setData(previous => previous ? {
+                current: previous.current,
+                history: result.history.slice(-MAX_CLIENT_HISTORY_ITEMS),
+            } : previous);
+        } catch (error) {
+            if (!(error instanceof DOMException && error.name === 'AbortError')) {
+                console.warn('Historical wait data is temporarily unavailable:', error);
+            }
+        }
+    }, []);
+
     // When resort changes: reset park selection, clear data, re-fetch
     const handleResortChange = (newResort: ResortId) => {
         setResort(newResort);
@@ -92,12 +132,15 @@ export function Dashboard() {
     useEffect(() => {
         const controller = new AbortController();
         fetchData(true, resort, controller.signal);
+        // Defer nonessential charts/history until the live table has had a chance to paint.
+        const historyTimer = window.setTimeout(() => fetchHistory(resort, controller.signal), 1_500);
         const interval = setInterval(() => fetchData(false, resort, controller.signal), REFRESH_INTERVAL);
         return () => {
             controller.abort();
+            window.clearTimeout(historyTimer);
             clearInterval(interval);
         };
-    }, [fetchData, resort]);
+    }, [fetchData, fetchHistory, resort]);
 
     const currentPark = data?.current.parks.find((p) => p.id === selectedParkId);
 
@@ -268,7 +311,9 @@ export function Dashboard() {
                             <Skeleton className="h-10 w-64 mb-2" />
                             <Skeleton className="h-4 w-48" />
                         </div>
-                        <Skeleton className="h-12 w-48 rounded-lg" />
+                        <Link href="/parks" className="inline-flex h-12 items-center rounded-xl border border-blue-200 bg-blue-50 px-4 text-sm font-bold text-blue-700 dark:border-blue-900/60 dark:bg-blue-950/40 dark:text-blue-300">
+                            Explore all parks
+                        </Link>
                     </div>
                     <div className="mb-6">
                         <Skeleton className="h-10 w-full max-w-md rounded-xl mb-6" />
